@@ -1,0 +1,226 @@
+.list-scroll {
+  height: 80vh;
+  overflow-y: auto;
+  background-color: white;
+  margin-right: 0.5rem !important;
+  padding: 0.5rem !important;
+}
+
+.task-item {
+  padding: 0.5rem !important;
+  min-height: 2vh;
+  display: flex;
+  justify-content: flex-start !important;
+  gap: 5px;
+}
+
+.task-item:hover {
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+.task-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  color: black;
+}
+
+.tab-bar {
+  font-weight: 500;
+}
+
+.tab-bar :global(.ant-tabs-content) {
+  height: 100%;
+  padding-top: 1rem;
+}
+
+.tab-bar :global(.ant-tabs-tabpane) {
+  height: 100%;
+}
+
+.tab-bar :global(.ant-tabs-nav) {
+  border-bottom: none !important;
+  margin: 0 !important;
+}
+
+.tab-bar :global(.ant-tabs-nav::before) {
+  border-bottom: none !important;
+}
+
+.tab-bar :global(.ant-tabs-nav-wrap) {
+  justify-content: center;
+}
+
+.select-filter {
+  position: relative; /* bắt buộc */
+  display: inline-block;
+}
+.select-filter::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 40%;
+  transform: translateY(-50%);
+  pointer-events: none;
+
+  width: 8px;
+  height: 6px;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'><path d='M5.00028 6.00028C4.74428 6.00028 4.48825 5.90231 4.29325 5.70731L0.29325 1.70731C-0.09775 1.31631 -0.09775 0.68425 0.29325 0.29325C0.68425 -0.09775 1.31631 -0.09775 1.70731 0.29325L5.00028 3.58622L8.29325 0.29325C8.68425 -0.09775 9.31631 -0.09775 9.70731 0.29325C10.0983 0.68425 10.0983 1.31631 9.70731 1.70731L5.70731 5.70731C5.51231 5.90231 5.25628 6.00028 5.00028 6.00028Z' fill='%2325314C'/></svg>");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.select-filter select {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: white;
+}
+
+.select-filter-label {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  z-index: 1;
+  font-size: xx-small;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+}
+
+.select-filter-item {
+  min-width: 6rem;
+  border: 0;
+  height: 3rem;
+  font-size: small;
+  font-weight: 500;
+}
+
+.select-filter-item:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+.kanban-board {
+  height: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 300px;
+  /* grid-auto-rows: auto; */
+  overflow-x: auto;
+  gap: 1.5rem;
+}
+
+.kanban-col {
+  display: grid;
+  grid-template-rows: 20px minmax(30%, 1fr) 20px;
+  background-color: #dce0e6;
+  overflow: hidden;
+  padding: 0.5rem;
+  min-height: 30%;
+  height: fit-content;
+  gap: 0.5rem;
+  max-height: 95%;
+}
+
+/* .kanban-col-dragging {
+  opacity: 20%;
+  border: 2px solid #ee7171;
+} */
+
+.kanban-col-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: medium;
+  cursor: grab;
+}
+
+.kanban-col-body {
+  background: white;
+  overflow-y: auto;
+}
+
+.kanban-col-footer {
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.kanban-col-footer:hover {
+  color: #e04000;
+}
+
+.list-task {
+  background-color: transparent;
+}
+
+.task {
+  padding: 0.5rem;
+  border-bottom: 0.5rem solid #dce0e6;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.task-dragging {
+  opacity: 20%;
+  border: 2px solid #ffa5a5;
+}
+
+.task-header {
+  font-size: small;
+  font-weight: 400;
+  cursor: grab;
+}
+
+.task-header:active {
+  cursor: grabbing;
+}
+
+.task-header-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  display: inline-block;
+}
+
+.task-body {
+  position: relative;
+}
+
+.task-body-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-body-main {
+  color: #919191;
+  font-size: smaller;
+  font-weight: 400;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  padding: 0.2rem;
+}
+
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,0 +1,12 @@
+/* styles/register_card.module.module.css */
+
+.checkbox :global(.ant-checkbox-inner) {
+  border-radius: 0 !important;
+  border: 1px solid #005de7 !important;
+  margin-top: 0px; 
+  margin-right: 5px;
+}
+
+.checkbox :global(.ant-checkbox) {
+  align-self: flex-start;
+}
