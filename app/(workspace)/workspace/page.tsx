@@ -5,6 +5,7 @@ import {
 } from '@/app/api/organizations/organizations';
 import { EModePage, ERole } from '@/app/constants';
 import { actions, useStore } from '@/app/store';
+import { TeamOutlined } from '@ant-design/icons';
 import { Avatar, Button, List, Skeleton } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -36,6 +37,9 @@ const WorkSpaceList = () => {
 
   const organizations = data?.pages.flatMap((page) => page.data?.organizations || []) || [];
 
+  const avatarGroup = (url: string | undefined) =>
+    url ? <Avatar src={url} /> : <TeamOutlined size={32} />;
+
   return (
     <div style={{ backgroundColor: 'white', width: '100%' }}>
       <div style={{ fontSize: '3rem' }}>Welcome back!</div>
@@ -48,7 +52,7 @@ const WorkSpaceList = () => {
           <List.Item>
             <Skeleton avatar title={false} loading={isFetching} active>
               <List.Item.Meta
-                avatar={<Avatar src={item.organization?.avatar} />}
+                avatar={avatarGroup(item.organization?.avatar)}
                 title={<a>{item.organization?.name}</a>}
                 description={
                   <div>
