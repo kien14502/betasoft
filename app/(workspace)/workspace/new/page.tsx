@@ -99,10 +99,7 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
       },
     );
   };
-
-  return isPendingGetData ? (
-    <Loading />
-  ) : (
+  return (
     <Form form={form} onFinish={onFinish} layout="vertical">
       {/* Workspace Name */}
       <Form.Item name={'avatar'} label={'Avatar'}>
@@ -207,6 +204,11 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
       </Form.Item>
     </Form>
   );
+  // return isPendingGetData ? (
+  //   <Loading />
+  // ) : (
+
+  // );
 };
 
 export default NewWorkSpace;

@@ -104,9 +104,9 @@ const LayoutWorkSpace = ({ children }: { children: React.ReactNode }) => {
             <Col span={12}>
               <Flex justify={'flex-end'}>
                 <div>
-                  <Button style={{ backgroundColor: 'white' }} href="/workspace/new">
-                    Create A New WorkSpace
-                  </Button>
+                  <Link href="/workspace/new">
+                    <Button style={{ backgroundColor: 'white' }}>Create A New WorkSpace</Button>
+                  </Link>
                 </div>
                 <div style={{ paddingInlineEnd: 10 }}>
                   <Dropdown
