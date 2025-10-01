@@ -1,6 +1,19 @@
 'use client';
 import React, { useState } from 'react';
-import { Avatar, Button, Col, Dropdown, Flex, Grid, Layout, Menu, Row } from 'antd';
+import {
+  Avatar,
+  Button,
+  Col,
+  Dropdown,
+  Flex,
+  Grid,
+  Layout,
+  Menu,
+  Row,
+  Modal,
+  Form,
+  Input,
+} from 'antd';
 import Link from 'next/link';
 import { Header } from 'antd/es/layout/layout';
 import {
@@ -14,12 +27,16 @@ import {
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { clearClientCookies } from '../utils/cookie.client';
+import { usePostAuthOrganizationsJoin } from '../api/organizations/organizations';
+import { RequestJoinOrganizationRequest } from '../api/generated.schemas';
 
 const { Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
 
 const LayoutWorkSpace = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [isModalInviteOpen, setIsModalInviteOpen] = useState(false);
+  const { mutate, isPending } = usePostAuthOrganizationsJoin();
   const screens = useBreakpoint();
   const router = useRouter();
   const items = [
@@ -35,7 +52,7 @@ const LayoutWorkSpace = ({ children }: { children: React.ReactNode }) => {
         <LogoutOutlined
           onClick={() => {
             clearClientCookies();
-            router;
+            router.push('/login');
           }}
         />
       ),
@@ -46,6 +63,19 @@ const LayoutWorkSpace = ({ children }: { children: React.ReactNode }) => {
       icon: <SettingOutlined />,
     },
   ];
+  const toggleModalInvite = () => setIsModalInviteOpen(!isModalInviteOpen);
+
+  const handleSubmit = (value: RequestJoinOrganizationRequest) => {
+    mutate(
+      { data: value },
+      {
+        onSuccess: () => {
+          setIsModalInviteOpen(false);
+          router.refresh();
+        },
+      },
+    );
+  };
 
   return (
     <Layout>
@@ -104,10 +134,37 @@ const LayoutWorkSpace = ({ children }: { children: React.ReactNode }) => {
             </Col>
             <Col span={12}>
               <Flex justify={'flex-end'}>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Button type="primary" onClick={toggleModalInvite}>
+                    Join Workspace
+                  </Button>
                   <Link href="/workspace/new">
                     <Button style={{ backgroundColor: 'white' }}>Create A New WorkSpace</Button>
                   </Link>
+
+                  <Modal
+                    title="Basic Modal"
+                    closable={{ 'aria-label': 'Custom Close Button' }}
+                    open={isModalInviteOpen}
+                    footer={null}
+                    onCancel={toggleModalInvite}
+                  >
+                    <Form onFinish={handleSubmit} layout="vertical">
+                      <Form.Item
+                        name="invite_code"
+                        label="Invite Code"
+                        rules={[{ required: true, message: 'Invite code is required' }]}
+                      >
+                        <Input
+                          variant="underlined"
+                          style={{ height: '50px', background: '#eff5fb' }}
+                        />
+                      </Form.Item>
+                      <Button loading={isPending} htmlType="submit">
+                        Join
+                      </Button>
+                    </Form>
+                  </Modal>
                 </div>
                 <div style={{ paddingInlineEnd: 10 }}>
                   <Dropdown

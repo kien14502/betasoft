@@ -2,17 +2,27 @@
 import {
   getAuthOrganizations,
   useGetAuthOrganizationsInfinite,
+  usePostAuthOrganizationsLaunch,
 } from '@/app/api/organizations/organizations';
+import { useGetAuthUserProfile } from '@/app/api/users/users';
 import { EModePage, ERole } from '@/app/constants';
 import { actions, useStore } from '@/app/store';
+import { showToast } from '@/app/utils/toast';
+import { updateAuthMetaStorage } from '@/app/utils/userHelper';
 import { TeamOutlined } from '@ant-design/icons';
 import { Avatar, Button, List, Skeleton } from 'antd';
 import { useRouter } from 'next/navigation';
-import React from 'react';
 
 const WorkSpaceList = () => {
   const router = useRouter();
   const [_, dispatch] = useStore();
+  const { data: userData } = useGetAuthUserProfile();
+  const wsId = userData?.data?.meta_data?.organization?.id;
+  if (wsId) {
+    router.replace(`/workspace/${wsId}`);
+  }
+
+  const { mutate: launchOrganization, isPending } = usePostAuthOrganizationsLaunch();
 
   const { data, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetAuthOrganizationsInfinite(
@@ -40,6 +50,19 @@ const WorkSpaceList = () => {
   const avatarGroup = (url: string | undefined) =>
     url ? <Avatar src={url} /> : <TeamOutlined size={32} />;
 
+  const onLaunch = (org_id: string | undefined) => {
+    if (!org_id) return;
+    launchOrganization(
+      { data: { org_id } },
+      {
+        onSuccess({ message, data }) {
+          showToast(message ?? 'Launch successful', 'success');
+          updateAuthMetaStorage({ organization: data }, () => {});
+        },
+      },
+    );
+  };
+
   return (
     <div style={{ backgroundColor: 'white', width: '100%' }}>
       <div style={{ fontSize: '3rem' }}>Welcome back!</div>
@@ -66,7 +89,7 @@ const WorkSpaceList = () => {
                 }
               />
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {item.role == ERole.ADMIN && (
+                {item.role?.includes(ERole.ADMIN) && (
                   <>
                     <Button
                       type={'primary'}
@@ -87,7 +110,13 @@ const WorkSpaceList = () => {
                     </Button>
                   </>
                 )}
-                <Button type={'primary'}>Launch</Button>
+                <Button
+                  loading={isPending}
+                  onClick={() => onLaunch(item.organization?.id)}
+                  type={'primary'}
+                >
+                  Launch
+                </Button>
               </div>
             </Skeleton>
           </List.Item>

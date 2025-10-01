@@ -5,14 +5,13 @@ import React, { useEffect } from 'react';
 import {
   useGetAuthOrganizationsId,
   usePostAuthOrganizations,
-  usePutAuthOrganizationsId,
+  usePatchAuthOrganizations,
 } from '@/app/api/organizations/organizations';
 import { RequestCreateOrganizationRequest } from '@/app/api/generated.schemas';
 import { showToast } from '@/app/utils/toast';
 import { useRouter } from 'next/navigation';
 import UploadImage, { normalizeImage } from '@/app/components/common/UploadImage';
 import { useForm } from 'antd/es/form/Form';
-import Loading from '@/app/components/common/Loading';
 
 interface INewWorkSpaceProps {
   idWorkSpace?: string;
@@ -31,7 +30,7 @@ type TNewWorkSpaceForm = {
 const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
   const [form] = useForm();
   const { mutate, isPending } = usePostAuthOrganizations();
-  const { mutate: mutateUpdate, isPending: isPendingUpdate } = usePutAuthOrganizationsId();
+  const { mutate: mutateUpdate, isPending: isPendingUpdate } = usePatchAuthOrganizations();
   const router = useRouter();
   const { data, isPending: isPendingGetData } = useGetAuthOrganizationsId(idWorkSpace ?? '', {
     query: {
@@ -71,8 +70,10 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
     if (idWorkSpace) {
       return mutateUpdate(
         {
-          id: idWorkSpace,
-          data: payload,
+          data: {
+            org_id: data?.id,
+            ...payload,
+          },
         },
         {
           onSuccess: (res) => {
@@ -204,11 +205,6 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
       </Form.Item>
     </Form>
   );
-  // return isPendingGetData ? (
-  //   <Loading />
-  // ) : (
-
-  // );
 };
 
 export default NewWorkSpace;

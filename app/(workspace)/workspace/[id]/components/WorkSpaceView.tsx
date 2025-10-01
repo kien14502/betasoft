@@ -1,10 +1,7 @@
-import {
-  useGetAuthOrganizationsId,
-  useGetAuthOrganizationsIdMembers,
-} from '@/app/api/organizations/organizations';
+import { useGetAuthOrganizationsIdMembers } from '@/app/api/organizations/organizations';
 import ListDataPage from '@/app/components/ListDataPage/ListTablePage';
 import { useStore } from '@/app/store';
-import { Button, Dropdown, Form, Input, MenuProps, Modal, Select } from 'antd';
+import { Button, Dropdown, Form, Input, MenuProps, Select } from 'antd';
 import { AnyObject } from 'antd/es/_util/type';
 import { useForm } from 'antd/es/form/Form';
 import React, { useState } from 'react';
@@ -18,8 +15,9 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
   const [form] = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [{ workspace }, dispatch] = useStore();
-  const { data, isLoading, isFetching, refetch } = useGetAuthOrganizationsIdMembers(idWorkSpace);
+  const [{ workspace }] = useStore();
+
+  const { data } = useGetAuthOrganizationsIdMembers(idWorkSpace);
 
   const { workspaceActive } = workspace;
 
@@ -39,7 +37,6 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
   ];
   return (
     <div>
-      <h1></h1>
       <ListDataPage
         listHeader={{
           title: workspaceActive?.name || '',

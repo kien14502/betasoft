@@ -15,10 +15,9 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get('accessToken')?.value;
   const { pathname } = req.nextUrl;
 
-  console.log('pathname', req.nextUrl.pathname);
-
   if (!UNAUTHENTICATED_ONLY_ROUTES.includes(pathname) && token) {
     const payload = decodeJwt(token);
+
     // 1. Check hết hạn
     if (payload.exp && Date.now() / 1000 > payload.exp) {
       return NextResponse.redirect(new URL('/login', req.url));
