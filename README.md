@@ -7,16 +7,16 @@ It uses **Turbopack** for blazing-fast builds, **React 19**, and a modern develo
 
 ## 📦 Tech Stack
 
-- [Next.js 15](https://nextjs.org/) – React framework with App Router  
-- [React 19](https://react.dev/) – latest React features  
-- [TypeScript](https://www.typescriptlang.org/) – static type checking  
-- [Ant Design 5](https://ant.design/) – UI components  
-- [TanStack Query](https://tanstack.com/query/v5) – data fetching & caching  
-- [Axios](https://axios-http.com/) – HTTP client  
-- [Recharts](https://recharts.org/) – charts & data visualization  
-- [UUID](https://www.npmjs.com/package/uuid) – unique ID generation  
-- [Husky](https://typicode.github.io/husky) & [lint-staged](https://github.com/okonet/lint-staged) – Git hooks & code quality  
-- [Prettier](https://prettier.io/) & [ESLint](https://eslint.org/) – code formatting & linting  
+- [Next.js 15](https://nextjs.org/) – React framework with App Router
+- [React 19](https://react.dev/) – latest React features
+- [TypeScript](https://www.typescriptlang.org/) – static type checking
+- [Ant Design 5](https://ant.design/) – UI components
+- [TanStack Query](https://tanstack.com/query/v5) – data fetching & caching
+- [Axios](https://axios-http.com/) – HTTP client
+- [Recharts](https://recharts.org/) – charts & data visualization
+- [UUID](https://www.npmjs.com/package/uuid) – unique ID generation
+- [Husky](https://typicode.github.io/husky) & [lint-staged](https://github.com/okonet/lint-staged) – Git hooks & code quality
+- [Prettier](https://prettier.io/) & [ESLint](https://eslint.org/) – code formatting & linting
 
 ---
 
@@ -39,30 +39,31 @@ bun install
 ```
 
 Run the development server:
+
 ```bash
 npm run dev
 ```
 
 ## 🛠️ Available Scripts
 
-| Command              | Description                          |
-|-----------------------|--------------------------------------|
-| `npm run dev`         | Run dev server with Turbopack        |
-| `npm run build`       | Create production build              |
-| `npm run start`       | Start production server              |
-| `npm run api`         | Generate API client via Orval        |
-| `npm run lint`        | Run ESLint                           |
-| `npm run format`      | Format code with Prettier            |
-| `npm run format:check`| Check formatting                     |
-| `npm run prepare`     | Setup Git hooks with Husky           |
+| Command                | Description                   |
+| ---------------------- | ----------------------------- |
+| `npm run dev`          | Run dev server with Turbopack |
+| `npm run build`        | Create production build       |
+| `npm run start`        | Start production server       |
+| `npm run api`          | Generate API client via Orval |
+| `npm run lint`         | Run ESLint                    |
+| `npm run format`       | Format code with Prettier     |
+| `npm run format:check` | Check formatting              |
+| `npm run prepare`      | Setup Git hooks with Husky    |
 
 ---
 
 ## 🧹 Code Quality
 
-- **Prettier** – enforces consistent code style  
-- **ESLint** – detects potential issues (`next lint` rules included)  
-- **Husky + lint-staged** – run lint/format automatically before committing  
+- **Prettier** – enforces consistent code style
+- **ESLint** – detects potential issues (`next lint` rules included)
+- **Husky + lint-staged** – run lint/format automatically before committing
 
 Lint & format staged files automatically on commit:
 
@@ -83,4 +84,4 @@ Lint & format staged files automatically on commit:
 - Ant Design Docs
 - TanStack Query Docs
 
->>>>>>> 7e5f677 (feat: inital project)
+> > > > > > > 7e5f677 (feat: inital project)

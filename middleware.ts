@@ -9,7 +9,7 @@ function decodeJwt(token: string) {
   return JSON.parse(json);
 }
 
-const UNAUTHENTICATED_ONLY_ROUTES = ['/login', '/register'];
+const UNAUTHENTICATED_ONLY_ROUTES = ['/login', '/register', 'forgot-pass'];
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('accessToken')?.value;

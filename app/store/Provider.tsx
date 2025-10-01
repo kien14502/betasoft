@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import Context from './Context';
 import { useReducer } from 'react';
@@ -13,7 +13,11 @@ type Context = {
 function Provider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initState);
   // console.log(state);
-  return <Context.Provider value={[state, dispatch] as [TRootState, React.Dispatch<ActionType>]}>{children}</Context.Provider>;
+  return (
+    <Context.Provider value={[state, dispatch] as [TRootState, React.Dispatch<ActionType>]}>
+      {children}
+    </Context.Provider>
+  );
 }
 
 export default Provider;

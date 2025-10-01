@@ -1,5 +1,5 @@
-.tab-bar{
-    font-weight: 500;
+.tab-bar {
+  font-weight: 500;
 }
 
 .tab-bar :global(.ant-tabs-nav::before) {

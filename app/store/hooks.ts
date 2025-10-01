@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { useContext } from 'react';
 import Context, { StoreContextType } from './Context';

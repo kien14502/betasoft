@@ -8,7 +8,7 @@ import { usePostLogin } from '@/app/api/users/users';
 import { setClientCookie } from '@/app/utils/cookie.client';
 import { useRouter } from 'next/navigation';
 import { EToken } from '@/app/constants';
-import localStorage from "@/app/utils/localStorage"
+import localStorage from '@/app/utils/localStorage';
 interface ILoginFormValues {
   email: string;
   password: string;

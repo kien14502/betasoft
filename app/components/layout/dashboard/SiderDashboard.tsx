@@ -1,11 +1,11 @@
-import { MenuProps } from "antd";
-import Sider from "antd/es/layout/Sider";
-import React from "react";
-import MenuDashboard from "./MenuDashboard";
-import LogoDashboard from "./LogoDashboard";
+import { MenuProps } from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import React from 'react';
+import MenuDashboard from './MenuDashboard';
+import LogoDashboard from './LogoDashboard';
 
 interface SiderDashboardProps {
-  menu: MenuProps["items"];
+  menu: MenuProps['items'];
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
 }

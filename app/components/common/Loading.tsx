@@ -1,10 +1,10 @@
-import { Flex, Spin } from "antd";
-import React from "react";
+import { Flex, Spin } from 'antd';
+import React from 'react';
 
 function Loading() {
   return (
     <Flex align="center" gap="middle" justify="center">
-      <Spin percent={"auto"} />
+      <Spin percent={'auto'} />
     </Flex>
   );
 }

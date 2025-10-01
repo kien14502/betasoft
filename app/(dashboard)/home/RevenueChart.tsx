@@ -1,14 +1,7 @@
-"use client";
-import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { Card } from "antd";
+'use client';
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Card } from 'antd';
 
 interface RevenueChartProps {
   data: { name: string; value: number }[];
@@ -19,15 +12,9 @@ interface RevenueChartProps {
   width?: number;
 }
 
-const RevenueChart = ({
-  title,
-  data,
-  subTitle,
-  description,
-  ...rest
-}: RevenueChartProps) => {
+const RevenueChart = ({ title, data, subTitle, description, ...rest }: RevenueChartProps) => {
   return (
-    <Card  title={<h2>{title}</h2>}>
+    <Card title={<h2>{title}</h2>}>
       <h3>{subTitle}</h3>
       <ResponsiveContainer {...rest}>
         <BarChart data={data}>
