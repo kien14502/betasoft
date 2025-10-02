@@ -9,5 +9,5 @@ export * from './hooks';
 export const actions = {
   ...menuActions,
   ...kanbanActions,
-  ...workspaceActions
+  ...workspaceActions,
 };

@@ -69,7 +69,7 @@ const KanbanCol = ({ col, tasks }: IKanbanCol) => {
       <div
         className={styles['kanban-col-footer']}
         onClick={() => {
-          dispatch(actions.setModeTask('add'))
+          dispatch(actions.setModeTask('add'));
           dispatch(actions.setStateTask(col.key));
           dispatch(actions.setActiveModalAddTask(true));
         }}

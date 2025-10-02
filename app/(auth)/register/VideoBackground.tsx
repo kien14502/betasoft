@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./video-background.module.css";
+import React from 'react';
+import styles from './video-background.module.css';
 
 const VideoBackground = () => {
   return (

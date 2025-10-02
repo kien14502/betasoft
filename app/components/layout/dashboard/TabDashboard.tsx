@@ -1,17 +1,12 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { Button, Tabs } from "antd";
-import { useAppDispatch, useAppSelector } from "@/app/reduxs/hooks";
-import {
-  setActiveKey,
-  removeTab,
-  closeAll,
-  addTab,
-} from "@/app/reduxs/tabs/tabs.slice";
-import menu from "@/app/(dashboard)/menu";
-import { usePathname } from "next/navigation";
-import { setActiveMenuKey } from "@/app/reduxs/menu/menu.slice";
+import React, { useEffect } from 'react';
+import { Button, Tabs } from 'antd';
+import { useAppDispatch, useAppSelector } from '@/app/reduxs/hooks';
+import { setActiveKey, removeTab, closeAll, addTab } from '@/app/reduxs/tabs/tabs.slice';
+import menu from '@/app/(dashboard)/menu';
+import { usePathname } from 'next/navigation';
+import { setActiveMenuKey } from '@/app/reduxs/menu/menu.slice';
 
 export type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
@@ -21,30 +16,28 @@ const TabDashboard: React.FC = () => {
   const { listTabs, activeTabKey } = useAppSelector((state) => state.tabs);
 
   useEffect(() => {
-    const pathWithoutSlash = pathname.startsWith("/")
-      ? pathname.slice(1)
-      : pathname;
+    const pathWithoutSlash = pathname.startsWith('/') ? pathname.slice(1) : pathname;
 
     const currentMenu = menu.find((item) => item.key === pathWithoutSlash);
-    console.log("first", currentMenu?.key);
+    console.log('first', currentMenu?.key);
     dispatch(
       addTab({
-        label: currentMenu?.title ?? "",
-        key: currentMenu?.key ?? "",
+        label: currentMenu?.title ?? '',
+        key: currentMenu?.key ?? '',
         children: currentMenu?.component ?? <></>,
-      })
+      }),
     );
 
-    dispatch(setActiveMenuKey(currentMenu?.key ?? ""));
+    dispatch(setActiveMenuKey(currentMenu?.key ?? ''));
   }, []);
 
   const onChange = (key: string) => {
-    console.log("listTabs", listTabs);
+    console.log('listTabs', listTabs);
     dispatch(setActiveKey(key));
   };
 
-  const onEdit = (targetKey: TargetKey, action: "add" | "remove") => {
-    if (action === "remove") {
+  const onEdit = (targetKey: TargetKey, action: 'add' | 'remove') => {
+    if (action === 'remove') {
       dispatch(removeTab(targetKey));
     }
   };
@@ -56,9 +49,9 @@ const TabDashboard: React.FC = () => {
   return (
     <div
       style={{
-        height: "87vh",
-        padding: "1vh",
-        backgroundColor: "white",
+        height: '87vh',
+        padding: '1vh',
+        backgroundColor: 'white',
       }}
     >
       <Tabs

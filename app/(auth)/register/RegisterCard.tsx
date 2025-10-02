@@ -32,7 +32,7 @@ const RegisterForm = ({ setDataPayload }: RegisterFormProps) => {
       {
         onSuccess: (res) => {
           showToast(res.message!, 'success');
-          payload.step=2
+          payload.step = 2;
           setDataPayload(payload);
         },
         onError: (err) => {
