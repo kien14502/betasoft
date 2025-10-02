@@ -3,7 +3,7 @@
 import { EModePage } from '@/app/constants';
 import { useSearchParams } from 'next/navigation';
 import { use } from 'react';
-import WorkSpaceView from './WorkSpaceView';
+import WorkSpaceView from './components/WorkSpaceView';
 import NewWorkSpace from '../new/page';
 
 const WorkSpaceEditPage = ({ params }: { params: Promise<{ id: string }> }) => {

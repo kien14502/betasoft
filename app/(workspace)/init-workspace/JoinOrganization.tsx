@@ -1,5 +1,5 @@
-import { Button, Form, Input } from "antd";
-import React, { useState } from "react";
+import { Button, Form, Input } from 'antd';
+import React, { useState } from 'react';
 
 interface JoinWorkSpaceProps {
   goToCreate: () => void;
@@ -12,18 +12,18 @@ const JoinOrganization = ({ goToCreate }: JoinWorkSpaceProps) => {
 
   const onFinish = (values: unknown) => {
     setLoading(true);
-    console.log("Received values:", values);
+    console.log('Received values:', values);
     setTimeout(() => setLoading(false), 2000); // Simulate API call
   };
   return (
     <div>
       <div
         style={{
-          fontSize: "2.5em",
+          fontSize: '2.5em',
           fontWeight: 700,
-          width: "100%",
-          textAlign: "center",
-          margin: "10% 0 10% 0",
+          width: '100%',
+          textAlign: 'center',
+          margin: '10% 0 10% 0',
         }}
       >
         Join Organization
@@ -32,23 +32,20 @@ const JoinOrganization = ({ goToCreate }: JoinWorkSpaceProps) => {
         <Form.Item
           name="code"
           label="Enter Code"
-          rules={[{ required: true, message: "Code is required" }]}
+          rules={[{ required: true, message: 'Code is required' }]}
         >
-          <Input
-            variant="underlined"
-            style={{ height: "50px", background: "#eff5fb" }}
-          />
+          <Input variant="underlined" style={{ height: '50px', background: '#eff5fb' }} />
         </Form.Item>
 
-        <Form.Item style={{ marginTop: "40px" }}>
+        <Form.Item style={{ marginTop: '40px' }}>
           <Button
             type="primary"
             htmlType="submit"
             style={{
-              width: "100%",
-              height: "40px",
-              borderRadius: "0px",
-              fontSize: "16px",
+              width: '100%',
+              height: '40px',
+              borderRadius: '0px',
+              fontSize: '16px',
             }}
             loading={loading}
           >
@@ -60,10 +57,10 @@ const JoinOrganization = ({ goToCreate }: JoinWorkSpaceProps) => {
           color="primary"
           variant="outlined"
           style={{
-            width: "100%",
-            height: "40px",
-            borderRadius: "0px",
-            fontSize: "16px",
+            width: '100%',
+            height: '40px',
+            borderRadius: '0px',
+            fontSize: '16px',
           }}
           onClick={goToCreate}
         >

@@ -1,9 +1,9 @@
-import React from "react";
-import RevenueChart from "./RevenueChart";
-import Overview from "./Overview";
-import WelcomeDashboard from "./WelcomeDashboard";
-import OrderList from "./OrderList";
-import TabBar from "./TabBar";
+import React from 'react';
+import RevenueChart from './RevenueChart';
+import Overview from './Overview';
+import WelcomeDashboard from './WelcomeDashboard';
+import OrderList from './OrderList';
+import TabBar from './TabBar';
 
 function Dashboard() {
   return (

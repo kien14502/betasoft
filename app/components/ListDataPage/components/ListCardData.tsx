@@ -1,6 +1,6 @@
-import { CardProps, Col, Pagination, PaginationProps, Row } from "antd";
-import React from "react";
-import CardData from "./CardData";
+import { CardProps, Col, Pagination, PaginationProps, Row } from 'antd';
+import React from 'react';
+import CardData from './CardData';
 
 export interface ListCardDataProps extends CardProps {
   data: Array<IDataCard>;
@@ -40,12 +40,7 @@ export default function ListCardData({
           </Col>
         ))}
       </Row>
-      <Pagination
-        align={"end"}
-        {...pagination}
-        responsive={true}
-        showSizeChanger={true}
-      />
+      <Pagination align={'end'} {...pagination} responsive={true} showSizeChanger={true} />
     </div>
   );
 }

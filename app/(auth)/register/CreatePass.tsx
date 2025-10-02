@@ -38,7 +38,7 @@ const CreatePass = ({ data, setData }: ICreatePassProps) => {
           data.step = 3;
           setData(data);
           setClientCookie(EToken.ACCESS_TOKEN, res.data?.token || '');
-          localStorage.add('userData', res.data?.user?.toString() ?? "");
+          localStorage.add('userData', res.data?.user?.toString() ?? '');
           console.log('accessToken', res.data);
           router.push('./init-workspace');
         },

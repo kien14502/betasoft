@@ -28,7 +28,7 @@
   border-right: 0.3rem solid #f2f4f7;
 }
 
-.menu-item:hover{
+.menu-item:hover {
   color: rgb(92, 92, 92);
 }
 
@@ -36,4 +36,3 @@
   background-color: #333333;
   color: white;
 }
-

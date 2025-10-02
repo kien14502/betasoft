@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const ChannelsPage = () => {
-  return (
-    <div>ChannelsPage</div>
-  )
-}
+  return <div>ChannelsPage</div>;
+};
 
-export default ChannelsPage
+export default ChannelsPage;

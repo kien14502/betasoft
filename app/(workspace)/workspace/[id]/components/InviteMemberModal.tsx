@@ -1,6 +1,7 @@
 import { RequestInviteMemberRequest } from '@/app/api/generated.schemas';
 import { usePostAuthOrganizationsIdInvite } from '@/app/api/organizations/organizations';
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { showToast } from '@/app/utils/toast';
+import { Button, Form, FormProps, Input, Modal, Select } from 'antd';
 import React from 'react';
 
 interface IInviteMemberProps {
@@ -19,12 +20,13 @@ const InviteMember = ({ id, isModalOpen, setIsModalOpen }: IInviteMemberProps) =
         data: values,
       },
       {
-        onSuccess(res) {
-          console.log('res', res);
+        onError() {},
+        onSuccess({ message }) {
+          showToast(message ?? 'Invite member successfully', 'success');
+          setIsModalOpen(false);
         },
       },
     );
-    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -36,8 +38,9 @@ const InviteMember = ({ id, isModalOpen, setIsModalOpen }: IInviteMemberProps) =
       closable={{ 'aria-label': 'Custom Close Button' }}
       open={isModalOpen}
       onCancel={handleCancel}
+      footer={null}
     >
-      <Form initialValues={{ role: 'member' }}>
+      <Form initialValues={{ role: 'member' }} onFinish={onFinish}>
         <Form.Item
           label={'Email'}
           name={'email'}
@@ -53,8 +56,8 @@ const InviteMember = ({ id, isModalOpen, setIsModalOpen }: IInviteMemberProps) =
             ]}
           ></Select>
         </Form.Item>
-        <Button htmlType="submit" onClick={() => onFinish}>
-          Ok
+        <Button loading={isPending} htmlType="submit">
+          Invite
         </Button>
       </Form>
     </Modal>

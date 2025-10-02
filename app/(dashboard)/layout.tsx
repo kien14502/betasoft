@@ -11,7 +11,7 @@ import { lightTheme } from '../theme';
 import { useStore } from '../store';
 
 function LayoutConfig({ children }: { children: React.ReactNode }) {
-  const [{config}] = useStore();
+  const [{ config }] = useStore();
   const getThemeConfig = () => {
     switch (config.theme) {
       case 'light':
@@ -31,9 +31,9 @@ function LayoutConfig({ children }: { children: React.ReactNode }) {
           <div
             style={{
               padding: 24,
-              height:'100%',
-              display:'flex',
-               width: '100%', 
+              height: '100%',
+              display: 'flex',
+              width: '100%',
             }}
           >
             {children}

@@ -1,17 +1,17 @@
-"use client";
-import { Card, Carousel, Switch, Tag } from "antd";
-import Image from "next/image";
-import React from "react";
-import { IDataCard } from "./ListCardData";
-import { Meta } from "antd/es/list/Item";
+'use client';
+import { Card, Carousel, Switch, Tag } from 'antd';
+import Image from 'next/image';
+import React from 'react';
+import { IDataCard } from './ListCardData';
+import { Meta } from 'antd/es/list/Item';
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
-  height: "160px",
-  color: "#fff",
-  lineHeight: "160px",
-  textAlign: "center",
-  background: "#364d79",
+  height: '160px',
+  color: '#fff',
+  lineHeight: '160px',
+  textAlign: 'center',
+  background: '#364d79',
 };
 
 type ActionsCardData = React.ReactNode | string;
@@ -23,33 +23,28 @@ export interface CardDataProps {
   apiChangeStatus?: string;
 }
 const titleStyle: React.CSSProperties = {
-  display: "-webkit-box",
+  display: '-webkit-box',
   WebkitLineClamp: 1,
-  WebkitBoxOrient: "vertical",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  wordBreak: "break-word",
-  textDecoration: "none",
-  width: "100%",
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  wordBreak: 'break-word',
+  textDecoration: 'none',
+  width: '100%',
 };
 
 const descriptionStyle: React.CSSProperties = {
-  display: "-webkit-box",
+  display: '-webkit-box',
   WebkitLineClamp: 4,
-  WebkitBoxOrient: "vertical",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  wordBreak: "break-word",
-  textDecoration: "none",
-  width: "100%",
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  wordBreak: 'break-word',
+  textDecoration: 'none',
+  width: '100%',
 };
 
-function CardData({
-  data,
-  actions,
-  actionEdit,
-  apiChangeStatus,
-}: CardDataProps) {
+function CardData({ data, actions, actionEdit, apiChangeStatus }: CardDataProps) {
   const [loading, setLoading] = React.useState(false);
   const [status, setStatus] = React.useState(data.status);
 
@@ -71,12 +66,7 @@ function CardData({
     }
     if (apiChangeStatus)
       result.push(
-        <Switch
-          key="status"
-          checked={status}
-          onChange={handleChangeStatus}
-          loading={loading}
-        />
+        <Switch key="status" checked={status} onChange={handleChangeStatus} loading={loading} />,
       );
     return result;
   })();
@@ -108,7 +98,7 @@ function CardData({
         </Carousel>
       }
       actions={actionsMerge}
-      extra={data.state && <Tag color={"blue-inverse"}>{data.state}</Tag>}
+      extra={data.state && <Tag color={'blue-inverse'}>{data.state}</Tag>}
     >
       <Meta
         title={<div style={titleStyle}>{data.title}</div>}
