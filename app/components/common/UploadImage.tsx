@@ -92,7 +92,7 @@ export default function UploadImage({
           onPreview={handlePreview}
           onChange={handleChange}
           style={{ width: width, height: height }}
-          itemRender={(originNode, file) => <div style={{ width, height }}>{originNode}</div>}
+          itemRender={(originNode) => <div style={{ width, height }}>{originNode}</div>}
         >
           {fileList.length >= maxImageUpload ? null : uploadButton}
         </Upload>
@@ -106,6 +106,7 @@ export default function UploadImage({
             afterOpenChange: (visible) => !visible && setPreviewImage(''),
           }}
           src={previewImage}
+          alt=""
         />
       )}
     </div>

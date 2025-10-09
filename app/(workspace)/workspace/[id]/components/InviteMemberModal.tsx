@@ -1,7 +1,7 @@
 import { RequestInviteMemberRequest } from '@/app/api/generated.schemas';
-import { usePostAuthOrganizationsIdInvite } from '@/app/api/organizations/organizations';
+import { usePostAuthOrganizationsInvite } from '@/app/api/organizations/organizations';
 import { showToast } from '@/app/utils/toast';
-import { Button, Form, FormProps, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import React from 'react';
 
 interface IInviteMemberProps {
@@ -11,16 +11,12 @@ interface IInviteMemberProps {
 }
 
 const InviteMember = ({ id, isModalOpen, setIsModalOpen }: IInviteMemberProps) => {
-  const { mutate, isPending } = usePostAuthOrganizationsIdInvite();
+  const { mutate, isPending } = usePostAuthOrganizationsInvite();
 
   const onFinish = (values: RequestInviteMemberRequest) => {
     mutate(
+      { data: { org_id: id, email: values.email } },
       {
-        id,
-        data: values,
-      },
-      {
-        onError() {},
         onSuccess({ message }) {
           showToast(message ?? 'Invite member successfully', 'success');
           setIsModalOpen(false);
@@ -47,14 +43,6 @@ const InviteMember = ({ id, isModalOpen, setIsModalOpen }: IInviteMemberProps) =
           rules={[{ required: true, message: 'Email is require!' }]}
         >
           <Input />
-        </Form.Item>
-        <Form.Item label={'Role'} name={'role'}>
-          <Select
-            options={[
-              { label: 'Member', value: 'member' },
-              { label: 'Sub admin', value: 'sub_admin' },
-            ]}
-          ></Select>
         </Form.Item>
         <Button loading={isPending} htmlType="submit">
           Invite

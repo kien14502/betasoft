@@ -8,7 +8,7 @@ import { usePostLogin } from '@/app/api/users/users';
 import { setClientCookie } from '@/app/utils/cookie.client';
 import { useRouter } from 'next/navigation';
 import { EToken } from '@/app/constants';
-import localStorage from '@/app/utils/localStorage';
+import { saveAuthStorage } from '@/app/utils/authStorage';
 interface ILoginFormValues {
   email: string;
   password: string;
@@ -26,17 +26,17 @@ export default function Login() {
         onSuccess: (res) => {
           const token = res.data?.token || '';
           setClientCookie(EToken.ACCESS_TOKEN, token);
-          localStorage.add('userData', JSON.stringify(res.data?.user) || '');
+          saveAuthStorage('USER_DATA', res.data?.user || {});
           router.push('/home');
         },
       },
     );
   };
 
-  const handleGoogleLogin = () => {
-    console.log('Google login clicked');
-    // Add Google login integration here
-  };
+  // const handleGoogleLogin = () => {
+  //   console.log('Google login clicked');
+  //   // Add Google login integration here
+  // };
 
   return (
     <div

@@ -27,9 +27,8 @@ import type {
 
 import type {
   GetAuthUserProfile200,
-  PostForgotPassword202,
+  PatchAuthUserProfile200,
   PostLogin200,
-  PutAuthUserProfile200,
   RequestChangePasswordRequest,
   RequestForgotPasswordRequest,
   RequestLoginRequest,
@@ -41,7 +40,7 @@ import postAuthLogoutMutator from '../../config/axios';
 import deleteAuthUserAccountMutator from '../../config/axios';
 import patchAuthUserPasswordMutator from '../../config/axios';
 import getAuthUserProfileMutator from '../../config/axios';
-import putAuthUserProfileMutator from '../../config/axios';
+import patchAuthUserProfileMutator from '../../config/axios';
 import postForgotPasswordMutator from '../../config/axios';
 import postLoginMutator from '../../config/axios';
 
@@ -93,7 +92,7 @@ export const usePostAuthLogout = <TError = unknown, TContext = unknown>(
   return useMutation(mutationOptions, queryClient);
 };
 /**
- * API xóa user và tất cả những thông tin liên quan trong workspace
+ * API xóa user và tất cả những thông tin liên quan đến user đó trừ profile user
  * @summary Xóa Account
  */
 export const deleteAuthUserAccount = () => {
@@ -456,32 +455,32 @@ export function useGetAuthUserProfile<
  * API cập nhật thông tin cá nhân cho workspace
  * @summary Cập nhật thông tin cá nhân
  */
-export const putAuthUserProfile = (requestUpdateProfileRequest: RequestUpdateProfileRequest) => {
-  return putAuthUserProfileMutator<PutAuthUserProfile200>({
+export const patchAuthUserProfile = (requestUpdateProfileRequest: RequestUpdateProfileRequest) => {
+  return patchAuthUserProfileMutator<PatchAuthUserProfile200>({
     url: `/auth/user/profile`,
-    method: 'PUT',
+    method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     data: requestUpdateProfileRequest,
   });
 };
 
-export const getPutAuthUserProfileMutationOptions = <
+export const getPatchAuthUserProfileMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof putAuthUserProfile>>,
+    Awaited<ReturnType<typeof patchAuthUserProfile>>,
     TError,
     { data: RequestUpdateProfileRequest },
     TContext
   >;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof putAuthUserProfile>>,
+  Awaited<ReturnType<typeof patchAuthUserProfile>>,
   TError,
   { data: RequestUpdateProfileRequest },
   TContext
 > => {
-  const mutationKey = ['putAuthUserProfile'];
+  const mutationKey = ['patchAuthUserProfile'];
   const { mutation: mutationOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
@@ -489,30 +488,30 @@ export const getPutAuthUserProfileMutationOptions = <
     : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof putAuthUserProfile>>,
+    Awaited<ReturnType<typeof patchAuthUserProfile>>,
     { data: RequestUpdateProfileRequest }
   > = (props) => {
     const { data } = props ?? {};
 
-    return putAuthUserProfile(data);
+    return patchAuthUserProfile(data);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PutAuthUserProfileMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putAuthUserProfile>>
+export type PatchAuthUserProfileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchAuthUserProfile>>
 >;
-export type PutAuthUserProfileMutationBody = RequestUpdateProfileRequest;
-export type PutAuthUserProfileMutationError = unknown;
+export type PatchAuthUserProfileMutationBody = RequestUpdateProfileRequest;
+export type PatchAuthUserProfileMutationError = unknown;
 
 /**
  * @summary Cập nhật thông tin cá nhân
  */
-export const usePutAuthUserProfile = <TError = unknown, TContext = unknown>(
+export const usePatchAuthUserProfile = <TError = unknown, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof putAuthUserProfile>>,
+      Awaited<ReturnType<typeof patchAuthUserProfile>>,
       TError,
       { data: RequestUpdateProfileRequest },
       TContext
@@ -520,12 +519,12 @@ export const usePutAuthUserProfile = <TError = unknown, TContext = unknown>(
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
-  Awaited<ReturnType<typeof putAuthUserProfile>>,
+  Awaited<ReturnType<typeof patchAuthUserProfile>>,
   TError,
   { data: RequestUpdateProfileRequest },
   TContext
 > => {
-  const mutationOptions = getPutAuthUserProfileMutationOptions(options);
+  const mutationOptions = getPatchAuthUserProfileMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };
@@ -537,7 +536,7 @@ export const postForgotPassword = (
   requestForgotPasswordRequest: RequestForgotPasswordRequest,
   signal?: AbortSignal,
 ) => {
-  return postForgotPasswordMutator<ResponseResponse | PostForgotPassword202>({
+  return postForgotPasswordMutator<ResponseResponse | ResponseResponse>({
     url: `/forgot_password`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

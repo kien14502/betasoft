@@ -37,7 +37,6 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
   ];
   return (
     <div>
-      <h1></h1>
       <ListDataPage
         listHeader={{
           title: workspaceActive?.name || '',

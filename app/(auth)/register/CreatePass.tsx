@@ -7,8 +7,8 @@ import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
 import { useRouter } from 'next/navigation';
 import { setClientCookie } from '@/app/utils/cookie.client';
-import localStorage from '@/app/utils/localStorage';
 import { EToken } from '@/app/constants';
+import { saveAuthStorage } from '@/app/utils/authStorage';
 
 interface ICreatePassValues {
   password: string;
@@ -38,7 +38,7 @@ const CreatePass = ({ data, setData }: ICreatePassProps) => {
           data.step = 3;
           setData(data);
           setClientCookie(EToken.ACCESS_TOKEN, res.data?.token || '');
-          localStorage.add('userData', res.data?.user?.toString() ?? '');
+          saveAuthStorage('USER_DATA', res.data?.user || {});
           console.log('accessToken', res.data);
           router.push('./init-workspace');
         },
