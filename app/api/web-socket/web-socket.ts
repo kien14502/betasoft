@@ -24,7 +24,7 @@ import type {
 
 import type { ResponseResponse } from '../generated.schemas';
 
-import getWsMutator from '../../config/axios';
+import getWsMutator from '../../../config/axios';
 
 /**
  * Websocket endpoint dùng để nhắn tin và gửi thông báo realtime, các bước liên quan Websocket: https://docs.google.com/spreadsheets/d/1BL38FzM7ol-xSpbekYP5dXajmZTYoYmyaDv1PLPJx_E/edit#gid=1003076463

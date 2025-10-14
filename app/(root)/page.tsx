@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Card, Row, Col } from 'antd';
+import { Card, Row, Col } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
+import LaunchApp from './components/LaunchApps';
 
 const WelcomePage: React.FC = () => {
   return (
@@ -19,11 +20,7 @@ const WelcomePage: React.FC = () => {
             We&apos;re glad to have you here. Start exploring the features of our amazing app.
           </p>
           <br />
-          <a href="/dashboard">
-            <Button type="primary" size="large" style={{ marginTop: '20px' }}>
-              Get Started
-            </Button>
-          </a>
+          <LaunchApp />
         </Card>
       </Col>
     </Row>

@@ -1,6 +1,6 @@
 'use client';
 
-import { EModePage } from '@/app/constants';
+import { EModePage } from '@/constants';
 import { useSearchParams } from 'next/navigation';
 import { use } from 'react';
 import WorkSpaceView from './components/WorkSpaceView';

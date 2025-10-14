@@ -4,9 +4,9 @@ import { GoogleOutlined, AppleFilled } from '@ant-design/icons';
 import Link from 'next/link';
 import styles from './register_card.module.css';
 import { RequestRegisterRequest } from '@/app/api/generated.schemas';
-import { showToast } from '@/app/utils/toast';
 import { Dispatch, SetStateAction } from 'react';
 import { usePostAuthRegister } from '@/app/api/auth/auth';
+import { showToast } from '@/utils/toast';
 
 export interface IRegisterFormValues {
   email: string;

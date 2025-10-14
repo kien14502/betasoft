@@ -5,10 +5,10 @@ import { GoogleOutlined, AppleFilled } from '@ant-design/icons';
 import Link from 'next/link';
 import './login-form.style.css';
 import { usePostLogin } from '@/app/api/users/users';
-import { setClientCookie } from '@/app/utils/cookie.client';
 import { useRouter } from 'next/navigation';
-import { EToken } from '@/app/constants';
-import { saveAuthStorage } from '@/app/utils/authStorage';
+import { EToken } from '@/constants';
+import { saveAuthStorage } from '@/utils/authStorage';
+import { setClientCookie } from '@/utils/cookie.client';
 interface ILoginFormValues {
   email: string;
   password: string;

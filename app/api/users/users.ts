@@ -36,13 +36,13 @@ import type {
   ResponseResponse,
 } from '../generated.schemas';
 
-import postAuthLogoutMutator from '../../config/axios';
-import deleteAuthUserAccountMutator from '../../config/axios';
-import patchAuthUserPasswordMutator from '../../config/axios';
-import getAuthUserProfileMutator from '../../config/axios';
-import patchAuthUserProfileMutator from '../../config/axios';
-import postForgotPasswordMutator from '../../config/axios';
-import postLoginMutator from '../../config/axios';
+import postAuthLogoutMutator from '../../../config/axios';
+import deleteAuthUserAccountMutator from '../../../config/axios';
+import patchAuthUserPasswordMutator from '../../../config/axios';
+import getAuthUserProfileMutator from '../../../config/axios';
+import patchAuthUserProfileMutator from '../../../config/axios';
+import postForgotPasswordMutator from '../../../config/axios';
+import postLoginMutator from '../../../config/axios';
 
 /**
  * API đăng xuất khỏi workspace platform

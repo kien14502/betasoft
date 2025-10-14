@@ -5,8 +5,8 @@ import React from 'react';
 import styles from './init_workspace.module.css';
 import { usePostAuthOrganizations } from '@/app/api/organizations/organizations';
 import { RequestCreateOrganizationRequest } from '@/app/api/generated.schemas';
-import { showToast } from '@/app/utils/toast';
 import { useRouter } from 'next/navigation';
+import { showToast } from '@/utils/toast';
 interface CreateWorkSpaceProps {
   goToJoin?: () => void;
 }

@@ -24,9 +24,9 @@ import type {
 
 import type { ModelsAssetLinks, ModelsConfig } from '../generated.schemas';
 
-import getWellKnownAppleAppSiteAssociationMutator from '../../config/axios';
-import getWellKnownAssetlinksJsonMutator from '../../config/axios';
-import getPublicKeyMutator from '../../config/axios';
+import getWellKnownAppleAppSiteAssociationMutator from '../../../config/axios';
+import getWellKnownAssetlinksJsonMutator from '../../../config/axios';
+import getPublicKeyMutator from '../../../config/axios';
 
 /**
  * lấy thông tin file apple-app-site-association

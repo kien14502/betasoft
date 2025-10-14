@@ -1,14 +1,14 @@
 'use client';
 import { usePostAuthRegister } from '@/app/api/auth/auth';
 import { RequestRegisterRequest } from '@/app/api/generated.schemas';
-import { showToast } from '@/app/utils/toast';
 import { Button, Form, Input } from 'antd';
 import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
 import { useRouter } from 'next/navigation';
-import { setClientCookie } from '@/app/utils/cookie.client';
-import { EToken } from '@/app/constants';
-import { saveAuthStorage } from '@/app/utils/authStorage';
+import { EToken } from '@/constants';
+import { saveAuthStorage } from '@/utils/authStorage';
+import { setClientCookie } from '@/utils/cookie.client';
+import { showToast } from '@/utils/toast';
 
 interface ICreatePassValues {
   password: string;

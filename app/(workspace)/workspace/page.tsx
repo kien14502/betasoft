@@ -5,10 +5,10 @@ import {
   usePostAuthOrganizationsLaunch,
 } from '@/app/api/organizations/organizations';
 import { useGetAuthUserProfile } from '@/app/api/users/users';
-import { EModePage, ERole } from '@/app/constants';
-import { actions, useStore } from '@/app/store';
-import { showToast } from '@/app/utils/toast';
-import { updateAuthMetaStorage } from '@/app/utils/userHelper';
+import { EModePage, ERole } from '@/constants';
+import { useStore, actions } from '@/store';
+import { showToast } from '@/utils/toast';
+import { updateAuthMetaStorage } from '@/utils/userHelper';
 import { TeamOutlined } from '@ant-design/icons';
 import { Avatar, Button, List, Skeleton } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -81,7 +81,7 @@ const WorkSpaceList = () => {
                   <div>
                     <div>
                       <h5>
-                        {item.organization?.industry} {`(${item.organization?.member_count}member)`}
+                        {item.organization?.industry} {`(${item.organization?.size}member)`}
                       </h5>
                     </div>
                     <div>{item.organization?.description}</div>
@@ -89,7 +89,7 @@ const WorkSpaceList = () => {
                 }
               />
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {item.role?.includes(ERole.ADMIN) && (
+                {item.roles?.includes(ERole.ADMIN) && (
                   <>
                     <Button
                       type={'primary'}

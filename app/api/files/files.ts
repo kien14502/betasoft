@@ -31,8 +31,8 @@ import type {
   PostAuthFileUploadBody,
 } from '../generated.schemas';
 
-import getAuthDownloadMutator from '../../config/axios';
-import postAuthFileUploadMutator from '../../config/axios';
+import getAuthDownloadMutator from '../../../config/axios';
+import postAuthFileUploadMutator from '../../../config/axios';
 
 /**
  * API tải file từ server, sử dụng một trong hai tham số là object_id hoặc object_key

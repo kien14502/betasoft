@@ -1,11 +1,12 @@
-import { useGetAuthOrganizationsIdMembers } from '@/app/api/organizations/organizations';
-import ListDataPage from '@/app/components/ListDataPage/ListTablePage';
-import { useStore } from '@/app/store';
+import { useGetAuthOrganizationsOrgIdMembers } from '@/app/api/organizations/organizations';
 import { Button, Dropdown, Form, Input, MenuProps, Select } from 'antd';
 import { AnyObject } from 'antd/es/_util/type';
 import { useForm } from 'antd/es/form/Form';
 import React, { useState } from 'react';
 import InviteMemberModal from './InviteMemberModal';
+import ListDataPage from '@/components/ListDataPage/ListTablePage';
+import { useStore } from '@/store';
+import { ResponseGetMembersInOrgResponse } from '@/app/api/generated.schemas';
 
 interface IWorkSpaceViewProps {
   idWorkSpace: string;
@@ -17,7 +18,7 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
 
   const [{ workspace }] = useStore();
 
-  const { data } = useGetAuthOrganizationsIdMembers(idWorkSpace);
+  const { data } = useGetAuthOrganizationsOrgIdMembers(idWorkSpace);
 
   const { workspaceActive } = workspace;
 
@@ -117,7 +118,7 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
               ),
             },
           ],
-          dataSource: data?.data,
+          dataSource: data?.data?.members ?? [],
           pagination: {
             current: 1,
             pageSize: 10,

@@ -3,15 +3,15 @@ import { TeamOutlined, GlobalOutlined, FileTextOutlined, AimOutlined } from '@an
 import { Button, Form, Input, Radio, Select, UploadFile } from 'antd';
 import React, { useEffect } from 'react';
 import {
-  useGetAuthOrganizationsId,
+  useGetAuthOrganizationsOrgId,
   usePostAuthOrganizations,
   usePatchAuthOrganizations,
 } from '@/app/api/organizations/organizations';
 import { RequestCreateOrganizationRequest } from '@/app/api/generated.schemas';
-import { showToast } from '@/app/utils/toast';
 import { useRouter } from 'next/navigation';
-import UploadImage, { normalizeImage } from '@/app/components/common/UploadImage';
 import { useForm } from 'antd/es/form/Form';
+import UploadImage, { normalizeImage } from '@/components/common/UploadImage';
+import { showToast } from '@/utils/toast';
 
 interface INewWorkSpaceProps {
   idWorkSpace?: string;
@@ -32,7 +32,7 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
   const { mutate, isPending } = usePostAuthOrganizations();
   const { mutate: mutateUpdate, isPending: isPendingUpdate } = usePatchAuthOrganizations();
   const router = useRouter();
-  const { data, isPending: isPendingGetData } = useGetAuthOrganizationsId(idWorkSpace ?? '', {
+  const { data, isPending: isPendingGetData } = useGetAuthOrganizationsOrgId(idWorkSpace ?? '', {
     query: {
       enabled: !!idWorkSpace,
       refetchOnMount: 'always',

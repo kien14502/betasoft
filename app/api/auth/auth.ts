@@ -33,9 +33,9 @@ import type {
   ResponseResponse,
 } from '../generated.schemas';
 
-import getAuthGoogleCallbackMutator from '../../config/axios';
-import getAuthGoogleUrlMutator from '../../config/axios';
-import postAuthRegisterMutator from '../../config/axios';
+import getAuthGoogleCallbackMutator from '../../../config/axios';
+import getAuthGoogleUrlMutator from '../../../config/axios';
+import postAuthRegisterMutator from '../../../config/axios';
 
 /**
  * API xử lý callback từ Google OAuth (giống NextAuth callback handler)

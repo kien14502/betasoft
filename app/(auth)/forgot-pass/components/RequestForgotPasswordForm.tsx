@@ -1,6 +1,6 @@
 import { RequestForgotPasswordRequest } from '@/app/api/generated.schemas';
 import { usePostForgotPassword } from '@/app/api/users/users';
-import { showToast } from '@/app/utils/toast';
+import { showToast } from '@/utils/toast';
 import { Form, Input, Button } from 'antd';
 
 type Props = {

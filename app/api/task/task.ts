@@ -31,13 +31,11 @@ import type {
   GetAuthProjectsProjectIdTasks200,
   GetAuthProjectsProjectIdTasksParams,
   GetAuthTasksTaskId200,
-  PostAuthTaskLists200,
   PostAuthTasks200,
-  PostAuthTasksTaskIdComments200,
+  PostAuthTasksComments200,
   PutAuthTasksTaskId200,
   PutAuthTasksTaskIdMove200,
   RequestCreateTaskCommentRequest,
-  RequestCreateTaskListRequest,
   RequestCreateTaskRequest,
   RequestDeleteMultipleTasksRequest,
   RequestMoveTaskRequest,
@@ -45,18 +43,16 @@ import type {
   ResponseResponse,
 } from '../generated.schemas';
 
-import getAuthProjectsProjectIdKanbanMutator from '../../config/axios';
-import getAuthProjectsProjectIdTasksMutator from '../../config/axios';
-import deleteAuthTaskCommentsCommentIdMutator from '../../config/axios';
-import postAuthTaskListsMutator from '../../config/axios';
-import deleteAuthTaskListsListIdMutator from '../../config/axios';
-import postAuthTasksMutator from '../../config/axios';
-import deleteAuthTasksTaskIdMutator from '../../config/axios';
-import getAuthTasksTaskIdMutator from '../../config/axios';
-import putAuthTasksTaskIdMutator from '../../config/axios';
-import postAuthTasksTaskIdCommentsMutator from '../../config/axios';
-import putAuthTasksTaskIdMoveMutator from '../../config/axios';
-import deleteAuthTasksBatchDeleteMutator from '../../config/axios';
+import getAuthProjectsProjectIdKanbanMutator from '../../../config/axios';
+import getAuthProjectsProjectIdTasksMutator from '../../../config/axios';
+import deleteAuthTaskCommentsCommentIdMutator from '../../../config/axios';
+import deleteAuthTasksMutator from '../../../config/axios';
+import postAuthTasksMutator from '../../../config/axios';
+import getAuthTasksTaskIdMutator from '../../../config/axios';
+import putAuthTasksTaskIdMutator from '../../../config/axios';
+import putAuthTasksTaskIdMoveMutator from '../../../config/axios';
+import deleteAuthTasksBatchDeleteMutator from '../../../config/axios';
+import postAuthTasksCommentsMutator from '../../../config/axios';
 
 /**
  * API lấy toàn bộ Kanban board với task lists và tasks
@@ -694,158 +690,56 @@ export const useDeleteAuthTaskCommentsCommentId = <TError = unknown, TContext = 
   return useMutation(mutationOptions, queryClient);
 };
 /**
- * API tạo danh sách task mới trong dự án (Kanban column)
- * @summary Tạo danh sách task mới
+ * API xóa task khỏi dự án
+ * @summary Xóa task
  */
-export const postAuthTaskLists = (
-  requestCreateTaskListRequest: RequestCreateTaskListRequest,
-  signal?: AbortSignal,
-) => {
-  return postAuthTaskListsMutator<PostAuthTaskLists200>({
-    url: `/auth/task-lists`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: requestCreateTaskListRequest,
-    signal,
-  });
+export const deleteAuthTasks = () => {
+  return deleteAuthTasksMutator<ResponseResponse>({ url: `/auth/tasks`, method: 'DELETE' });
 };
 
-export const getPostAuthTaskListsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
+export const getDeleteAuthTasksMutationOptions = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postAuthTaskLists>>,
+    Awaited<ReturnType<typeof deleteAuthTasks>>,
     TError,
-    { data: RequestCreateTaskListRequest },
+    void,
     TContext
   >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof postAuthTaskLists>>,
-  TError,
-  { data: RequestCreateTaskListRequest },
-  TContext
-> => {
-  const mutationKey = ['postAuthTaskLists'];
+}): UseMutationOptions<Awaited<ReturnType<typeof deleteAuthTasks>>, TError, void, TContext> => {
+  const mutationKey = ['deleteAuthTasks'];
   const { mutation: mutationOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postAuthTaskLists>>,
-    { data: RequestCreateTaskListRequest }
-  > = (props) => {
-    const { data } = props ?? {};
-
-    return postAuthTaskLists(data);
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteAuthTasks>>, void> = () => {
+    return deleteAuthTasks();
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostAuthTaskListsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postAuthTaskLists>>
+export type DeleteAuthTasksMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteAuthTasks>>
 >;
-export type PostAuthTaskListsMutationBody = RequestCreateTaskListRequest;
-export type PostAuthTaskListsMutationError = unknown;
+
+export type DeleteAuthTasksMutationError = unknown;
 
 /**
- * @summary Tạo danh sách task mới
+ * @summary Xóa task
  */
-export const usePostAuthTaskLists = <TError = unknown, TContext = unknown>(
+export const useDeleteAuthTasks = <TError = unknown, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof postAuthTaskLists>>,
+      Awaited<ReturnType<typeof deleteAuthTasks>>,
       TError,
-      { data: RequestCreateTaskListRequest },
+      void,
       TContext
     >;
   },
   queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof postAuthTaskLists>>,
-  TError,
-  { data: RequestCreateTaskListRequest },
-  TContext
-> => {
-  const mutationOptions = getPostAuthTaskListsMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-/**
- * API xóa danh sách task khỏi dự án (cùng với tất cả tasks bên trong)
- * @summary Xóa danh sách task
- */
-export const deleteAuthTaskListsListId = (listId: string) => {
-  return deleteAuthTaskListsListIdMutator<ResponseResponse>({
-    url: `/auth/task-lists/${listId}`,
-    method: 'DELETE',
-  });
-};
-
-export const getDeleteAuthTaskListsListIdMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteAuthTaskListsListId>>,
-    TError,
-    { listId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteAuthTaskListsListId>>,
-  TError,
-  { listId: string },
-  TContext
-> => {
-  const mutationKey = ['deleteAuthTaskListsListId'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteAuthTaskListsListId>>,
-    { listId: string }
-  > = (props) => {
-    const { listId } = props ?? {};
-
-    return deleteAuthTaskListsListId(listId);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type DeleteAuthTaskListsListIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteAuthTaskListsListId>>
->;
-
-export type DeleteAuthTaskListsListIdMutationError = unknown;
-
-/**
- * @summary Xóa danh sách task
- */
-export const useDeleteAuthTaskListsListId = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteAuthTaskListsListId>>,
-      TError,
-      { listId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof deleteAuthTaskListsListId>>,
-  TError,
-  { listId: string },
-  TContext
-> => {
-  const mutationOptions = getDeleteAuthTaskListsListIdMutationOptions(options);
+): UseMutationResult<Awaited<ReturnType<typeof deleteAuthTasks>>, TError, void, TContext> => {
+  const mutationOptions = getDeleteAuthTasksMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };
@@ -922,81 +816,6 @@ export const usePostAuthTasks = <TError = unknown, TContext = unknown>(
   TContext
 > => {
   const mutationOptions = getPostAuthTasksMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-/**
- * API xóa task khỏi dự án
- * @summary Xóa task
- */
-export const deleteAuthTasksTaskId = (taskId: string) => {
-  return deleteAuthTasksTaskIdMutator<ResponseResponse>({
-    url: `/auth/tasks/${taskId}`,
-    method: 'DELETE',
-  });
-};
-
-export const getDeleteAuthTasksTaskIdMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteAuthTasksTaskId>>,
-    TError,
-    { taskId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteAuthTasksTaskId>>,
-  TError,
-  { taskId: string },
-  TContext
-> => {
-  const mutationKey = ['deleteAuthTasksTaskId'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteAuthTasksTaskId>>,
-    { taskId: string }
-  > = (props) => {
-    const { taskId } = props ?? {};
-
-    return deleteAuthTasksTaskId(taskId);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type DeleteAuthTasksTaskIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteAuthTasksTaskId>>
->;
-
-export type DeleteAuthTasksTaskIdMutationError = unknown;
-
-/**
- * @summary Xóa task
- */
-export const useDeleteAuthTasksTaskId = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteAuthTasksTaskId>>,
-      TError,
-      { taskId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof deleteAuthTasksTaskId>>,
-  TError,
-  { taskId: string },
-  TContext
-> => {
-  const mutationOptions = getDeleteAuthTasksTaskIdMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };
@@ -1316,88 +1135,6 @@ export const usePutAuthTasksTaskId = <TError = unknown, TContext = unknown>(
   return useMutation(mutationOptions, queryClient);
 };
 /**
- * API thêm comment mới vào task
- * @summary Thêm comment vào task
- */
-export const postAuthTasksTaskIdComments = (
-  taskId: string,
-  requestCreateTaskCommentRequest: RequestCreateTaskCommentRequest,
-  signal?: AbortSignal,
-) => {
-  return postAuthTasksTaskIdCommentsMutator<PostAuthTasksTaskIdComments200>({
-    url: `/auth/tasks/${taskId}/comments`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: requestCreateTaskCommentRequest,
-    signal,
-  });
-};
-
-export const getPostAuthTasksTaskIdCommentsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postAuthTasksTaskIdComments>>,
-    TError,
-    { taskId: string; data: RequestCreateTaskCommentRequest },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof postAuthTasksTaskIdComments>>,
-  TError,
-  { taskId: string; data: RequestCreateTaskCommentRequest },
-  TContext
-> => {
-  const mutationKey = ['postAuthTasksTaskIdComments'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postAuthTasksTaskIdComments>>,
-    { taskId: string; data: RequestCreateTaskCommentRequest }
-  > = (props) => {
-    const { taskId, data } = props ?? {};
-
-    return postAuthTasksTaskIdComments(taskId, data);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type PostAuthTasksTaskIdCommentsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postAuthTasksTaskIdComments>>
->;
-export type PostAuthTasksTaskIdCommentsMutationBody = RequestCreateTaskCommentRequest;
-export type PostAuthTasksTaskIdCommentsMutationError = unknown;
-
-/**
- * @summary Thêm comment vào task
- */
-export const usePostAuthTasksTaskIdComments = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof postAuthTasksTaskIdComments>>,
-      TError,
-      { taskId: string; data: RequestCreateTaskCommentRequest },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof postAuthTasksTaskIdComments>>,
-  TError,
-  { taskId: string; data: RequestCreateTaskCommentRequest },
-  TContext
-> => {
-  const mutationOptions = getPostAuthTasksTaskIdCommentsMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-/**
  * API di chuyển task sang list khác hoặc thay đổi vị trí
  * @summary Di chuyển task
  */
@@ -1553,6 +1290,87 @@ export const useDeleteAuthTasksBatchDelete = <TError = unknown, TContext = unkno
   TContext
 > => {
   const mutationOptions = getDeleteAuthTasksBatchDeleteMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
+ * API thêm comment mới vào task
+ * @summary Thêm comment vào task
+ */
+export const postAuthTasksComments = (
+  requestCreateTaskCommentRequest: RequestCreateTaskCommentRequest,
+  signal?: AbortSignal,
+) => {
+  return postAuthTasksCommentsMutator<PostAuthTasksComments200>({
+    url: `/auth/tasks/comments`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: requestCreateTaskCommentRequest,
+    signal,
+  });
+};
+
+export const getPostAuthTasksCommentsMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postAuthTasksComments>>,
+    TError,
+    { data: RequestCreateTaskCommentRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postAuthTasksComments>>,
+  TError,
+  { data: RequestCreateTaskCommentRequest },
+  TContext
+> => {
+  const mutationKey = ['postAuthTasksComments'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postAuthTasksComments>>,
+    { data: RequestCreateTaskCommentRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postAuthTasksComments(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostAuthTasksCommentsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthTasksComments>>
+>;
+export type PostAuthTasksCommentsMutationBody = RequestCreateTaskCommentRequest;
+export type PostAuthTasksCommentsMutationError = unknown;
+
+/**
+ * @summary Thêm comment vào task
+ */
+export const usePostAuthTasksComments = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postAuthTasksComments>>,
+      TError,
+      { data: RequestCreateTaskCommentRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postAuthTasksComments>>,
+  TError,
+  { data: RequestCreateTaskCommentRequest },
+  TContext
+> => {
+  const mutationOptions = getPostAuthTasksCommentsMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };

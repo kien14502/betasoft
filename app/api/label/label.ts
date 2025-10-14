@@ -32,27 +32,176 @@ import type {
   GetAuthProjectsProjectIdLabelsSearch200,
   GetAuthProjectsProjectIdLabelsSearchParams,
   GetAuthTasksTaskIdLabels200,
+  PatchAuthLabels200,
   PostAuthLabels200,
-  PutAuthLabelsLabelId200,
   RequestAddLabelToTaskRequest,
   RequestCreateLabelRequest,
+  RequestDeleteLabelRequest,
   RequestUpdateLabelRequest,
   RequestUpdateTaskLabelsRequest,
   ResponseResponse,
 } from '../generated.schemas';
 
-import postAuthLabelsMutator from '../../config/axios';
-import deleteAuthLabelsLabelIdMutator from '../../config/axios';
-import putAuthLabelsLabelIdMutator from '../../config/axios';
-import getAuthLabelsLabelIdUsageMutator from '../../config/axios';
-import getAuthLabelsTemplatesMutator from '../../config/axios';
-import getAuthProjectsProjectIdLabelsMutator from '../../config/axios';
-import getAuthProjectsProjectIdLabelsSearchMutator from '../../config/axios';
-import getAuthTasksTaskIdLabelsMutator from '../../config/axios';
-import postAuthTasksTaskIdLabelsMutator from '../../config/axios';
-import putAuthTasksTaskIdLabelsMutator from '../../config/axios';
-import deleteAuthTasksTaskIdLabelsLabelIdMutator from '../../config/axios';
+import deleteAuthLabelsMutator from '../../../config/axios';
+import patchAuthLabelsMutator from '../../../config/axios';
+import postAuthLabelsMutator from '../../../config/axios';
+import getAuthLabelsLabelIdUsageMutator from '../../../config/axios';
+import getAuthLabelsTemplatesMutator from '../../../config/axios';
+import getAuthProjectsProjectIdLabelsMutator from '../../../config/axios';
+import getAuthProjectsProjectIdLabelsSearchMutator from '../../../config/axios';
+import getAuthTasksTaskIdLabelsMutator from '../../../config/axios';
+import postAuthTasksTaskIdLabelsMutator from '../../../config/axios';
+import putAuthTasksTaskIdLabelsMutator from '../../../config/axios';
+import deleteAuthTasksTaskIdLabelsLabelIdMutator from '../../../config/axios';
 
+/**
+ * API xóa label khỏi dự án (sẽ xóa khỏi tất cả tasks)
+ * @summary Xóa label
+ */
+export const deleteAuthLabels = (requestDeleteLabelRequest: RequestDeleteLabelRequest) => {
+  return deleteAuthLabelsMutator<ResponseResponse>({
+    url: `/auth/labels`,
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    data: requestDeleteLabelRequest,
+  });
+};
+
+export const getDeleteAuthLabelsMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteAuthLabels>>,
+    TError,
+    { data: RequestDeleteLabelRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteAuthLabels>>,
+  TError,
+  { data: RequestDeleteLabelRequest },
+  TContext
+> => {
+  const mutationKey = ['deleteAuthLabels'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteAuthLabels>>,
+    { data: RequestDeleteLabelRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return deleteAuthLabels(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteAuthLabelsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteAuthLabels>>
+>;
+export type DeleteAuthLabelsMutationBody = RequestDeleteLabelRequest;
+export type DeleteAuthLabelsMutationError = unknown;
+
+/**
+ * @summary Xóa label
+ */
+export const useDeleteAuthLabels = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteAuthLabels>>,
+      TError,
+      { data: RequestDeleteLabelRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteAuthLabels>>,
+  TError,
+  { data: RequestDeleteLabelRequest },
+  TContext
+> => {
+  const mutationOptions = getDeleteAuthLabelsMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
+ * API cập nhật thông tin label
+ * @summary Cập nhật label
+ */
+export const patchAuthLabels = (requestUpdateLabelRequest: RequestUpdateLabelRequest) => {
+  return patchAuthLabelsMutator<PatchAuthLabels200>({
+    url: `/auth/labels`,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    data: requestUpdateLabelRequest,
+  });
+};
+
+export const getPatchAuthLabelsMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof patchAuthLabels>>,
+    TError,
+    { data: RequestUpdateLabelRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof patchAuthLabels>>,
+  TError,
+  { data: RequestUpdateLabelRequest },
+  TContext
+> => {
+  const mutationKey = ['patchAuthLabels'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof patchAuthLabels>>,
+    { data: RequestUpdateLabelRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return patchAuthLabels(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PatchAuthLabelsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchAuthLabels>>
+>;
+export type PatchAuthLabelsMutationBody = RequestUpdateLabelRequest;
+export type PatchAuthLabelsMutationError = unknown;
+
+/**
+ * @summary Cập nhật label
+ */
+export const usePatchAuthLabels = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof patchAuthLabels>>,
+      TError,
+      { data: RequestUpdateLabelRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof patchAuthLabels>>,
+  TError,
+  { data: RequestUpdateLabelRequest },
+  TContext
+> => {
+  const mutationOptions = getPatchAuthLabelsMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
 /**
  * API tạo label mới trong dự án
  * @summary Tạo label mới
@@ -126,161 +275,6 @@ export const usePostAuthLabels = <TError = unknown, TContext = unknown>(
   TContext
 > => {
   const mutationOptions = getPostAuthLabelsMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-/**
- * API xóa label khỏi dự án (sẽ xóa khỏi tất cả tasks)
- * @summary Xóa label
- */
-export const deleteAuthLabelsLabelId = (labelId: string) => {
-  return deleteAuthLabelsLabelIdMutator<ResponseResponse>({
-    url: `/auth/labels/${labelId}`,
-    method: 'DELETE',
-  });
-};
-
-export const getDeleteAuthLabelsLabelIdMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteAuthLabelsLabelId>>,
-    TError,
-    { labelId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteAuthLabelsLabelId>>,
-  TError,
-  { labelId: string },
-  TContext
-> => {
-  const mutationKey = ['deleteAuthLabelsLabelId'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteAuthLabelsLabelId>>,
-    { labelId: string }
-  > = (props) => {
-    const { labelId } = props ?? {};
-
-    return deleteAuthLabelsLabelId(labelId);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type DeleteAuthLabelsLabelIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteAuthLabelsLabelId>>
->;
-
-export type DeleteAuthLabelsLabelIdMutationError = unknown;
-
-/**
- * @summary Xóa label
- */
-export const useDeleteAuthLabelsLabelId = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteAuthLabelsLabelId>>,
-      TError,
-      { labelId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof deleteAuthLabelsLabelId>>,
-  TError,
-  { labelId: string },
-  TContext
-> => {
-  const mutationOptions = getDeleteAuthLabelsLabelIdMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-/**
- * API cập nhật thông tin label
- * @summary Cập nhật label
- */
-export const putAuthLabelsLabelId = (
-  labelId: string,
-  requestUpdateLabelRequest: RequestUpdateLabelRequest,
-) => {
-  return putAuthLabelsLabelIdMutator<PutAuthLabelsLabelId200>({
-    url: `/auth/labels/${labelId}`,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    data: requestUpdateLabelRequest,
-  });
-};
-
-export const getPutAuthLabelsLabelIdMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof putAuthLabelsLabelId>>,
-    TError,
-    { labelId: string; data: RequestUpdateLabelRequest },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof putAuthLabelsLabelId>>,
-  TError,
-  { labelId: string; data: RequestUpdateLabelRequest },
-  TContext
-> => {
-  const mutationKey = ['putAuthLabelsLabelId'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof putAuthLabelsLabelId>>,
-    { labelId: string; data: RequestUpdateLabelRequest }
-  > = (props) => {
-    const { labelId, data } = props ?? {};
-
-    return putAuthLabelsLabelId(labelId, data);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type PutAuthLabelsLabelIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putAuthLabelsLabelId>>
->;
-export type PutAuthLabelsLabelIdMutationBody = RequestUpdateLabelRequest;
-export type PutAuthLabelsLabelIdMutationError = unknown;
-
-/**
- * @summary Cập nhật label
- */
-export const usePutAuthLabelsLabelId = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof putAuthLabelsLabelId>>,
-      TError,
-      { labelId: string; data: RequestUpdateLabelRequest },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof putAuthLabelsLabelId>>,
-  TError,
-  { labelId: string; data: RequestUpdateLabelRequest },
-  TContext
-> => {
-  const mutationOptions = getPutAuthLabelsLabelIdMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };

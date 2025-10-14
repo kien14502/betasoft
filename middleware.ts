@@ -12,8 +12,11 @@ function decodeJwt(token: string) {
 const UNAUTHENTICATED_ONLY_ROUTES = ['/login', '/register', 'forgot-pass'];
 
 export function middleware(req: NextRequest) {
+  console.log(req);
+
   const token = req.cookies.get('accessToken')?.value;
   const { pathname } = req.nextUrl;
+  const baseHomePathRegex = /^\/[^/]+\/home$/;
 
   if (!UNAUTHENTICATED_ONLY_ROUTES.includes(pathname) && token) {
     const payload = decodeJwt(token);
@@ -28,6 +31,9 @@ export function middleware(req: NextRequest) {
     // 2. Check cho /admin/**
     if (pathname.startsWith('/admin') && role !== 'admin') {
       return NextResponse.redirect(new URL('/401', req.url));
+    }
+    if (baseHomePathRegex.test(pathname) && role !== 'admin') {
+      return NextResponse.redirect(new URL(pathname + '/overview', req.url));
     }
   }
 
@@ -44,5 +50,9 @@ export function middleware(req: NextRequest) {
 
 // Áp dụng cho tất cả route trừ static (login, 403, public assets)
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|403).*)', '/login'],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|login|403).*)',
+    '/login',
+    '/home/:path*',
+  ],
 };
