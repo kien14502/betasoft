@@ -26,9 +26,9 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { clearClientCookies } from '../utils/cookie.client';
 import { usePostAuthOrganizationsJoin } from '../api/organizations/organizations';
 import { RequestJoinOrganizationRequest } from '../api/generated.schemas';
+import { clearClientCookies } from '@/utils/cookie.client';
 
 const { Sider, Content } = Layout;
 const { useBreakpoint } = Grid;

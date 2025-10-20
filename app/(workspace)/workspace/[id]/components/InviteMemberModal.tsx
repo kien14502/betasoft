@@ -1,6 +1,6 @@
 import { RequestInviteMemberRequest } from '@/app/api/generated.schemas';
 import { usePostAuthOrganizationsInvite } from '@/app/api/organizations/organizations';
-import { showToast } from '@/app/utils/toast';
+import { showToast } from '@/utils/toast';
 import { Button, Form, Input, Modal } from 'antd';
 import React from 'react';
 

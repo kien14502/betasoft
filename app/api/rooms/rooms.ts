@@ -34,9 +34,9 @@ import type {
   RequestRoomRequest,
 } from '../generated.schemas';
 
-import postAuthRoomMutator from '../../config/axios';
-import getAuthRoomCircleIdMutator from '../../config/axios';
-import patchAuthRoomRoomIdMutator from '../../config/axios';
+import postAuthRoomMutator from '../../../config/axios';
+import getAuthRoomCircleIdMutator from '../../../config/axios';
+import patchAuthRoomRoomIdMutator from '../../../config/axios';
 
 /**
  * API lấy thông tin room nếu room đã tồn tại, ngược lại nếu chưa tồn tại sẽ tạo room mới

@@ -32,8 +32,8 @@ import type {
   ResponseResponse,
 } from '../generated.schemas';
 
-import getChatRoomIdMutator from '../../config/axios';
-import postChatRoomIdMutator from '../../config/axios';
+import getChatRoomIdMutator from '../../../config/axios';
+import postChatRoomIdMutator from '../../../config/axios';
 
 /**
  * API lấy danh sách tin nhắn dựa trong phòng chat, có phân trang

@@ -1,7 +1,7 @@
 'use client';
 import { RequestChangePasswordRequest } from '@/app/api/generated.schemas';
 import { usePatchAuthUserPassword } from '@/app/api/users/users';
-import { showToast } from '@/app/utils/toast';
+import { showToast } from '@/utils/toast';
 import { Row, Col, Card, Form, Input, Button } from 'antd';
 import { useRouter } from 'next/navigation';
 

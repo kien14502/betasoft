@@ -19,8 +19,8 @@ import type {
   ResponseResponse,
 } from '../generated.schemas';
 
-import postAuthNotificationRegisterDeviceMutator from '../../config/axios';
-import postAuthNotificationSendMutator from '../../config/axios';
+import postAuthNotificationRegisterDeviceMutator from '../../../config/axios';
+import postAuthNotificationSendMutator from '../../../config/axios';
 
 /**
  * API đăng ký token device để nhận thông báo

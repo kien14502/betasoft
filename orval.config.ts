@@ -9,7 +9,7 @@ module.exports = {
       override: {
         useQuery: true,
         mutator: {
-          path: './app/config/axios.ts',
+          path: './config/axios.ts',
           default: true,
         },
         query: {

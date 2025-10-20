@@ -1,6 +1,6 @@
 import { usePostAuthRegister } from '@/app/api/auth/auth';
 import { RequestRegisterRequest } from '@/app/api/generated.schemas';
-import { showToast } from '@/app/utils/toast';
+import { showToast } from '@/utils/toast';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Spin } from 'antd';
 import Link from 'next/link';
