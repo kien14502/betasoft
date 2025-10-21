@@ -2,26 +2,25 @@
 import { PlusCircleFilled, PlusOutlined } from '@ant-design/icons';
 import EmptyProjectView from './components/EmptyProjectView';
 import { Pagination } from '@/interface/common';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import ProjectCard from './components/ProjectCard';
 import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useGetAuthProjectsMyProjectsOrgId } from '@/app/api/project/project';
-import { AuthContext } from '@/components/providers/AuthProvider';
+import useGetIdWorkspace from '@/hooks/useGetIdWorkspace';
+import ProjectLoading from './components/ProjectsLoading';
+import { groupRoleProjects } from '@/utils/common';
 
 const ProjectPage = () => {
-  const { profile } = useContext(AuthContext);
+  const { idWs } = useGetIdWorkspace();
   const router = useRouter();
-  const [pagination] = useState<Pagination>({
-    page: 1,
-    page_size: 10,
-  });
+  const [pagination] = useState<Pagination>({ page: 1, page_size: 10 });
 
-  const { data } = useGetAuthProjectsMyProjectsOrgId(profile?.meta_data?.organization_id ?? '', {
+  const { data, isPending } = useGetAuthProjectsMyProjectsOrgId(idWs ?? '', {
     ...pagination,
   });
-
-  const projects = data?.data;
+  const projects = data?.data?.projects ?? [];
+  const { adminProjects, otherProjects } = groupRoleProjects(projects ?? []);
 
   const onCreatePrj = () => router.push('/home/project/new');
 
@@ -41,11 +40,31 @@ const ProjectPage = () => {
           New Task
         </button>
       </div>
-      {projects ? (
-        <div className="grid grid-cols-4 gap-4">
-          {projects.projects?.map((item, i) => (
-            <ProjectCard data={item} key={i} />
-          ))}
+      {isPending && <ProjectLoading />}
+      {projects.length > 0 ? (
+        <div className="grid grid-cols-2 !mt-6">
+          <div className="col-span-1 !pr-8">
+            <div className="flex flex-col">
+              <p className="font-semibold text-base">You are Admin.</p>
+              <span className="text-sm text-[#787878]">You created the project.</span>
+            </div>
+            <div className="gap-6 grid-cols-2 grid !mt-6">
+              {adminProjects.map((item) => (
+                <ProjectCard key={item.project?.id} data={item} />
+              ))}
+            </div>
+          </div>
+          <div className="col-span-1 !pl-8 border-l border-[#8E8E93]">
+            <div className="flex flex-col">
+              <p className="font-semibold text-base">You are Member.</p>
+              <span className="text-sm text-[#787878]">You have been added in the project.</span>
+            </div>
+            <div className="gap-6 grid-cols-2 grid !mt-6">
+              {otherProjects.map((item) => (
+                <ProjectCard key={item.project?.id} data={item} />
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <EmptyProjectView onClick={onCreatePrj} />

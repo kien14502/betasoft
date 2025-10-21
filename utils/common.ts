@@ -1,4 +1,7 @@
-import { ResponseOrgMember } from '@/app/api/generated.schemas';
+import {
+  ResponseOrgMember,
+  ResponseProjectsWithProjectMemberRole,
+} from '@/app/api/generated.schemas';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -6,12 +9,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-type Test = {
+type GroupMembers = {
   startChar: string;
   members: ResponseOrgMember[];
 };
 
-export function detectStartCharMembers(members: ResponseOrgMember[]): Test[] {
+export function detectStartCharMembers(members: ResponseOrgMember[]): GroupMembers[] {
   if (!members || members.length === 0) return [];
 
   const sortedMembers = [...members].sort((a, b) =>
@@ -37,4 +40,24 @@ export function detectStartCharMembers(members: ResponseOrgMember[]): Test[] {
     startChar: char,
     members: groupedMembers[char],
   }));
+}
+
+type GroupedProjects = {
+  adminProjects: ResponseProjectsWithProjectMemberRole[];
+  otherProjects: ResponseProjectsWithProjectMemberRole[];
+};
+
+export function groupRoleProjects(projects: ResponseProjectsWithProjectMemberRole[]) {
+  const group = projects.reduce<GroupedProjects>(
+    (acc, proj) => {
+      if (proj.role === 'admin') {
+        acc.adminProjects.push(proj);
+      } else {
+        acc.otherProjects.push(proj);
+      }
+      return acc;
+    },
+    { adminProjects: [], otherProjects: [] },
+  );
+  return group;
 }

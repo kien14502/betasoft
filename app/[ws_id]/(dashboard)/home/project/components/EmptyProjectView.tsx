@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import { PlusCircleFilled } from '@ant-design/icons';
-import Image from 'next/image';
 
 type Props = {
   onClick: () => void;
@@ -7,7 +7,7 @@ type Props = {
 
 const EmptyProjectView: React.FC<Props> = ({ onClick }) => (
   <div className="flex-1 flex flex-col items-center justify-center">
-    <Image
+    <img
       src={'/images/create-project.png'}
       width={560}
       height={355}

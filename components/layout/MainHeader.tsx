@@ -6,7 +6,7 @@ type Props = {
 };
 
 const MainHeader: React.FC<Props> = ({ subHeader }) => (
-  <div className="flex justify-between !p-6 !pb-4">
+  <div className="flex justify-between !p-6 !pb-4 sticky top-0 z-50">
     <div className="flex items-center gap-3 rounded-[64px] bg-white shadow-btn !py-3 !px-4">
       <Image className="object-cover" src={'/logo-company.svg'} width={32} height={32} alt={''} />
       <span>BETASOFT</span>

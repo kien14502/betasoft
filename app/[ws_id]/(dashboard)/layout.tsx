@@ -26,10 +26,16 @@ function LayoutConfig({ children }: { children: React.ReactNode }) {
 
   return (
     <ConfigProvider theme={getThemeConfig()}>
-      <Layout style={{ height: '100vh' }}>
+      <Layout style={{ height: '100vh', background: '#F4FAFC' }}>
         <MainHeader subHeader={<>{pathname.split('/').includes('home') && <HomeHeader />}</>} />
         <MenuDashboard />
-        <Layout.Content style={{ marginLeft: '98px', display: 'flex', flexDirection: 'column' }}>
+        <Layout.Content
+          style={{
+            marginLeft: '98px',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <div className="h-full !px-6 !pb-6 flex w-full">{children}</div>
         </Layout.Content>
       </Layout>

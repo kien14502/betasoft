@@ -4,6 +4,7 @@ import TaskStatus from './TaskStatus';
 import Image from 'next/image';
 import { Button } from 'antd';
 import MessageTag from './MessageTag';
+import Link from 'next/link';
 
 type Props = {
   data: ResponseProjectsWithProjectMemberRole;
@@ -26,9 +27,11 @@ const ProjectCard: React.FC<Props> = ({ data }) => {
           alt={''}
         />
         <div className="flex flex-col gap-2">
-          <p className="text-2xl font-semibold">{project?.name}</p>
+          <Link href={`project/${project?.id}`} className="text-2xl font-semibold">
+            {project?.name}
+          </Link>
           <span className="text-[#787878] text-sm line-clamp-3">{project?.description}</span>
-          <div className="">members</div>
+          <div className="">{statistic?.total_members} members</div>
         </div>
       </div>
       <div className="flex items-center gap-2 !mt-6">
