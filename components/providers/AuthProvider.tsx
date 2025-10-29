@@ -1,3 +1,4 @@
+'use client';
 import { ResponseGetUserInfoResponse } from '@/app/api/generated.schemas';
 import { useGetAuthUserProfile } from '@/app/api/users/users';
 import { createContext, ReactNode, useEffect, useState } from 'react';

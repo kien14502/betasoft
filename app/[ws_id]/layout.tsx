@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { getListWorkspace } from '@/services/workspace-service';
 import { notFound, redirect } from 'next/navigation';
+import AuthProvider from '@/components/providers/AuthProvider';
 
 type Props = {
   children: ReactNode;
@@ -23,6 +24,6 @@ const LayoutWorkspaceLaunched = async ({ children, params }: Props) => {
   // }
   // return redirect(`/${ws_id}/home`);
 
-  return <>{children}</>;
+  return <AuthProvider>{children}</AuthProvider>;
 };
 export default LayoutWorkspaceLaunched;
