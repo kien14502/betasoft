@@ -3,6 +3,7 @@
 import { useGetAuthOrganizations } from '@/app/api/organizations/organizations';
 import { AuthContext } from '@/components/providers/AuthProvider';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 
@@ -23,6 +24,9 @@ const LaunchApp = () => {
   return (
     <div className="w-full flex items-start flex-col">
       <span>Workspace for {profile?.full_name}</span>
+      {data?.data?.organizations?.length === 0 && (
+        <Link href={'/init-workspace'}>Create Workspace</Link>
+      )}
       <div className="w-full flex flex-col gap-2">
         {workspaces?.organizations?.map((item, i) => (
           <div key={i} className="w-full flex items-center justify-between">

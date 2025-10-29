@@ -60,7 +60,7 @@ function InitWorkSpacePage() {
           </div>
           {action == null && <RedirectForm />}
           {action == 'create' && <CreateWorkSpace joinWorkspace={() => setAction('join')} />}
-          {action == 'join' && <JoinOrganization goToCreate={() => setAction('create')} />}
+          {/* {action == 'join' && <JoinOrganization goToCreate={() => setAction('create')} />} */}
         </div>
       </div>
     </div>

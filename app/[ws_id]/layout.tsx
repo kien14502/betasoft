@@ -17,13 +17,14 @@ const LayoutWorkspaceLaunched = async ({ children, params }: Props) => {
   const accessToken = cookie.get('accessToken')?.value;
 
   if (!accessToken) redirect('/login');
+
   const workspaceList = await getListWorkspace(ws_id, accessToken);
 
-  // if (!workspaceList) {
-  //   notFound();
-  // }
-  // return redirect(`/${ws_id}/home`);
+  if (!workspaceList) {
+    notFound();
+  }
 
+  // Always redirect if workspace exists
   return <AuthProvider>{children}</AuthProvider>;
 };
 export default LayoutWorkspaceLaunched;

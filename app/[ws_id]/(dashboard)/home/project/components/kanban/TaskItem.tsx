@@ -25,7 +25,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     >
       <div className="flex items-center justify-between">
         <p className="font-semibold text-gray-90 text-sm">{task.title}</p>
-        <Button>
+        <Button variant={'ghost'} size={'icon'}>
           <Image width={20} height={20} src={'/icons/dots.svg'} alt={''} />
         </Button>
       </div>

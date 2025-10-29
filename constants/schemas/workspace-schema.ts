@@ -3,7 +3,7 @@ import { emailRegex } from '../regex';
 
 export const createWorkspaceSchema = z.object({
   name: z.string().min(3, 'Workspace name must be at least 3 characters'),
-  size: z.number().min(1, 'Workspace size must be at least 1'),
+  size: z.string().min(1, 'Workspace size must be at least 1'),
 });
 export type CreateWorkSpaceSchemaType = z.infer<typeof createWorkspaceSchema>;
 
@@ -39,7 +39,6 @@ export const createProjectSchema = z.object({
       color: z.string().optional(),
       description: z.string().optional(),
       name: z.string(),
-      project_id: z.string(),
     }),
   ),
   lead: z.string().optional(),

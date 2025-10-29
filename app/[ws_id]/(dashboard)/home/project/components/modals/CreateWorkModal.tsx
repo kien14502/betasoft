@@ -59,7 +59,7 @@ const CreateWorkModal: React.FC<Props> = ({ toggle, isOpen }) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="border-b border-[#C7C7CC] !py-6 !px-8">
+        <div className="border-b border-[#C7C7CC] py-6 px-8">
           <p className="text-[#0045AC] text-2xl font-semibold">NEW TASK</p>
           <span className="text-[#787878] text-sm font-normal">
             Required fields are marked with an asterisk

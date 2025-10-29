@@ -24,7 +24,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
         <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: section.color }} />
         <span className="text-text-primary text-sm font-medium capitalize">{section.name}</span>
         <span>{section.tasks_count}</span>
-        <Button className="!ml-auto">
+        <Button size={'icon'} variant={'ghost'} className="ml-auto">
           <Ellipsis />
         </Button>
       </div>

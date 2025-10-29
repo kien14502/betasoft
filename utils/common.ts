@@ -86,7 +86,6 @@ export const labels: RequestCreateLabelDataToCreate[] = [
     name: 'Bug',
     description: 'Issues that need to be fixed',
     color: '#D73A49',
-    project_id: '',
   },
 ];
 

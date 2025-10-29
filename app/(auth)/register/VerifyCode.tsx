@@ -2,12 +2,13 @@ import { usePostAuthRegister } from '@/app/api/auth/auth';
 import { RequestRegisterRequest } from '@/app/api/generated.schemas';
 import InputForm from '@/components/common/form/InputField';
 import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
 import { verifyCodeSchema, VerifyCodeSchemaType } from '@/constants/schemas/register-schem';
 import { showToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
-import { Form, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 interface IVerifyCodeProps {
   data: RequestRegisterRequest;

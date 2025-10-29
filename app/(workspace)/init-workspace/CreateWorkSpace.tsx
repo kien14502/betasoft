@@ -8,12 +8,13 @@ import {
   createWorkspaceSchema,
   CreateWorkSpaceSchemaType,
 } from '@/constants/schemas/workspace-schema';
-import { Form, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputForm from '@/components/common/form/InputField';
 import { Button } from '@/components/ui/button';
 import RadioGroupForm from '@/components/common/form/RadioGroupForm';
-import { EWorkspaceSizes } from '@/constants';
+import { Form } from '@/components/ui/form';
+import { WORKSPACE_SIZE_OPTIONS } from '@/constants/common';
 interface CreateWorkSpaceProps {
   joinWorkspace?: () => void;
 }
@@ -22,14 +23,14 @@ const CreateWorkSpace = ({ joinWorkspace }: CreateWorkSpaceProps) => {
   const { mutate } = usePostAuthOrganizations();
   const router = useRouter();
   const form = useForm<CreateWorkSpaceSchemaType>({
-    defaultValues: { name: '', size: 0 },
+    defaultValues: { name: '', size: '' },
     resolver: zodResolver(createWorkspaceSchema),
   });
 
   const onFinish = (values: CreateWorkSpaceSchemaType) => {
     const payload: RequestCreateOrganizationRequest = {
       name: values.name,
-      size: values.size,
+      size: Number(values.size),
     };
     mutate(
       { data: payload },
@@ -41,6 +42,7 @@ const CreateWorkSpace = ({ joinWorkspace }: CreateWorkSpaceProps) => {
       },
     );
   };
+
   return (
     <div>
       <div
@@ -57,14 +59,7 @@ const CreateWorkSpace = ({ joinWorkspace }: CreateWorkSpaceProps) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onFinish)}>
           <InputForm control={form.control} name="name" label="Workspace name" />
-          <RadioGroupForm
-            control={form.control}
-            name="size"
-            options={Object.entries(EWorkspaceSizes).map(([key, value]) => ({
-              label: key,
-              value: value.toString(),
-            }))}
-          />
+          <RadioGroupForm control={form.control} name="size" options={WORKSPACE_SIZE_OPTIONS} />
           <Button type="submit">Continue</Button>
           <Button type="button" onClick={joinWorkspace}>
             Join Organization

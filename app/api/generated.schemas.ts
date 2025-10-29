@@ -90,7 +90,6 @@ export interface ModelsMetaData {
 export type ModelsOrganizationInvitationStatus =
   (typeof ModelsOrganizationInvitationStatus)[keyof typeof ModelsOrganizationInvitationStatus];
 
- 
 export const ModelsOrganizationInvitationStatus = {
   OrgInvitationStatusPending: 'pending',
   OrgInvitationStatusAccepted: 'accepted',
@@ -120,7 +119,6 @@ export interface ModelsProject {
 export type ModelsProjectMemberRole =
   (typeof ModelsProjectMemberRole)[keyof typeof ModelsProjectMemberRole];
 
- 
 export const ModelsProjectMemberRole = {
   ProjectMemberRoleAdmin: 'admin',
   ProjectMemberRoleSubAdmin: 'sub_admin',
@@ -214,7 +212,6 @@ export interface ModelsTaskListBasic {
 
 export type ModelsTaskPriority = (typeof ModelsTaskPriority)[keyof typeof ModelsTaskPriority];
 
- 
 export const ModelsTaskPriority = {
   TaskPriorityHigh: 'high',
   TaskPriorityMedium: 'medium',
@@ -241,7 +238,6 @@ export interface ModelsUser {
 
 export type ModelsUserRole = (typeof ModelsUserRole)[keyof typeof ModelsUserRole];
 
- 
 export const ModelsUserRole = {
   UserRoleUser: 'user',
   UserRoleAdmin: 'admin',
@@ -259,7 +255,6 @@ export interface RequestActiveNextSprintRequest {
 export type RequestAddProjectMemberRequestRole =
   (typeof RequestAddProjectMemberRequestRole)[keyof typeof RequestAddProjectMemberRequestRole];
 
- 
 export const RequestAddProjectMemberRequestRole = {
   member: 'member',
   viewer: 'viewer',
@@ -280,7 +275,6 @@ export interface RequestCreateLabelDataToCreate {
   color?: string;
   description?: string;
   name: string;
-  project_id: string;
 }
 
 export interface RequestCreateLabelRequest {
@@ -350,7 +344,6 @@ export interface RequestCreateTaskListRequest {
 export type RequestCreateTaskRequestPriority =
   (typeof RequestCreateTaskRequestPriority)[keyof typeof RequestCreateTaskRequestPriority];
 
- 
 export const RequestCreateTaskRequestPriority = {
   low: 'low',
   medium: 'medium',
@@ -505,7 +498,6 @@ export interface RequestUpdateLabelRequest {
 export type RequestUpdateMemberRoleRequestRole =
   (typeof RequestUpdateMemberRoleRequestRole)[keyof typeof RequestUpdateMemberRoleRequestRole];
 
- 
 export const RequestUpdateMemberRoleRequestRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -541,7 +533,6 @@ export interface RequestUpdateProfileRequest {
 export type RequestUpdateProjectMemberRoleRequestRole =
   (typeof RequestUpdateProjectMemberRoleRequestRole)[keyof typeof RequestUpdateProjectMemberRoleRequestRole];
 
- 
 export const RequestUpdateProjectMemberRoleRequestRole = {
   member: 'member',
   viewer: 'viewer',
@@ -587,7 +578,6 @@ export interface RequestUpdateTaskListRequest {
 export type RequestUpdateTaskRequestPriority =
   (typeof RequestUpdateTaskRequestPriority)[keyof typeof RequestUpdateTaskRequestPriority];
 
- 
 export const RequestUpdateTaskRequestPriority = {
   low: 'low',
   medium: 'medium',
@@ -665,7 +655,7 @@ export interface ResponseGetUserInfoResponse {
   phone_number?: string;
   profile_image?: string;
   updated_at?: string;
-  user_id?: string;
+  id?: string;
 }
 
 export interface ResponseGetUserOrgsResponse {
@@ -1215,7 +1205,6 @@ export type GetAuthProjectsProjectIdMembersParams = {
 export type GetAuthProjectsProjectIdMembersRole =
   (typeof GetAuthProjectsProjectIdMembersRole)[keyof typeof GetAuthProjectsProjectIdMembersRole];
 
- 
 export const GetAuthProjectsProjectIdMembersRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -1320,7 +1309,6 @@ export type GetAuthProjectsMyProjectsOrgIdParams = {
 export type GetAuthProjectsMyProjectsOrgIdProjectType =
   (typeof GetAuthProjectsMyProjectsOrgIdProjectType)[keyof typeof GetAuthProjectsMyProjectsOrgIdProjectType];
 
- 
 export const GetAuthProjectsMyProjectsOrgIdProjectType = {
   internal: 'internal',
   external: 'external',
@@ -1329,7 +1317,6 @@ export const GetAuthProjectsMyProjectsOrgIdProjectType = {
 export type GetAuthProjectsMyProjectsOrgIdRole =
   (typeof GetAuthProjectsMyProjectsOrgIdRole)[keyof typeof GetAuthProjectsMyProjectsOrgIdRole];
 
- 
 export const GetAuthProjectsMyProjectsOrgIdRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -1340,7 +1327,6 @@ export const GetAuthProjectsMyProjectsOrgIdRole = {
 export type GetAuthProjectsMyProjectsOrgIdStatus =
   (typeof GetAuthProjectsMyProjectsOrgIdStatus)[keyof typeof GetAuthProjectsMyProjectsOrgIdStatus];
 
- 
 export const GetAuthProjectsMyProjectsOrgIdStatus = {
   active: 'active',
   inactive: 'inactive',

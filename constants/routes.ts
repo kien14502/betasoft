@@ -1,35 +1,36 @@
 import { IMenuItem } from '../interface/common';
+import { Calendar, ClipboardList, FileText, House, MessageCircleMore } from 'lucide-react';
 
 export const mainRoutes: IMenuItem[] = [
   {
     label: 'Home',
     index: 'home',
     path: '/home',
-    // icon: HomeOutlined,
+    icon: House,
   },
   {
     label: 'Tasks',
     index: 'tasks',
     path: '/tasks',
-    // icon: OrderedListOutlined,
+    icon: ClipboardList,
   },
   {
     label: 'Channels',
     index: 'channels',
     path: '/channels',
-    // icon: CommentOutlined,
+    icon: MessageCircleMore,
   },
   {
     label: 'Documents',
     index: 'documents',
     path: '/documents',
-    // icon: FolderOutlined,
+    icon: FileText,
   },
   {
     label: 'Calendar',
     index: 'Calendar',
     path: '/calendar',
-    // icon: CalendarOutlined,
+    icon: Calendar,
     children: [
       {
         label: 'Item 1',

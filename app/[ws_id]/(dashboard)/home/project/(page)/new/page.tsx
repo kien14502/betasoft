@@ -10,7 +10,7 @@ import {
 } from '@/app/api/generated.schemas';
 import { usePostAuthProjects } from '@/app/api/project/project';
 import dynamic from 'next/dynamic';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import useGetIdWorkspace from '@/hooks/useGetIdWorkspace';
 import { AuthContext } from '@/components/providers/AuthProvider';
 import WrapperContent from '../../components/WrapperContent';
@@ -30,6 +30,8 @@ const NewProjectPage = () => {
   const { mutate: createProject } = usePostAuthProjects();
   const [openTrackworkModal, setOpenTrackworkModal] = useState<boolean>(false);
   const { profile } = useContext(AuthContext);
+  console.log(profile);
+
   const form = useForm<CreateProjectSchemaType>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
@@ -37,12 +39,22 @@ const NewProjectPage = () => {
       labels: labels,
       sprints: sprints,
       org_id: idWs,
-      lead: profile?.user_id,
+      is_team: true,
       settings: {
         allow_guests: true,
+        enable_due_dates: true,
+        enable_notifications: true,
+        enable_time_tracking: true,
       },
+      project_type: 'test',
     },
   });
+
+  useEffect(() => {
+    if (!profile) return;
+    form.setValue('lead', profile?.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
 
   const onFinish = () => {
     toggleModal();
@@ -50,6 +62,14 @@ const NewProjectPage = () => {
 
   const handleCreateProject = () => {
     console.log('form', form.getValues());
+    createProject(
+      { data: form.getValues() },
+      {
+        onSuccess() {
+          setOpenTrackworkModal(false);
+        },
+      },
+    );
   };
 
   const onCancel = () => router.back();

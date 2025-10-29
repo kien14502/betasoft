@@ -20,7 +20,7 @@ interface RegisterFormProps {
 const RegisterForm = ({ setDataPayload }: RegisterFormProps) => {
   const { mutate, isPending } = usePostAuthRegister();
   const form = useForm<RegisterSchemaType>({
-    defaultValues: { email: '', first_name: '', last_name: '' },
+    defaultValues: { email: '', first_name: '', last_name: '', agreement: true },
     resolver: zodResolver(registerSchema),
   });
 
@@ -45,6 +45,10 @@ const RegisterForm = ({ setDataPayload }: RegisterFormProps) => {
     );
   };
 
+  const onError = (err: any) => {
+    console.log('err', err);
+  };
+
   return (
     <div
       style={{
@@ -58,7 +62,7 @@ const RegisterForm = ({ setDataPayload }: RegisterFormProps) => {
       <div style={{ height: '66%', width: '100%' }}>
         <div style={{ fontSize: '30px', fontWeight: 750, paddingBottom: '5%' }}>Sign Up Free</div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmit, onError)}>
             <div className="grid grid-cols-2">
               <InputForm control={form.control} name={'first_name'} label="First Name" />
               <InputForm control={form.control} name={'last_name'} label="Last Name" />

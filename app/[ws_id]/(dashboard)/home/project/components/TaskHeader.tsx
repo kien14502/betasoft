@@ -12,12 +12,16 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-6 flex-1">
         <Button
+          variant={'ghost'}
+          size={'icon'}
           onClick={() => setViewMode('list')}
           className={viewMode === 'list' ? 'bg-blue-1' : ''}
         >
           <Image src={'/icons/check-list.svg'} width={20} height={20} alt={''} />
         </Button>
         <Button
+          size={'icon'}
+          variant={'ghost'}
           onClick={() => setViewMode('kanban')}
           className={viewMode === 'kanban' ? 'bg-blue-1' : ''}
         >

@@ -1,3 +1,4 @@
+import { ChartArea } from 'lucide-react';
 import { ReactNode } from 'react';
 import { Control, FieldValues, Path } from 'react-hook-form';
 
@@ -5,7 +6,7 @@ export interface IMenuItem {
   label: string;
   index: string;
   path: string;
-  icon?: any;
+  icon?: typeof ChartArea;
   children?: IMenuItem[] | null;
 }
 

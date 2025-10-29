@@ -5,6 +5,7 @@ import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/genera
 import useDndKanban from '@/hooks/useDndKanban';
 import { useMemo } from 'react';
 import Image from 'next/image';
+import { usePostAuthTasks } from '@/app/api/task/task';
 
 type Props = {
   init_tasks: ResponseTaskResponse[];
@@ -22,12 +23,25 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks, sections }) => {
     sensors,
   } = useDndKanban(init_tasks, sections);
 
+  const { mutate: createTask } = usePostAuthTasks();
+
   const getSection = useMemo(
     () => (key: string) => {
       return sections.find((item) => item.id === key);
     },
     [sections],
   );
+
+  const handleCreateTask = () => {
+    createTask({
+      data: {
+        list_id: '',
+        sprint_id: '',
+        title: '',
+        project_id: '',
+      },
+    });
+  };
 
   return (
     <DndContext
@@ -53,7 +67,7 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks, sections }) => {
         <DragOverlay dropAnimation={dropAnimation}>
           {currentTask ? <TaskItem task={currentTask} /> : null}
         </DragOverlay>
-        <button className="!p-2.5 shrink-0 rounded-xl bg-bg-secondary active:scale-95">
+        <button className="p-2.5 shrink-0 rounded-xl bg-bg-secondary active:scale-95">
           <Image src={'/icons/plus.svg'} width={20} height={20} alt={''} />
         </button>
       </div>

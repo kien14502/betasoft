@@ -1,6 +1,6 @@
 import { FieldValues } from 'react-hook-form';
 import { cn } from '@/lib/utils';
-import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
+import { FormField, FormItem, FormControl, FormMessage, FormLabel } from '@/components/ui/form';
 import { FormProps } from '@/interface/common';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -18,14 +18,16 @@ const RadioGroupForm = <T extends FieldValues>({
   defaultValue,
   className,
 }: Props<T>) => {
+  console.log('options', options);
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem className={cn('flex flex-col gap-2 space-y-0', className)}>
+          {label && <FormLabel className="mb-2">{label}</FormLabel>}
           <FormControl>
-            {label && <Label className="mb-2">{label}</Label>}
             <RadioGroup
               defaultValue={defaultValue ?? field.value}
               onValueChange={field.onChange}
