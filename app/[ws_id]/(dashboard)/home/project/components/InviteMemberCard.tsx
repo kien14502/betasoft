@@ -1,7 +1,6 @@
 import { ResponseOrgMember } from '@/app/api/generated.schemas';
 import { CheckboxRound } from '@/components/common/CheckboxRound';
-import { UserOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 type Props = {
   member: ResponseOrgMember;
@@ -13,11 +12,14 @@ const InviteMemberCard: React.FC<Props> = ({ member, onChange, checked }) => {
   return (
     <div
       onClick={() => onChange(member)}
-      className="flex items-center !py-2 !px-3 justify-start hover:bg-[#F2F2F7]"
+      className="flex items-center py-2 px-3 justify-start hover:bg-[#F2F2F7]"
     >
       <CheckboxRound checked={checked} onChange={() => onChange(member)} />
-      <Avatar className="!ml-4" src={member.profile_image} size={32} icon={<UserOutlined />} />
-      <span className="!ml-3">{member.full_name}</span>
+      <Avatar className="ml-4">
+        <AvatarImage src={member.profile_image} />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
+      <span className="ml-3 text-sm font-medium">{member.full_name}</span>
     </div>
   );
 };

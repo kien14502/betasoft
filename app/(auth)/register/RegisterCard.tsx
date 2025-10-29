@@ -1,18 +1,17 @@
 'use client';
-import { Form, Input, Button, Row, Col, Checkbox } from 'antd';
-import { GoogleOutlined, AppleFilled } from '@ant-design/icons';
+
 import Link from 'next/link';
-import styles from './register_card.module.css';
 import { RequestRegisterRequest } from '@/app/api/generated.schemas';
 import { Dispatch, SetStateAction } from 'react';
 import { usePostAuthRegister } from '@/app/api/auth/auth';
 import { showToast } from '@/utils/toast';
-
-export interface IRegisterFormValues {
-  email: string;
-  first_name: string;
-  last_name: string;
-}
+import { registerSchema, RegisterSchemaType } from '@/constants/schemas/register-schem';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import InputForm from '@/components/common/form/InputField';
+import { Button } from '@/components/ui/button';
+import CheckboxForm from '@/components/common/form/CheckboxForm';
+import { Form } from '@/components/ui/form';
 
 interface RegisterFormProps {
   setDataPayload: Dispatch<SetStateAction<RequestRegisterRequest>>;
@@ -20,8 +19,12 @@ interface RegisterFormProps {
 
 const RegisterForm = ({ setDataPayload }: RegisterFormProps) => {
   const { mutate, isPending } = usePostAuthRegister();
+  const form = useForm<RegisterSchemaType>({
+    defaultValues: { email: '', first_name: '', last_name: '' },
+    resolver: zodResolver(registerSchema),
+  });
 
-  const handleSubmit = (values: IRegisterFormValues) => {
+  const handleSubmit = (values: RegisterSchemaType) => {
     const payload: RequestRegisterRequest = {
       email: values.email,
       full_name: values.first_name + ' ' + values.last_name,
@@ -54,113 +57,26 @@ const RegisterForm = ({ setDataPayload }: RegisterFormProps) => {
     >
       <div style={{ height: '66%', width: '100%' }}>
         <div style={{ fontSize: '30px', fontWeight: 750, paddingBottom: '5%' }}>Sign Up Free</div>
-        <Form onFinish={handleSubmit} layout="vertical">
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="first_name"
-                label="First Name"
-                rules={[{ required: true, message: 'Full name is required' }]}
-              >
-                <Input variant="underlined" style={{ height: '50px', background: '#eff5fb' }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="last_name"
-                label="Last Name"
-                rules={[{ required: true, message: 'Full name is required' }]}
-              >
-                <Input variant="underlined" style={{ height: '50px', background: '#eff5fb' }} />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[
-              { required: true, message: 'Email is required' },
-              { type: 'email', message: 'Email is not valid' },
-            ]}
-          >
-            <Input variant="underlined" style={{ height: '50px', background: '#eff5fb' }} />
-          </Form.Item>
-
-          <Form.Item
-            name="agreement"
-            valuePropName="checked"
-            rules={[
-              {
-                validator: (_, value) =>
-                  value ? Promise.resolve() : Promise.reject(new Error('Should accept agreement')),
-              },
-            ]}
-          >
-            <Checkbox
-              style={{ marginTop: '0', alignItems: 'flex-start' }}
-              className={styles.checkbox}
-            >
-              Agree to the terms of use and acknowledge that you have read our privacy policy, which
-              describes how we collect, use, store, and share your data.
-            </Checkbox>
-          </Form.Item>
-
-          <Form.Item style={{ marginTop: '40px' }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{
-                width: '100%',
-                height: '40px',
-                borderRadius: '0px',
-                fontSize: '16px',
-              }}
-              loading={isPending}
-            >
-              Sign Up
-            </Button>
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Button
-                color="primary"
-                variant="outlined"
-                style={{
-                  width: '100%',
-                  height: '40px',
-                  borderRadius: '0px',
-                  fontSize: '16px',
-                }}
-              >
-                <GoogleOutlined /> Login with Google
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button
-                color="primary"
-                variant="outlined"
-                style={{
-                  width: '100%',
-                  height: '40px',
-                  borderRadius: '0px',
-                  fontSize: '16px',
-                }}
-              >
-                <AppleFilled /> Login with Apple
-              </Button>
-            </Col>
-          </Row>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <div className="grid grid-cols-2">
+              <InputForm control={form.control} name={'first_name'} label="First Name" />
+              <InputForm control={form.control} name={'last_name'} label="Last Name" />
+            </div>
+            <InputForm control={form.control} name={'email'} label="Email" />
+            <CheckboxForm
+              control={form.control}
+              name={'agreement'}
+              label="Agree to the terms of use and acknowledge that you have read our privacy policy, which
+              describes how we collect, use, store, and share your data."
+            />
+            <Button type="submit">Sign Up</Button>
+          </form>
 
           <hr style={{ margin: '30px 0 10px 0', border: '1px solid #ecececff' }} />
-
-          {/* Link to Login Page */}
-          <Form.Item>
-            <div style={{ textAlign: 'center' }}>
-              <Link href="/login">Already have an account?</Link>
-            </div>
-          </Form.Item>
+          <div style={{ textAlign: 'center' }}>
+            <Link href="/login">Already have an account?</Link>
+          </div>
         </Form>
       </div>
     </div>

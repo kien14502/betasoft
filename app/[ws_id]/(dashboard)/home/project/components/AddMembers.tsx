@@ -3,7 +3,6 @@ import {
   useGetAuthOrganizationsOrgIdMembers,
 } from '@/app/api/organizations/organizations';
 import { useDebounce } from '@/hooks/useDebounce';
-import { LoadingOutlined, PlusCircleFilled } from '@ant-design/icons';
 import Image from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import InviteMemberCard from './InviteMemberCard';
@@ -11,6 +10,7 @@ import { ResponseOrgMember } from '@/app/api/generated.schemas';
 import MemberSelected from './MemberSelected';
 import { detectStartCharMembers } from '@/utils/common';
 import useGetIdWorkspace from '@/hooks/useGetIdWorkspace';
+import { Loader, Plus } from 'lucide-react';
 
 type Props = {
   onChangeMemberSeleted: (members: ResponseOrgMember[]) => void;
@@ -71,16 +71,16 @@ const AddMembers: React.FC<Props> = ({ onChangeMemberSeleted }) => {
         <Image src={'/icons/search.svg'} height={24} width={24} alt={''} />
         <input value={search} onChange={onChange} className="outline-none flex-1" type="text" />
         {!isLoading ? (
-          <PlusCircleFilled style={{ fontSize: '24px' }} />
+          <Plus style={{ fontSize: '24px' }} />
         ) : (
-          <LoadingOutlined style={{ fontSize: '24px' }} />
+          <Loader className="animate-spin" style={{ fontSize: '24px' }} />
         )}
       </div>
       <div className="flex flex-1 gap-6">
         <div className="flex-1">
           {detectStartCharMembers(members ?? [])?.map((item) => (
             <div key={item.startChar}>
-              <div className="font-semibold !mb-2">{item.startChar}</div>
+              <div className="font-semibold mb-2">{item.startChar}</div>
               {item.members.map((_item) => (
                 <InviteMemberCard
                   checked={isChecked(_item)}
@@ -92,10 +92,10 @@ const AddMembers: React.FC<Props> = ({ onChangeMemberSeleted }) => {
             </div>
           ))}
         </div>
-        <div className="max-w-[272px] w-full border border-[#D1D1D6] h-full !p-4 rounded-[8px]">
-          <div className="flex items-center gap-4 !mb-4">
-            <span>Selected</span>
-            <div className="bg-[#E5F1FF] font-medium text-[#002E73] rounded-[8px] !py-1.5 !px-3">
+        <div className="max-w-[272px] w-full border border-[#D1D1D6] h-full p-4 rounded-[8px]">
+          <div className="flex items-center gap-4 mb-4">
+            <span className="text-sm font-semibold">Selected</span>
+            <div className="bg-[#E5F1FF] font-medium text-[#002E73] rounded-[8px] py-1.5 px-3">
               {membersSelected.length}/{totalMembersWorkspace}
             </div>
           </div>

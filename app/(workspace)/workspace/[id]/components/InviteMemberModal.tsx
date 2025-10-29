@@ -1,8 +1,20 @@
-import { RequestInviteMemberRequest } from '@/app/api/generated.schemas';
 import { usePostAuthOrganizationsInvite } from '@/app/api/organizations/organizations';
 import { showToast } from '@/utils/toast';
-import { Button, Form, Input, Modal } from 'antd';
 import React from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { useForm } from 'react-hook-form';
+import { inviteMemberSchema, InviteMemberSchemaType } from '@/constants/schemas/workspace-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from '@/components/ui/form';
+import InputForm from '@/components/common/form/InputField';
 
 interface IInviteMemberProps {
   id: string;
@@ -12,8 +24,11 @@ interface IInviteMemberProps {
 
 const InviteMember = ({ id, isModalOpen, setIsModalOpen }: IInviteMemberProps) => {
   const { mutate, isPending } = usePostAuthOrganizationsInvite();
+  const form = useForm<InviteMemberSchemaType>({
+    resolver: zodResolver(inviteMemberSchema),
+  });
 
-  const onFinish = (values: RequestInviteMemberRequest) => {
+  const onFinish = (values: InviteMemberSchemaType) => {
     mutate(
       { data: { org_id: id, email: values.email } },
       {
@@ -25,30 +40,27 @@ const InviteMember = ({ id, isModalOpen, setIsModalOpen }: IInviteMemberProps) =
     );
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   return (
-    <Modal
-      title="Invite member"
-      closable={{ 'aria-label': 'Custom Close Button' }}
-      open={isModalOpen}
-      onCancel={handleCancel}
-      footer={null}
-    >
-      <Form initialValues={{ role: 'member' }} onFinish={onFinish}>
-        <Form.Item
-          label={'Email'}
-          name={'email'}
-          rules={[{ required: true, message: 'Email is require!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Button loading={isPending} htmlType="submit">
-          Invite
-        </Button>
-      </Form>
-    </Modal>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
+        <Button>Invite member</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete your account and remove your
+            data from our servers.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onFinish)}>
+            <InputForm control={form.control} name={'email'} label="Email" />
+            <Button type="submit">Invite</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

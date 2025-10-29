@@ -5,12 +5,13 @@ import {
   usePostAuthOrganizationsLaunch,
 } from '@/app/api/organizations/organizations';
 import { useGetAuthUserProfile } from '@/app/api/users/users';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { EModePage, ERole } from '@/constants';
 import { useStore, actions } from '@/store';
 import { showToast } from '@/utils/toast';
 import { updateAuthMetaStorage } from '@/utils/userHelper';
-import { TeamOutlined } from '@ant-design/icons';
-import { Avatar, Button, List, Skeleton } from 'antd';
+import { UserRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const WorkSpaceList = () => {
@@ -48,7 +49,14 @@ const WorkSpaceList = () => {
   const organizations = data?.pages.flatMap((page) => page.data?.organizations || []) || [];
 
   const avatarGroup = (url: string | undefined) =>
-    url ? <Avatar src={url} /> : <TeamOutlined size={32} />;
+    url ? (
+      <Avatar>
+        <AvatarImage src={url} />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
+    ) : (
+      <UserRound size={32} />
+    );
 
   const onLaunch = (org_id: string | undefined) => {
     if (!org_id) return;
@@ -66,7 +74,7 @@ const WorkSpaceList = () => {
   return (
     <div style={{ backgroundColor: 'white', width: '100%' }}>
       <div style={{ fontSize: '3rem' }}>Welcome back!</div>
-      <List
+      {/* <List
         className="demo-loadmore-list"
         loading={isLoading || isFetching}
         itemLayout="horizontal"
@@ -121,7 +129,7 @@ const WorkSpaceList = () => {
             </Skeleton>
           </List.Item>
         )}
-      />
+      /> */}
       {hasNextPage && (
         <div
           style={{
@@ -131,7 +139,7 @@ const WorkSpaceList = () => {
             lineHeight: '40px',
           }}
         >
-          <Button onClick={() => fetchNextPage()} loading={isFetchingNextPage}>
+          <Button onClick={() => fetchNextPage()}>
             {isFetchingNextPage ? 'Loading...' : 'Load More'}
           </Button>
         </div>

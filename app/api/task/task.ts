@@ -32,27 +32,27 @@ import type {
   GetAuthProjectsProjectIdTasksParams,
   GetAuthTasksTaskId200,
   PostAuthTasks200,
-  PostAuthTasksComments200,
   PutAuthTasksTaskId200,
   PutAuthTasksTaskIdMove200,
-  RequestCreateTaskCommentRequest,
   RequestCreateTaskRequest,
   RequestDeleteMultipleTasksRequest,
   RequestMoveTaskRequest,
+  RequestSubscribeTaskRequest,
+  RequestUnSubscribeTaskRequest,
   RequestUpdateTaskRequest,
   ResponseResponse,
 } from '../generated.schemas';
 
 import getAuthProjectsProjectIdKanbanMutator from '../../../config/axios';
 import getAuthProjectsProjectIdTasksMutator from '../../../config/axios';
-import deleteAuthTaskCommentsCommentIdMutator from '../../../config/axios';
 import deleteAuthTasksMutator from '../../../config/axios';
 import postAuthTasksMutator from '../../../config/axios';
 import getAuthTasksTaskIdMutator from '../../../config/axios';
 import putAuthTasksTaskIdMutator from '../../../config/axios';
 import putAuthTasksTaskIdMoveMutator from '../../../config/axios';
 import deleteAuthTasksBatchDeleteMutator from '../../../config/axios';
-import postAuthTasksCommentsMutator from '../../../config/axios';
+import postAuthTasksSubscribeMutator from '../../../config/axios';
+import postAuthTasksUnsubscribeMutator from '../../../config/axios';
 
 /**
  * API lấy toàn bộ Kanban board với task lists và tasks
@@ -614,81 +614,6 @@ export function useGetAuthProjectsProjectIdTasks<
   return query;
 }
 
-/**
- * API xóa comment khỏi task
- * @summary Xóa comment khỏi task
- */
-export const deleteAuthTaskCommentsCommentId = (commentId: string) => {
-  return deleteAuthTaskCommentsCommentIdMutator<ResponseResponse>({
-    url: `/auth/task-comments/${commentId}`,
-    method: 'DELETE',
-  });
-};
-
-export const getDeleteAuthTaskCommentsCommentIdMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteAuthTaskCommentsCommentId>>,
-    TError,
-    { commentId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteAuthTaskCommentsCommentId>>,
-  TError,
-  { commentId: string },
-  TContext
-> => {
-  const mutationKey = ['deleteAuthTaskCommentsCommentId'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteAuthTaskCommentsCommentId>>,
-    { commentId: string }
-  > = (props) => {
-    const { commentId } = props ?? {};
-
-    return deleteAuthTaskCommentsCommentId(commentId);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type DeleteAuthTaskCommentsCommentIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteAuthTaskCommentsCommentId>>
->;
-
-export type DeleteAuthTaskCommentsCommentIdMutationError = unknown;
-
-/**
- * @summary Xóa comment khỏi task
- */
-export const useDeleteAuthTaskCommentsCommentId = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteAuthTaskCommentsCommentId>>,
-      TError,
-      { commentId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof deleteAuthTaskCommentsCommentId>>,
-  TError,
-  { commentId: string },
-  TContext
-> => {
-  const mutationOptions = getDeleteAuthTaskCommentsCommentIdMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
 /**
  * API xóa task khỏi dự án
  * @summary Xóa task
@@ -1294,39 +1219,39 @@ export const useDeleteAuthTasksBatchDelete = <TError = unknown, TContext = unkno
   return useMutation(mutationOptions, queryClient);
 };
 /**
- * API thêm comment mới vào task
- * @summary Thêm comment vào task
+ * API đăng ký nhận thông báo từ một task
+ * @summary Đăng ký nhận thông báo task
  */
-export const postAuthTasksComments = (
-  requestCreateTaskCommentRequest: RequestCreateTaskCommentRequest,
+export const postAuthTasksSubscribe = (
+  requestSubscribeTaskRequest: RequestSubscribeTaskRequest,
   signal?: AbortSignal,
 ) => {
-  return postAuthTasksCommentsMutator<PostAuthTasksComments200>({
-    url: `/auth/tasks/comments`,
+  return postAuthTasksSubscribeMutator<ResponseResponse>({
+    url: `/auth/tasks/subscribe`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    data: requestCreateTaskCommentRequest,
+    data: requestSubscribeTaskRequest,
     signal,
   });
 };
 
-export const getPostAuthTasksCommentsMutationOptions = <
+export const getPostAuthTasksSubscribeMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postAuthTasksComments>>,
+    Awaited<ReturnType<typeof postAuthTasksSubscribe>>,
     TError,
-    { data: RequestCreateTaskCommentRequest },
+    { data: RequestSubscribeTaskRequest },
     TContext
   >;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof postAuthTasksComments>>,
+  Awaited<ReturnType<typeof postAuthTasksSubscribe>>,
   TError,
-  { data: RequestCreateTaskCommentRequest },
+  { data: RequestSubscribeTaskRequest },
   TContext
 > => {
-  const mutationKey = ['postAuthTasksComments'];
+  const mutationKey = ['postAuthTasksSubscribe'];
   const { mutation: mutationOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
@@ -1334,43 +1259,124 @@ export const getPostAuthTasksCommentsMutationOptions = <
     : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postAuthTasksComments>>,
-    { data: RequestCreateTaskCommentRequest }
+    Awaited<ReturnType<typeof postAuthTasksSubscribe>>,
+    { data: RequestSubscribeTaskRequest }
   > = (props) => {
     const { data } = props ?? {};
 
-    return postAuthTasksComments(data);
+    return postAuthTasksSubscribe(data);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostAuthTasksCommentsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postAuthTasksComments>>
+export type PostAuthTasksSubscribeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthTasksSubscribe>>
 >;
-export type PostAuthTasksCommentsMutationBody = RequestCreateTaskCommentRequest;
-export type PostAuthTasksCommentsMutationError = unknown;
+export type PostAuthTasksSubscribeMutationBody = RequestSubscribeTaskRequest;
+export type PostAuthTasksSubscribeMutationError = unknown;
 
 /**
- * @summary Thêm comment vào task
+ * @summary Đăng ký nhận thông báo task
  */
-export const usePostAuthTasksComments = <TError = unknown, TContext = unknown>(
+export const usePostAuthTasksSubscribe = <TError = unknown, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof postAuthTasksComments>>,
+      Awaited<ReturnType<typeof postAuthTasksSubscribe>>,
       TError,
-      { data: RequestCreateTaskCommentRequest },
+      { data: RequestSubscribeTaskRequest },
       TContext
     >;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
-  Awaited<ReturnType<typeof postAuthTasksComments>>,
+  Awaited<ReturnType<typeof postAuthTasksSubscribe>>,
   TError,
-  { data: RequestCreateTaskCommentRequest },
+  { data: RequestSubscribeTaskRequest },
   TContext
 > => {
-  const mutationOptions = getPostAuthTasksCommentsMutationOptions(options);
+  const mutationOptions = getPostAuthTasksSubscribeMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
+ * API hủy đăng ký nhận thông báo từ một task
+ * @summary Hủy đăng ký nhận thông báo task
+ */
+export const postAuthTasksUnsubscribe = (
+  requestUnSubscribeTaskRequest: RequestUnSubscribeTaskRequest,
+  signal?: AbortSignal,
+) => {
+  return postAuthTasksUnsubscribeMutator<ResponseResponse>({
+    url: `/auth/tasks/unsubscribe`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: requestUnSubscribeTaskRequest,
+    signal,
+  });
+};
+
+export const getPostAuthTasksUnsubscribeMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postAuthTasksUnsubscribe>>,
+    TError,
+    { data: RequestUnSubscribeTaskRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postAuthTasksUnsubscribe>>,
+  TError,
+  { data: RequestUnSubscribeTaskRequest },
+  TContext
+> => {
+  const mutationKey = ['postAuthTasksUnsubscribe'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postAuthTasksUnsubscribe>>,
+    { data: RequestUnSubscribeTaskRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postAuthTasksUnsubscribe(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostAuthTasksUnsubscribeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthTasksUnsubscribe>>
+>;
+export type PostAuthTasksUnsubscribeMutationBody = RequestUnSubscribeTaskRequest;
+export type PostAuthTasksUnsubscribeMutationError = unknown;
+
+/**
+ * @summary Hủy đăng ký nhận thông báo task
+ */
+export const usePostAuthTasksUnsubscribe = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postAuthTasksUnsubscribe>>,
+      TError,
+      { data: RequestUnSubscribeTaskRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postAuthTasksUnsubscribe>>,
+  TError,
+  { data: RequestUnSubscribeTaskRequest },
+  TContext
+> => {
+  const mutationOptions = getPostAuthTasksUnsubscribeMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };

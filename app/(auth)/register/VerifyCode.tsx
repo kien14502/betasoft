@@ -1,14 +1,13 @@
 import { usePostAuthRegister } from '@/app/api/auth/auth';
 import { RequestRegisterRequest } from '@/app/api/generated.schemas';
+import InputForm from '@/components/common/form/InputField';
+import { Button } from '@/components/ui/button';
+import { verifyCodeSchema, VerifyCodeSchemaType } from '@/constants/schemas/register-schem';
 import { showToast } from '@/utils/toast';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Spin } from 'antd';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
-
-interface IVerifyFormValues {
-  code: string;
-}
+import { Form, useForm } from 'react-hook-form';
 
 interface IVerifyCodeProps {
   data: RequestRegisterRequest;
@@ -18,8 +17,12 @@ interface IVerifyCodeProps {
 const VerifyCode = ({ data, setData }: IVerifyCodeProps) => {
   const { mutate, isPending } = usePostAuthRegister();
   const { mutate: resendMutate, isPending: isPendingReSend } = usePostAuthRegister();
+  const form = useForm<VerifyCodeSchemaType>({
+    defaultValues: { code: '' },
+    resolver: zodResolver(verifyCodeSchema),
+  });
 
-  const handleSubmit = (values: IVerifyFormValues) => {
+  const handleSubmit = (values: VerifyCodeSchemaType) => {
     const payload: RequestRegisterRequest = {
       ...data,
       verify_code: values.code,
@@ -72,32 +75,19 @@ const VerifyCode = ({ data, setData }: IVerifyCodeProps) => {
         <div style={{ fontSize: '30px', fontWeight: 750, paddingBottom: '5%' }}>
           Verify Code from Email
         </div>
-        <Form onFinish={handleSubmit} layout="vertical">
-          <Form.Item name="code" rules={[{ required: true, message: 'Verify Code is required' }]}>
-            <Input.OTP formatter={(str) => str.toUpperCase()} />
-          </Form.Item>
-          <Form.Item style={{ paddingTop: '20px' }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{
-                width: '100%',
-                height: '40px',
-                borderRadius: '0px',
-                fontSize: '16px',
-              }}
-              loading={isPending}
-            >
-              Next
-            </Button>
-          </Form.Item>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <InputForm control={form.control} name="code" label="Verify Code" />
+            <Button type="submit">Verify</Button>
+          </form>
+
           <hr style={{ margin: '30px 0 10px 0', border: '1px solid #ecececff' }} />
 
           {/* Link to Login Page */}
           <div>
             <div>
               {isPendingReSend ? (
-                <Spin indicator={<LoadingOutlined spin />} size="small" />
+                <span>Resending...</span>
               ) : (
                 <a onClick={resend} style={{ cursor: 'pointer' }}>
                   Resend?

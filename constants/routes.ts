@@ -1,42 +1,35 @@
 import { IMenuItem } from '../interface/common';
-import {
-  CalendarOutlined,
-  CommentOutlined,
-  FolderOutlined,
-  HomeOutlined,
-  OrderedListOutlined,
-} from '@ant-design/icons';
 
 export const mainRoutes: IMenuItem[] = [
   {
     label: 'Home',
     index: 'home',
     path: '/home',
-    icon: HomeOutlined,
+    // icon: HomeOutlined,
   },
   {
     label: 'Tasks',
     index: 'tasks',
     path: '/tasks',
-    icon: OrderedListOutlined,
+    // icon: OrderedListOutlined,
   },
   {
     label: 'Channels',
     index: 'channels',
     path: '/channels',
-    icon: CommentOutlined,
+    // icon: CommentOutlined,
   },
   {
     label: 'Documents',
     index: 'documents',
     path: '/documents',
-    icon: FolderOutlined,
+    // icon: FolderOutlined,
   },
   {
     label: 'Calendar',
     index: 'Calendar',
     path: '/calendar',
-    icon: CalendarOutlined,
+    // icon: CalendarOutlined,
     children: [
       {
         label: 'Item 1',

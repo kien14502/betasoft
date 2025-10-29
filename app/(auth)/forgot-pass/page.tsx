@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import RequestForgotPasswordForm from './components/RequestForgotPasswordForm';
-import { Row, Col, Card } from 'antd';
 import ConfirmNewPasswordForm from './components/ConfirmNewPasswordForm';
 
 function ForgotPassPage() {
@@ -20,13 +19,8 @@ function ForgotPassPage() {
   };
 
   return (
-    <Row justify="center">
-      <Col
-        xs={24}
-        sm={20}
-        md={16}
-        lg={12}
-        xl={10}
+    <div>
+      <div
         style={{
           position: 'relative',
           height: '100vh',
@@ -35,7 +29,7 @@ function ForgotPassPage() {
           alignItems: 'center',
         }}
       >
-        <Card
+        <div
           style={{
             width: '85%',
             margin: 'auto',
@@ -58,9 +52,9 @@ function ForgotPassPage() {
             password.
           </p>
           {formForgotPassword()}
-        </Card>
-      </Col>
-    </Row>
+        </div>
+      </div>
+    </div>
   );
 }
 

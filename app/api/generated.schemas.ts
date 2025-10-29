@@ -62,6 +62,13 @@ export interface ModelsLabel {
   updated_at?: string;
 }
 
+export interface ModelsLabelBasic {
+  color?: string;
+  description?: string;
+  id?: string;
+  name: string;
+}
+
 export interface ModelsMessage {
   content?: string;
   created_at?: string;
@@ -83,6 +90,7 @@ export interface ModelsMetaData {
 export type ModelsOrganizationInvitationStatus =
   (typeof ModelsOrganizationInvitationStatus)[keyof typeof ModelsOrganizationInvitationStatus];
 
+ 
 export const ModelsOrganizationInvitationStatus = {
   OrgInvitationStatusPending: 'pending',
   OrgInvitationStatusAccepted: 'accepted',
@@ -96,6 +104,7 @@ export interface ModelsProject {
   created_by?: string;
   description?: string;
   id?: string;
+  is_team?: boolean;
   /** "business" for business-related initiatives,
 "service_management" for managing services or operations. */
   lead?: string;
@@ -111,6 +120,7 @@ export interface ModelsProject {
 export type ModelsProjectMemberRole =
   (typeof ModelsProjectMemberRole)[keyof typeof ModelsProjectMemberRole];
 
+ 
 export const ModelsProjectMemberRole = {
   ProjectMemberRoleAdmin: 'admin',
   ProjectMemberRoleSubAdmin: 'sub_admin',
@@ -135,6 +145,29 @@ export interface ModelsS3Object {
   user_id: string;
 }
 
+export interface ModelsSprint {
+  begin_at: string;
+  created_at?: string;
+  created_by?: string;
+  end_at: string;
+  id?: string;
+  is_active?: boolean;
+  project_id: string;
+  sprint_goal?: string;
+  sprint_name: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface ModelsSprintBasic {
+  begin_at: string;
+  end_at: string;
+  id?: string;
+  is_active?: boolean;
+  name: string;
+  project_id: string;
+}
+
 export interface ModelsTarget {
   namespace?: string;
   package_name?: string;
@@ -144,6 +177,7 @@ export interface ModelsTarget {
 export interface ModelsTask {
   assignee?: string;
   board_position?: number;
+  checkpoint?: number;
   completed?: boolean;
   completed_at?: string;
   created_at?: string;
@@ -163,6 +197,7 @@ export interface ModelsTask {
   priority?: ModelsTaskPriority;
   project_id?: string;
   reporter?: string;
+  sprint_id?: string;
   start_date?: string;
   started_at?: string;
   swimlane_priority?: number;
@@ -170,8 +205,16 @@ export interface ModelsTask {
   updated_at?: string;
 }
 
+export interface ModelsTaskListBasic {
+  color?: string;
+  id?: string;
+  name: string;
+  position?: number;
+}
+
 export type ModelsTaskPriority = (typeof ModelsTaskPriority)[keyof typeof ModelsTaskPriority];
 
+ 
 export const ModelsTaskPriority = {
   TaskPriorityHigh: 'high',
   TaskPriorityMedium: 'medium',
@@ -188,7 +231,6 @@ export interface ModelsUser {
   full_name?: string;
   gender?: number;
   id?: string;
-  is_online?: boolean;
   meta_data?: ModelsMetaData;
   phone_number: string;
   profile_image?: string;
@@ -199,6 +241,7 @@ export interface ModelsUser {
 
 export type ModelsUserRole = (typeof ModelsUserRole)[keyof typeof ModelsUserRole];
 
+ 
 export const ModelsUserRole = {
   UserRoleUser: 'user',
   UserRoleAdmin: 'admin',
@@ -208,13 +251,15 @@ export interface ModelsWebCredentials {
   apps?: string[];
 }
 
-export interface RequestAddLabelToTaskRequest {
-  label_id: string;
+export interface RequestActiveNextSprintRequest {
+  project_id: string;
+  sprint_id: string;
 }
 
 export type RequestAddProjectMemberRequestRole =
   (typeof RequestAddProjectMemberRequestRole)[keyof typeof RequestAddProjectMemberRequestRole];
 
+ 
 export const RequestAddProjectMemberRequestRole = {
   member: 'member',
   viewer: 'viewer',
@@ -264,15 +309,26 @@ export interface RequestCreateOrganizationRequest {
 export interface RequestCreateProjectRequest {
   avatar?: string;
   description?: string;
-  labels: RequestCreateLabelDataToCreate[];
+  is_team?: boolean;
+  labels?: RequestCreateLabelDataToCreate[];
   lead?: string;
   members?: string[];
   name: string;
   org_id: string;
   project_type?: string;
   settings?: RequestProjectSettingsRequest;
-  tasks_list: RequestTaskListDataToCreate[];
+  sprints: RequestCreateSprintRequest[];
+  task_list: RequestTaskListDataToCreate[];
   template_id?: string;
+}
+
+export interface RequestCreateSprintRequest {
+  begin_at: string;
+  end_at: string;
+  goal?: string;
+  is_active?: boolean;
+  name: string;
+  project_id?: string;
 }
 
 export interface RequestCreateTaskCommentRequest {
@@ -294,6 +350,7 @@ export interface RequestCreateTaskListRequest {
 export type RequestCreateTaskRequestPriority =
   (typeof RequestCreateTaskRequestPriority)[keyof typeof RequestCreateTaskRequestPriority];
 
+ 
 export const RequestCreateTaskRequestPriority = {
   low: 'low',
   medium: 'medium',
@@ -302,6 +359,7 @@ export const RequestCreateTaskRequestPriority = {
 
 export interface RequestCreateTaskRequest {
   assignee?: string;
+  checkpoint?: number;
   completed_at?: string;
   description?: string;
   due_date?: string;
@@ -311,6 +369,7 @@ export interface RequestCreateTaskRequest {
   parent_task_id?: string;
   priority?: RequestCreateTaskRequestPriority;
   project_id: string;
+  sprint_id: string;
   start_date?: string;
   title: string;
 }
@@ -327,6 +386,17 @@ export interface RequestDeleteMemberInOrgRequest {
 
 export interface RequestDeleteMultipleTasksRequest {
   task_ids: string[];
+}
+
+export interface RequestDeleteSprintRequest {
+  project_id: string;
+  sprint_id: string;
+}
+
+export interface RequestDeleteTaskCommentRequest {
+  comment_id: string;
+  project_id: string;
+  task_id: string;
 }
 
 export interface RequestDeleteTaskListRequest {
@@ -376,12 +446,6 @@ export interface RequestMoveTaskRequest {
   target_position: number;
 }
 
-export interface RequestNotificationRequest {
-  circle_id?: string;
-  data?: string;
-  notify_type?: string;
-}
-
 export interface RequestProjectSettingsRequest {
   allow_guests?: boolean;
   enable_due_dates?: boolean;
@@ -412,12 +476,22 @@ export interface RequestRoomRequest {
   type_of_room?: number;
 }
 
+export interface RequestSubscribeTaskRequest {
+  project_id: string;
+  task_id: string;
+}
+
 export interface RequestTaskListDataToCreate {
   color?: string;
   description?: string;
   is_default?: boolean;
   name: string;
   position?: number;
+}
+
+export interface RequestUnSubscribeTaskRequest {
+  project_id: string;
+  task_id: string;
 }
 
 export interface RequestUpdateLabelRequest {
@@ -431,6 +505,7 @@ export interface RequestUpdateLabelRequest {
 export type RequestUpdateMemberRoleRequestRole =
   (typeof RequestUpdateMemberRoleRequestRole)[keyof typeof RequestUpdateMemberRoleRequestRole];
 
+ 
 export const RequestUpdateMemberRoleRequestRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -466,9 +541,11 @@ export interface RequestUpdateProfileRequest {
 export type RequestUpdateProjectMemberRoleRequestRole =
   (typeof RequestUpdateProjectMemberRoleRequestRole)[keyof typeof RequestUpdateProjectMemberRoleRequestRole];
 
+ 
 export const RequestUpdateProjectMemberRoleRequestRole = {
   member: 'member',
   viewer: 'viewer',
+  sub_admin: 'sub_admin',
 } as const;
 
 export interface RequestUpdateProjectMemberRoleRequest {
@@ -488,8 +565,13 @@ export interface RequestUpdateProjectRequest {
   status?: string;
 }
 
-export interface RequestUpdateTaskLabelsRequest {
-  label_ids?: string[];
+export interface RequestUpdateSprintRequest {
+  begin_at?: string;
+  end_at?: string;
+  project_id: string;
+  sprint_goal?: string;
+  sprint_id: string;
+  sprint_name?: string;
 }
 
 export interface RequestUpdateTaskListRequest {
@@ -505,6 +587,7 @@ export interface RequestUpdateTaskListRequest {
 export type RequestUpdateTaskRequestPriority =
   (typeof RequestUpdateTaskRequestPriority)[keyof typeof RequestUpdateTaskRequestPriority];
 
+ 
 export const RequestUpdateTaskRequestPriority = {
   low: 'low',
   medium: 'medium',
@@ -513,16 +596,19 @@ export const RequestUpdateTaskRequestPriority = {
 
 export interface RequestUpdateTaskRequest {
   assignee?: string;
+  /** @minimum 0 */
+  checkpoint?: number;
   completed_at?: string;
   description?: string;
   due_date?: string;
   due_reminder?: ModelsDueReminder;
   labels?: string[];
   list_id?: string;
-  parent_task_id?: string;
+  /** @minimum 1 */
   position?: number;
   priority?: RequestUpdateTaskRequestPriority;
-  project_id?: string;
+  project_id: string;
+  sprint_id: string;
   start_date?: string;
   task_id: string;
   title?: string;
@@ -579,7 +665,7 @@ export interface ResponseGetUserInfoResponse {
   phone_number?: string;
   profile_image?: string;
   updated_at?: string;
-  id?: string;
+  user_id?: string;
 }
 
 export interface ResponseGetUserOrgsResponse {
@@ -612,12 +698,6 @@ export interface ResponseLabelShort {
   name?: string;
 }
 
-export interface ResponseLabelWithUsageResponse {
-  label?: ResponseLabelResponse;
-  last_used?: string;
-  task_count?: number;
-}
-
 export interface ResponseLoginResponse {
   token?: string;
   user?: ModelsUser;
@@ -648,7 +728,6 @@ export interface ResponseOrgMember {
   full_name?: string;
   gender?: number;
   id?: string;
-  is_online?: boolean;
   meta_data?: ModelsMetaData;
   phone_number: string;
   profile_image?: string;
@@ -732,6 +811,7 @@ export interface ResponseProjectResponse {
   created_by?: string;
   description?: string;
   id?: string;
+  is_team?: boolean;
   lead?: string;
   name?: string;
   organization_id?: string;
@@ -758,6 +838,14 @@ export interface ResponseProjectStatisticBasic {
   total_members?: number;
   total_tasks?: number;
   updated_at?: string;
+}
+
+export interface ResponseProjectWithColLabelAndSprint {
+  columns?: ModelsTaskListBasic[];
+  labels?: ModelsLabelBasic[];
+  lead?: ResponseUserBasicInfo;
+  project?: ModelsProject;
+  sprint_active?: ModelsSprintBasic;
 }
 
 export interface ResponseProjectsWithProjectMemberRole {
@@ -790,13 +878,12 @@ export interface ResponseTaskAndSubTasks {
 
 export interface ResponseTaskCommentResponse {
   author?: ResponseUserBasicInfo;
+  comment_task_id?: string;
   content?: string;
   created_at?: string;
   id?: string;
   mentions?: string[];
   parent_id?: string;
-  replies?: ResponseTaskCommentResponse[];
-  task_id?: string;
   updated_at?: string;
 }
 
@@ -979,12 +1066,6 @@ export type PostAuthLabels200AllOf = {
 
 export type PostAuthLabels200 = ResponseResponse & PostAuthLabels200AllOf;
 
-export type GetAuthLabelsLabelIdUsage200AllOf = {
-  data?: ResponseLabelWithUsageResponse;
-};
-
-export type GetAuthLabelsLabelIdUsage200 = ResponseResponse & GetAuthLabelsLabelIdUsage200AllOf;
-
 export type GetAuthLabelsTemplates200AllOfDataItem = { [key: string]: string };
 
 export type GetAuthLabelsTemplates200AllOf = {
@@ -1083,7 +1164,7 @@ export type PostAuthProjects200AllOf = {
 export type PostAuthProjects200 = ResponseResponse & PostAuthProjects200AllOf;
 
 export type GetAuthProjectsProjectId200AllOf = {
-  data?: ResponseProjectResponse;
+  data?: ResponseProjectWithColLabelAndSprint;
 };
 
 export type GetAuthProjectsProjectId200 = ResponseResponse & GetAuthProjectsProjectId200AllOf;
@@ -1115,19 +1196,32 @@ export type GetAuthProjectsProjectIdLabels200AllOf = {
 export type GetAuthProjectsProjectIdLabels200 = ResponseResponse &
   GetAuthProjectsProjectIdLabels200AllOf;
 
-export type GetAuthProjectsProjectIdLabelsSearchParams = {
+export type GetAuthProjectsProjectIdMembersParams = {
+  email?: string;
+  name?: string;
   /**
-   * Search query
+   * @minimum 1
    */
-  q: string;
+  page?: number;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  page_size?: number;
+  phone_number?: string;
+  role?: GetAuthProjectsProjectIdMembersRole;
 };
 
-export type GetAuthProjectsProjectIdLabelsSearch200AllOf = {
-  data?: ResponseLabelResponse[];
-};
+export type GetAuthProjectsProjectIdMembersRole =
+  (typeof GetAuthProjectsProjectIdMembersRole)[keyof typeof GetAuthProjectsProjectIdMembersRole];
 
-export type GetAuthProjectsProjectIdLabelsSearch200 = ResponseResponse &
-  GetAuthProjectsProjectIdLabelsSearch200AllOf;
+ 
+export const GetAuthProjectsProjectIdMembersRole = {
+  admin: 'admin',
+  sub_admin: 'sub_admin',
+  member: 'member',
+  viewer: 'viewer',
+} as const;
 
 export type GetAuthProjectsProjectIdMembers200AllOf = {
   data?: ResponseGetProjectMembersResponse;
@@ -1138,6 +1232,46 @@ export type GetAuthProjectsProjectIdMembers200 = ResponseResponse &
 
 export type GetAuthProjectsProjectIdTasksParams = {
   /**
+   * Sprint ID
+   */
+  sprint_id?: string;
+  /**
+   * Danh sách List ID
+   */
+  list_id?: string[];
+  /**
+   * Tiêu đề task
+   */
+  title?: string;
+  /**
+   * Danh sách Assignee ID
+   */
+  assignee?: string[];
+  /**
+   * Danh sách Priority
+   */
+  priority?: string[];
+  /**
+   * Reporter ID
+   */
+  reporter?: string;
+  /**
+   * Danh sách Label ID
+   */
+  label?: string[];
+  /**
+   * Ngày bắt đầu (dd/MM/yyyy)
+   */
+  start_date?: string;
+  /**
+   * Ngày hết hạn (dd/MM/yyyy)
+   */
+  due_date?: string;
+  /**
+   * Người tạo
+   */
+  created_by?: string;
+  /**
    * Page number
    */
   page?: number;
@@ -1145,18 +1279,6 @@ export type GetAuthProjectsProjectIdTasksParams = {
    * Page size
    */
   page_size?: number;
-  /**
-   * Assignee ID
-   */
-  assignee?: string;
-  /**
-   * Task status
-   */
-  status?: string;
-  /**
-   * Task priority
-   */
-  priority?: string;
 };
 
 export type GetAuthProjectsProjectIdTasks200AllOf = {
@@ -1179,6 +1301,7 @@ export type PostAuthProjectsMembers200AllOf = {
 export type PostAuthProjectsMembers200 = ResponseResponse & PostAuthProjectsMembers200AllOf;
 
 export type GetAuthProjectsMyProjectsOrgIdParams = {
+  is_team?: boolean;
   name?: string;
   /**
    * @minimum 1
@@ -1188,8 +1311,8 @@ export type GetAuthProjectsMyProjectsOrgIdParams = {
    * @minimum 1
    * @maximum 100
    */
-  pageSize?: number;
-  projectType?: GetAuthProjectsMyProjectsOrgIdProjectType;
+  page_size?: number;
+  project_type?: GetAuthProjectsMyProjectsOrgIdProjectType;
   role?: GetAuthProjectsMyProjectsOrgIdRole;
   status?: GetAuthProjectsMyProjectsOrgIdStatus;
 };
@@ -1197,6 +1320,7 @@ export type GetAuthProjectsMyProjectsOrgIdParams = {
 export type GetAuthProjectsMyProjectsOrgIdProjectType =
   (typeof GetAuthProjectsMyProjectsOrgIdProjectType)[keyof typeof GetAuthProjectsMyProjectsOrgIdProjectType];
 
+ 
 export const GetAuthProjectsMyProjectsOrgIdProjectType = {
   internal: 'internal',
   external: 'external',
@@ -1205,6 +1329,7 @@ export const GetAuthProjectsMyProjectsOrgIdProjectType = {
 export type GetAuthProjectsMyProjectsOrgIdRole =
   (typeof GetAuthProjectsMyProjectsOrgIdRole)[keyof typeof GetAuthProjectsMyProjectsOrgIdRole];
 
+ 
 export const GetAuthProjectsMyProjectsOrgIdRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -1215,6 +1340,7 @@ export const GetAuthProjectsMyProjectsOrgIdRole = {
 export type GetAuthProjectsMyProjectsOrgIdStatus =
   (typeof GetAuthProjectsMyProjectsOrgIdStatus)[keyof typeof GetAuthProjectsMyProjectsOrgIdStatus];
 
+ 
 export const GetAuthProjectsMyProjectsOrgIdStatus = {
   active: 'active',
   inactive: 'inactive',
@@ -1228,8 +1354,10 @@ export type GetAuthProjectsMyProjectsOrgId200AllOf = {
 export type GetAuthProjectsMyProjectsOrgId200 = ResponseResponse &
   GetAuthProjectsMyProjectsOrgId200AllOf;
 
+export type PostAuthRegister200AllOfData = { [key: string]: string };
+
 export type PostAuthRegister200AllOf = {
-  data?: ResponseLoginResponse;
+  data?: PostAuthRegister200AllOfData;
 };
 
 export type PostAuthRegister200 = ResponseResponse & PostAuthRegister200AllOf;
@@ -1305,12 +1433,6 @@ export type PutAuthTasksTaskId200AllOf = {
 
 export type PutAuthTasksTaskId200 = ResponseResponse & PutAuthTasksTaskId200AllOf;
 
-export type GetAuthTasksTaskIdLabels200AllOf = {
-  data?: ResponseLabelResponse[];
-};
-
-export type GetAuthTasksTaskIdLabels200 = ResponseResponse & GetAuthTasksTaskIdLabels200AllOf;
-
 export type PutAuthTasksTaskIdMove200AllOf = {
   data?: ResponseTaskResponse;
 };
@@ -1322,6 +1444,26 @@ export type DeleteAuthTasksBatchDelete200AllOf = {
 };
 
 export type DeleteAuthTasksBatchDelete200 = ResponseResponse & DeleteAuthTasksBatchDelete200AllOf;
+
+export type GetAuthTasksCommentsParams = {
+  /**
+   * @minimum 1
+   */
+  page?: number;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  page_size?: number;
+  parentID?: string;
+  taskID: string;
+};
+
+export type GetAuthTasksComments200AllOf = {
+  data?: ResponseTaskCommentResponse[];
+};
+
+export type GetAuthTasksComments200 = ResponseResponse & GetAuthTasksComments200AllOf;
 
 export type PostAuthTasksComments200AllOf = {
   data?: ResponseTaskCommentResponse;
@@ -1358,8 +1500,64 @@ export type GetChatRoomId200AllOf = {
 
 export type GetChatRoomId200 = ResponseResponse & GetChatRoomId200AllOf;
 
+export type PostLogin200AllOfData = { [key: string]: string };
+
 export type PostLogin200AllOf = {
-  data?: ResponseLoginResponse;
+  data?: PostLogin200AllOfData;
 };
 
 export type PostLogin200 = ResponseResponse & PostLogin200AllOf;
+
+export type GetNotificationsParams = {
+  /**
+   * Số trang
+   */
+  page?: number;
+  /**
+   * Kích thước trang
+   */
+  page_size?: number;
+  /**
+   * Tiêu đề thông báo (tìm kiếm gần đúng, không phân biệt hoa thường)
+   */
+  title?: string;
+  /**
+   * Trạng thái đã đọc (true: đã đọc, false: chưa đọc)
+   */
+  is_read?: boolean;
+  /**
+   * ID người gửi
+   */
+  sender?: string;
+  /**
+   * Ngày bắt đầu (định dạng: YYYY-MM-DD)
+   */
+  from_date?: string;
+  /**
+   * Ngày kết thúc (định dạng: YYYY-MM-DD)
+   */
+  to_date?: string;
+};
+
+export type PostSprints200AllOf = {
+  data?: ModelsSprint;
+};
+
+export type PostSprints200 = ResponseResponse & PostSprints200AllOf;
+
+export type GetSprintsProjectIdParams = {
+  /**
+   * Page number
+   */
+  page?: number;
+  /**
+   * Number of items per page
+   */
+  page_size?: number;
+};
+
+export type GetSprintsProjectId200AllOf = {
+  data?: ModelsSprint[];
+};
+
+export type GetSprintsProjectId200 = ResponseResponse & GetSprintsProjectId200AllOf;

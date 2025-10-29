@@ -1,4 +1,8 @@
 import {
+  ModelsTaskListBasic,
+  RequestCreateLabelDataToCreate,
+  RequestCreateSprintRequest,
+  ResponseMembersWithProjectMemberRole,
   ResponseOrgMember,
   ResponseProjectsWithProjectMemberRole,
 } from '@/app/api/generated.schemas';
@@ -61,3 +65,37 @@ export function groupRoleProjects(projects: ResponseProjectsWithProjectMemberRol
   );
   return group;
 }
+
+export const getColorProject = (prjs: ModelsTaskListBasic[], id: string) =>
+  prjs.find((item) => item.id === id)?.color;
+
+export const getAvatarMember = (members: ResponseMembersWithProjectMemberRole[], id: string) => {
+  const avatar = members.find((item) => item.member?.id === id)?.member?.profile_image;
+  return avatar ?? '/icons/user-circle.svg';
+};
+
+export const fEnumToArray = (enumObj: Record<string, string | number>) => {
+  return Object.entries(enumObj).map(([key, value]) => ({
+    label: key,
+    value: value.toString(),
+  }));
+};
+
+export const labels: RequestCreateLabelDataToCreate[] = [
+  {
+    name: 'Bug',
+    description: 'Issues that need to be fixed',
+    color: '#D73A49',
+    project_id: '',
+  },
+];
+
+export const sprints: RequestCreateSprintRequest[] = [
+  {
+    begin_at: '1',
+    end_at: '2',
+    name: 'test',
+    is_active: true,
+    goal: 'done',
+  },
+];

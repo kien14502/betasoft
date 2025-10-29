@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { PlusCircleFilled } from '@ant-design/icons';
+
+import { Plus } from 'lucide-react';
 
 type Props = {
   onClick: () => void;
@@ -24,9 +25,9 @@ const EmptyProjectView: React.FC<Props> = ({ onClick }) => (
     <button
       onClick={onClick}
       style={{ border: '2px dashed #0045AC' }}
-      className="rounded-2xl bg-white !mt-6 !py-5 !px-7 flex items-center gap-2.5 font-medium text-[24px] hover:bg-[#E5F1FF]"
+      className="rounded-2xl bg-white mt-6 py-5 px-7 flex items-center gap-2.5 font-medium text-[24px] hover:bg-[#E5F1FF]"
     >
-      <PlusCircleFilled style={{ fontSize: '32px' }} />
+      <Plus size={32} />
       Create project
     </button>
   </div>

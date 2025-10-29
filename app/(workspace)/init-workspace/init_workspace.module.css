@@ -1,8 +1,0 @@
-:global(.ant-radio-button-wrapper) {
-  border: none !important;
-  box-shadow: none !important;
-}
-
-:global(.ant-radio-button-wrapper::before) {
-  display: none !important; /* bỏ line ngăn cách giữa các button */
-}

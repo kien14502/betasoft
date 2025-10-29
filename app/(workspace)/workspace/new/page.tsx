@@ -1,6 +1,5 @@
 'use client';
-import { TeamOutlined, GlobalOutlined, FileTextOutlined, AimOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Radio, Select, UploadFile } from 'antd';
+
 import React, { useEffect } from 'react';
 import {
   useGetAuthOrganizationsOrgId,
@@ -9,26 +8,30 @@ import {
 } from '@/app/api/organizations/organizations';
 import { RequestCreateOrganizationRequest } from '@/app/api/generated.schemas';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'antd/es/form/Form';
-import UploadImage, { normalizeImage } from '@/components/common/UploadImage';
 import { showToast } from '@/utils/toast';
+import { useForm } from 'react-hook-form';
+import { NewWorkSpaceSchemaType } from '@/constants/schemas/workspace-schema';
+import { Form } from '@/components/ui/form';
+import InputForm from '@/components/common/form/InputField';
+import RadioGroupForm from '@/components/common/form/RadioGroupForm';
+import { EWorkSpaceIndustry, EWorkSpaceRegion, EWorkspaceSizes } from '@/constants';
+import SelectForm from '@/components/common/form/SelectForm';
+import { fEnumToArray } from '@/utils/common';
+import TextareaForm from '@/components/common/form/TextareaForm';
+import { Button } from '@/components/ui/button';
 
 interface INewWorkSpaceProps {
   idWorkSpace?: string;
 }
 
-type TNewWorkSpaceForm = {
-  id?: string;
-  industry: string;
-  avatar?: UploadFile[];
-  name: string;
-  size?: number;
-  region?: string;
-  description?: string;
-};
-
 const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
-  const [form] = useForm();
+  const form = useForm<NewWorkSpaceSchemaType>({
+    defaultValues: {
+      avatar: [],
+      name: '',
+      size: 0,
+    },
+  });
   const { mutate, isPending } = usePostAuthOrganizations();
   const { mutate: mutateUpdate, isPending: isPendingUpdate } = usePatchAuthOrganizations();
   const router = useRouter();
@@ -36,30 +39,19 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
     query: {
       enabled: !!idWorkSpace,
       refetchOnMount: 'always',
-      select: (response) => {
-        const { data } = response;
-        return {
-          id: data?.id,
-          industry: data?.industry || '',
-          avatar: data?.avatar ? normalizeImage(Array(data?.avatar)) : [],
-          name: data?.name || '',
-          size: data?.size,
-          region: data?.region,
-          description: data?.description,
-        };
-      },
+      select: (response) => response.data,
     },
   });
 
   useEffect(() => {
     if (data) {
-      form.setFieldsValue(data);
+      form.reset(data as NewWorkSpaceSchemaType);
     }
   }, [data, form]);
 
-  const onFinish = (values: TNewWorkSpaceForm) => {
+  const onFinish = (values: NewWorkSpaceSchemaType) => {
     const payload: RequestCreateOrganizationRequest = {
-      avatar: values.avatar?.[0].response,
+      avatar: values.avatar?.[0],
       name: values.name,
       size: values.size,
       industry: values.industry,
@@ -71,7 +63,7 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
       return mutateUpdate(
         {
           data: {
-            org_id: data?.id,
+            org_id: data?.id || '0',
             ...payload,
           },
         },
@@ -101,108 +93,33 @@ const NewWorkSpace = ({ idWorkSpace }: INewWorkSpaceProps) => {
     );
   };
   return (
-    <Form form={form} onFinish={onFinish} layout="vertical">
-      {/* Workspace Name */}
-      <Form.Item name={'avatar'} label={'Avatar'}>
-        <UploadImage maxImageUpload={1} width={150} height={150} aspect={1} />
-      </Form.Item>
-      <Form.Item
-        name="name"
-        label="Workspace Name"
-        rules={[
-          { required: true, message: 'Workspace name is required' },
-          { min: 3, message: 'Workspace name must be at least 3 characters' },
-        ]}
-      >
-        <Input variant="underlined" style={{ height: '50px', background: '#eff5fb' }} />
-      </Form.Item>
-
-      {/* Workspace Size */}
-      <Form.Item
-        name="size"
-        label={
-          <span style={{ padding: 10 }}>
-            <TeamOutlined /> Workspace Size
-          </span>
-        }
-        rules={[{ required: true, message: 'Workspace size is required' }]}
-      >
-        <Radio.Group style={{ border: '0 solid' }}>
-          <Radio.Button value={5}>2-5</Radio.Button>
-          <Radio.Button value={10}>6-10</Radio.Button>
-          <Radio.Button value={20}>11-20</Radio.Button>
-          <Radio.Button value={50}>21-50</Radio.Button>
-          <Radio.Button value={100}>51-100</Radio.Button>
-          <Radio.Button value={250}>101-250</Radio.Button>
-          <Radio.Button value={1000}>250+</Radio.Button>
-        </Radio.Group>
-      </Form.Item>
-
-      {/* Region */}
-      <Form.Item
-        name="region"
-        label={
-          <span style={{ padding: 10 }}>
-            <GlobalOutlined /> Region
-          </span>
-        }
-      >
-        <Select placeholder="Select a region">
-          <Select.Option value="us-east">US East</Select.Option>
-          <Select.Option value="us-west">US West</Select.Option>
-          <Select.Option value="eu-central">EU Central</Select.Option>
-          <Select.Option value="asia">Asia Pacific</Select.Option>
-        </Select>
-      </Form.Item>
-
-      {/* Industry */}
-      <Form.Item
-        name="industry"
-        label={
-          <span style={{ padding: 10 }}>
-            <AimOutlined /> Industry
-          </span>
-        }
-      >
-        <Select placeholder="Select a industry">
-          <Select.Option value="Technology">Technology</Select.Option>
-          <Select.Option value="Healthcare">Healthcare</Select.Option>
-          <Select.Option value="Finance">Finance</Select.Option>
-          <Select.Option value="Education">Education</Select.Option>
-          <Select.Option value="Retail">Retail</Select.Option>
-          <Select.Option value="Manufacturing">Manufacturing</Select.Option>
-          <Select.Option value="Consulting">Consulting</Select.Option>
-        </Select>
-      </Form.Item>
-
-      {/* Description */}
-      <Form.Item
-        name="description"
-        label={
-          <span style={{ padding: 10 }}>
-            <FileTextOutlined /> Description
-          </span>
-        }
-        rules={[{ max: 200, message: 'Description must be under 200 characters' }]}
-      >
-        <Input.TextArea rows={4} placeholder="Enter a short description..." />
-      </Form.Item>
-
-      {/* Submit Button */}
-      <Form.Item style={{ marginTop: '40px' }}>
-        <Button
-          type="primary"
-          htmlType="submit"
-          style={{
-            height: '40px',
-            borderRadius: '0px',
-            fontSize: '16px',
-          }}
-          loading={isPending || isPendingUpdate}
-        >
-          Submit
-        </Button>
-      </Form.Item>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onFinish)}>
+        <InputForm control={form.control} name="name" label="Workspace Name" />
+        <InputForm control={form.control} name="avatar" label="Workspace Avatar" />
+        <RadioGroupForm
+          control={form.control}
+          name="size"
+          label="Workspace Size"
+          options={fEnumToArray(EWorkspaceSizes)}
+        />
+        <SelectForm
+          control={form.control}
+          name={'id'}
+          options={fEnumToArray(EWorkSpaceRegion)}
+          label="Region"
+          placeholder="Select an option"
+        />
+        <SelectForm
+          control={form.control}
+          name={'id'}
+          options={fEnumToArray(EWorkSpaceIndustry)}
+          label="Industry"
+          placeholder="Select an option"
+        />
+        <TextareaForm control={form.control} name="description" label="Description" />
+        <Button type="submit">{idWorkSpace ? 'Update Workspace' : 'Create Workspace'}</Button>
+      </form>
     </Form>
   );
 };

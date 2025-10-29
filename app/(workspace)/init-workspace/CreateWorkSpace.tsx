@@ -1,26 +1,32 @@
 'use client';
-import { TeamOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Radio } from 'antd';
 import React from 'react';
-import styles from './init_workspace.module.css';
 import { usePostAuthOrganizations } from '@/app/api/organizations/organizations';
 import { RequestCreateOrganizationRequest } from '@/app/api/generated.schemas';
 import { useRouter } from 'next/navigation';
 import { showToast } from '@/utils/toast';
+import {
+  createWorkspaceSchema,
+  CreateWorkSpaceSchemaType,
+} from '@/constants/schemas/workspace-schema';
+import { Form, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import InputForm from '@/components/common/form/InputField';
+import { Button } from '@/components/ui/button';
+import RadioGroupForm from '@/components/common/form/RadioGroupForm';
+import { EWorkspaceSizes } from '@/constants';
 interface CreateWorkSpaceProps {
-  goToJoin?: () => void;
+  joinWorkspace?: () => void;
 }
 
-type TCreateWorkSpaceForm = {
-  name: string;
-  size: number;
-};
-
-const CreateWorkSpace = ({ goToJoin }: CreateWorkSpaceProps) => {
-  const { mutate, isPending } = usePostAuthOrganizations();
+const CreateWorkSpace = ({ joinWorkspace }: CreateWorkSpaceProps) => {
+  const { mutate } = usePostAuthOrganizations();
   const router = useRouter();
+  const form = useForm<CreateWorkSpaceSchemaType>({
+    defaultValues: { name: '', size: 0 },
+    resolver: zodResolver(createWorkspaceSchema),
+  });
 
-  const onFinish = (values: TCreateWorkSpaceForm) => {
+  const onFinish = (values: CreateWorkSpaceSchemaType) => {
     const payload: RequestCreateOrganizationRequest = {
       name: values.name,
       size: values.size,
@@ -31,9 +37,6 @@ const CreateWorkSpace = ({ goToJoin }: CreateWorkSpaceProps) => {
         onSuccess: (res) => {
           showToast(res.message!, 'success');
           router.push('/workspace');
-        },
-        onError: (err) => {
-          console.log(err);
         },
       },
     );
@@ -51,65 +54,22 @@ const CreateWorkSpace = ({ goToJoin }: CreateWorkSpaceProps) => {
       >
         Create Workspace
       </div>
-      <Form onFinish={onFinish} layout="vertical">
-        <Form.Item
-          name="name"
-          label="Workspace Name"
-          rules={[
-            { required: true, message: 'Workspace name is required' },
-            { min: 3, message: 'Workspace name must be at least 3 characters' },
-          ]}
-        >
-          <Input variant="underlined" style={{ height: '50px', background: '#eff5fb' }} />
-        </Form.Item>
-
-        <Form.Item
-          name="size"
-          label={
-            <span style={{ padding: 10 }}>
-              <TeamOutlined /> Workspace Size
-            </span>
-          }
-        >
-          <Radio.Group style={{ border: '0 solid' }} className={styles.radioWarrap}>
-            <Radio.Button value={5}>2-5</Radio.Button>
-            <Radio.Button value={10}>6-10</Radio.Button>
-            <Radio.Button value={20}>11-20</Radio.Button>
-            <Radio.Button value={50}>21-50</Radio.Button>
-            <Radio.Button value={100}>51-100</Radio.Button>
-            <Radio.Button value={250}>101-250</Radio.Button>
-            <Radio.Button value={1000}>250-mo</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item style={{ marginTop: '40px' }}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{
-              width: '100%',
-              height: '40px',
-              borderRadius: '0px',
-              fontSize: '16px',
-            }}
-            loading={isPending}
-          >
-            Continue
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onFinish)}>
+          <InputForm control={form.control} name="name" label="Workspace name" />
+          <RadioGroupForm
+            control={form.control}
+            name="size"
+            options={Object.entries(EWorkspaceSizes).map(([key, value]) => ({
+              label: key,
+              value: value.toString(),
+            }))}
+          />
+          <Button type="submit">Continue</Button>
+          <Button type="button" onClick={joinWorkspace}>
+            Join Organization
           </Button>
-        </Form.Item>
-
-        <Button
-          color="primary"
-          variant="outlined"
-          style={{
-            width: '100%',
-            height: '40px',
-            borderRadius: '0px',
-            fontSize: '16px',
-          }}
-          onClick={goToJoin}
-        >
-          Join Organization
-        </Button>
+        </form>
       </Form>
     </div>
   );

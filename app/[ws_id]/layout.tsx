@@ -18,9 +18,9 @@ const LayoutWorkspaceLaunched = async ({ children, params }: Props) => {
   if (!accessToken) redirect('/login');
   const workspaceList = await getListWorkspace(ws_id, accessToken);
 
-  if (!workspaceList) {
-    notFound();
-  }
+  // if (!workspaceList) {
+  //   notFound();
+  // }
   // return redirect(`/${ws_id}/home`);
 
   return <>{children}</>;

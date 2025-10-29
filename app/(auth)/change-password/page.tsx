@@ -1,16 +1,29 @@
 'use client';
-import { RequestChangePasswordRequest } from '@/app/api/generated.schemas';
 import { usePatchAuthUserPassword } from '@/app/api/users/users';
+import InputForm from '@/components/common/form/InputField';
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import {
+  changePasswordSchema,
+  ChangePasswordSchemaType,
+} from '@/constants/schemas/password-schema';
 import { showToast } from '@/utils/toast';
-import { Row, Col, Card, Form, Input, Button } from 'antd';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 
 const ChangePasswordPage = () => {
-  const [form] = Form.useForm<RequestChangePasswordRequest>();
+  const form = useForm<ChangePasswordSchemaType>({
+    defaultValues: {
+      old_password: '',
+      new_password: '',
+    },
+    resolver: zodResolver(changePasswordSchema),
+  });
   const { mutate, isPending } = usePatchAuthUserPassword();
   const navigate = useRouter();
 
-  const onFinish = (values: RequestChangePasswordRequest) =>
+  const onFinish = (values: ChangePasswordSchemaType) =>
     mutate(
       {
         data: {
@@ -26,13 +39,8 @@ const ChangePasswordPage = () => {
       },
     );
   return (
-    <Row justify="center">
-      <Col
-        xs={24}
-        sm={20}
-        md={16}
-        lg={12}
-        xl={10}
+    <div>
+      <div
         style={{
           position: 'relative',
           height: '100vh',
@@ -41,7 +49,7 @@ const ChangePasswordPage = () => {
           alignItems: 'center',
         }}
       >
-        <Card
+        <div
           style={{
             width: '85%',
             margin: 'auto',
@@ -64,78 +72,16 @@ const ChangePasswordPage = () => {
             password.
           </p>
 
-          <Form form={form} onFinish={onFinish} layout="vertical">
-            <Form.Item
-              name="old_password"
-              label="Old Password"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your password!',
-                },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name="new_password"
-              label="New Password"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your password!',
-                },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
+          <Form {...form}>
+            <InputForm control={form.control} name={'new_password'} />
+            <InputForm control={form.control} name={'old_password'} />
+            <InputForm control={form.control} name={'confirm_password'} />
 
-            <Form.Item
-              name="confirm"
-              label="Confirm New Password"
-              dependencies={['new_password']}
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: 'Please confirm your password!',
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue('new_password') === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error('The new password that you entered do not match!'),
-                    );
-                  },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item style={{ marginTop: '40px' }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{
-                  width: '100%',
-                  height: '40px',
-                  borderRadius: '0px',
-                  fontSize: '16px',
-                }}
-                loading={isPending}
-              >
-                Confirm
-              </Button>
-            </Form.Item>
+            <Button>Confirm</Button>
           </Form>
-        </Card>
-      </Col>
-    </Row>
+        </div>
+      </div>
+    </div>
   );
 };
 export default ChangePasswordPage;

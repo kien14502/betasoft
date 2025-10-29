@@ -1,7 +1,13 @@
-import { RequestForgotPasswordRequest } from '@/app/api/generated.schemas';
 import { usePostForgotPassword } from '@/app/api/users/users';
+import InputForm from '@/components/common/form/InputField';
+import { Button } from '@/components/ui/button';
+import {
+  requestForgotPasswordSchema,
+  RequestForgotPasswordSchemaType,
+} from '@/constants/schemas/password-schema';
 import { showToast } from '@/utils/toast';
-import { Form, Input, Button } from 'antd';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, useForm } from 'react-hook-form';
 
 type Props = {
   step: number;
@@ -10,9 +16,18 @@ type Props = {
 
 const RequestForgotPasswordForm: React.FC<Props> = ({ setStep, step }) => {
   const { mutate, isPending } = usePostForgotPassword();
-  const [form] = Form.useForm();
+  const form = useForm<RequestForgotPasswordSchemaType>({
+    defaultValues: {
+      email: '',
+      new_password: '',
+      confirmNewPassword: '',
+      verify_code: '',
+      step: step,
+    },
+    resolver: zodResolver(requestForgotPasswordSchema),
+  });
 
-  const onFinish = (values: RequestForgotPasswordRequest) => {
+  const onFinish = (values: RequestForgotPasswordSchemaType) => {
     mutate(
       {
         data: {
@@ -22,7 +37,6 @@ const RequestForgotPasswordForm: React.FC<Props> = ({ setStep, step }) => {
       },
       {
         onSuccess({ message }) {
-          console.log(message);
           showToast(message!, 'success');
           setStep();
         },
@@ -31,37 +45,11 @@ const RequestForgotPasswordForm: React.FC<Props> = ({ setStep, step }) => {
   };
 
   return (
-    <Form form={form} onFinish={onFinish} layout="vertical">
-      <Form.Item
-        name="email"
-        label="Email Address"
-        rules={[
-          { required: true, message: 'Email Address is required' },
-          { type: 'email', message: 'Email is not valid' },
-        ]}
-      >
-        <Input
-          variant="underlined"
-          style={{ height: '50px', background: '#eff5fb' }}
-          placeholder="Enter personal or work email address"
-        />
-      </Form.Item>
-
-      <Form.Item style={{ marginTop: '40px' }}>
-        <Button
-          type="primary"
-          htmlType="submit"
-          style={{
-            width: '100%',
-            height: '40px',
-            borderRadius: '0px',
-            fontSize: '16px',
-          }}
-          loading={isPending}
-        >
-          Send Reset Link
-        </Button>
-      </Form.Item>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onFinish)}>
+        <InputForm control={form.control} name={'email'} />
+        <Button type="submit">Send Reset Link</Button>
+      </form>
     </Form>
   );
 };

@@ -2,7 +2,7 @@
 
 import { useGetAuthOrganizations } from '@/app/api/organizations/organizations';
 import { AuthContext } from '@/components/providers/AuthProvider';
-import { Button } from 'antd';
+import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 
@@ -27,9 +27,7 @@ const LaunchApp = () => {
         {workspaces?.organizations?.map((item, i) => (
           <div key={i} className="w-full flex items-center justify-between">
             {item.organization?.name}
-            <Button type="primary" onClick={() => onLaunch(item.organization?.id || '')}>
-              Lanch
-            </Button>
+            <Button onClick={() => onLaunch(item.organization?.id || '')}>Lanch</Button>
           </div>
         ))}
       </div>

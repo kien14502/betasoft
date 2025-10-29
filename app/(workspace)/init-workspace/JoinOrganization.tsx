@@ -1,5 +1,9 @@
-import { Button, Form, Input } from 'antd';
+import InputForm from '@/components/common/form/InputField';
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { VerifyCodeSchemaType } from '@/constants/schemas/register-schem';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 interface JoinWorkSpaceProps {
   goToCreate: () => void;
@@ -8,9 +12,9 @@ interface JoinWorkSpaceProps {
 const JoinOrganization = ({ goToCreate }: JoinWorkSpaceProps) => {
   const [loading, setLoading] = useState(false);
 
-  const [form] = Form.useForm();
+  const form = useForm<VerifyCodeSchemaType>();
 
-  const onFinish = (values: unknown) => {
+  const onFinish = (values: VerifyCodeSchemaType) => {
     setLoading(true);
     console.log('Received values:', values);
     setTimeout(() => setLoading(false), 2000); // Simulate API call
@@ -28,44 +32,14 @@ const JoinOrganization = ({ goToCreate }: JoinWorkSpaceProps) => {
       >
         Join Organization
       </div>
-      <Form form={form} onFinish={onFinish} layout="vertical">
-        <Form.Item
-          name="code"
-          label="Enter Code"
-          rules={[{ required: true, message: 'Code is required' }]}
-        >
-          <Input variant="underlined" style={{ height: '50px', background: '#eff5fb' }} />
-        </Form.Item>
-
-        <Form.Item style={{ marginTop: '40px' }}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{
-              width: '100%',
-              height: '40px',
-              borderRadius: '0px',
-              fontSize: '16px',
-            }}
-            loading={loading}
-          >
-            Continue
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onFinish)}>
+          <InputForm label="Enter code" control={form.control} name={'code'} />
+          <Button type="submit">Continue</Button>
+          <Button onClick={goToCreate} type="button">
+            Create Workspace
           </Button>
-        </Form.Item>
-
-        <Button
-          color="primary"
-          variant="outlined"
-          style={{
-            width: '100%',
-            height: '40px',
-            borderRadius: '0px',
-            fontSize: '16px',
-          }}
-          onClick={goToCreate}
-        >
-          Create Workspace
-        </Button>
+        </form>
       </Form>
     </div>
   );

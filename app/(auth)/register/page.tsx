@@ -1,7 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import RegisterCard from './RegisterCard';
-import { Col, Row } from 'antd';
 import Image from 'next/image';
 import VerifyCode from './VerifyCode';
 import { RequestRegisterRequest } from '@/app/api/generated.schemas';
@@ -14,8 +13,8 @@ function Page() {
   });
 
   return (
-    <Row>
-      <Col span={12} style={{ position: 'relative', height: '100vh', width: '100%' }}>
+    <div className="grid grid-cols-2">
+      <div className="col-span-1">
         <Image
           src="/logo_register.png"
           alt="logo_register"
@@ -23,13 +22,13 @@ function Page() {
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           priority
         />
-      </Col>
-      <Col span={12}>
+      </div>
+      <div className="col-span-1">
         {dataPayload.step == 1 && <RegisterCard setDataPayload={setDataPayload} />}
         {dataPayload.step == 2 && <VerifyCode data={dataPayload} setData={setDataPayload} />}
         {dataPayload.step == 3 && <CreatePass data={dataPayload} setData={setDataPayload} />}
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 }
 

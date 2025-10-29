@@ -24,82 +24,83 @@ import type {
 
 import type { ResponseResponse } from '../generated.schemas';
 
-import getWsMutator from '../../../config/axios';
+import getAuthWsMutator from '../../../config/axios';
 
 /**
- * Websocket endpoint dùng để nhắn tin và gửi thông báo realtime, các bước liên quan Websocket: https://docs.google.com/spreadsheets/d/1BL38FzM7ol-xSpbekYP5dXajmZTYoYmyaDv1PLPJx_E/edit#gid=1003076463
+ * Websocket endpoint dùng để nhắn tin và gửi thông báo realtime
  * @summary Kết nối Websocket
  */
-export const getWs = (signal?: AbortSignal) => {
-  return getWsMutator<ResponseResponse>({ url: `/ws`, method: 'GET', signal });
+export const getAuthWs = (signal?: AbortSignal) => {
+  return getAuthWsMutator<ResponseResponse>({ url: `/auth/ws`, method: 'GET', signal });
 };
 
-export const getGetWsQueryKey = () => {
-  return [`/ws`] as const;
+export const getGetAuthWsQueryKey = () => {
+  return [`/auth/ws`] as const;
 };
 
-export const getGetWsInfiniteQueryOptions = <
-  TData = InfiniteData<Awaited<ReturnType<typeof getWs>>>,
+export const getGetAuthWsInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthWs>>>,
   TError = unknown,
 >(options?: {
-  query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>>;
+  query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>>;
 }) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetWsQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getGetAuthWsQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWs>>> = ({ signal }) => getWs(signal);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthWs>>> = ({ signal }) =>
+    getAuthWs(signal);
 
   return { queryKey, queryFn, staleTime: 10000, ...queryOptions } as UseInfiniteQueryOptions<
-    Awaited<ReturnType<typeof getWs>>,
+    Awaited<ReturnType<typeof getAuthWs>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetWsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getWs>>>;
-export type GetWsInfiniteQueryError = unknown;
+export type GetAuthWsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthWs>>>;
+export type GetAuthWsInfiniteQueryError = unknown;
 
-export function useGetWsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof getWs>>>,
+export function useGetAuthWsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthWs>>>,
   TError = unknown,
 >(
   options: {
-    query: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>> &
+    query: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>> &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWs>>,
+          Awaited<ReturnType<typeof getAuthWs>>,
           TError,
-          Awaited<ReturnType<typeof getWs>>
+          Awaited<ReturnType<typeof getAuthWs>>
         >,
         'initialData'
       >;
   },
   queryClient?: QueryClient,
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof getWs>>>,
+export function useGetAuthWsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthWs>>>,
   TError = unknown,
 >(
   options?: {
-    query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>> &
+    query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>> &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWs>>,
+          Awaited<ReturnType<typeof getAuthWs>>,
           TError,
-          Awaited<ReturnType<typeof getWs>>
+          Awaited<ReturnType<typeof getAuthWs>>
         >,
         'initialData'
       >;
   },
   queryClient?: QueryClient,
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof getWs>>>,
+export function useGetAuthWsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthWs>>>,
   TError = unknown,
 >(
   options?: {
-    query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>>;
+    query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>>;
   },
   queryClient?: QueryClient,
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -107,16 +108,16 @@ export function useGetWsInfinite<
  * @summary Kết nối Websocket
  */
 
-export function useGetWsInfinite<
-  TData = InfiniteData<Awaited<ReturnType<typeof getWs>>>,
+export function useGetAuthWsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthWs>>>,
   TError = unknown,
 >(
   options?: {
-    query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>>;
+    query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>>;
   },
   queryClient?: QueryClient,
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetWsInfiniteQueryOptions(options);
+  const queryOptions = getGetAuthWsInfiniteQueryOptions(options);
 
   const query = useInfiniteQuery(queryOptions, queryClient) as UseInfiniteQueryResult<
     TData,
@@ -128,69 +129,74 @@ export function useGetWsInfinite<
   return query;
 }
 
-export const getGetWsQueryOptions = <
-  TData = Awaited<ReturnType<typeof getWs>>,
+export const getGetAuthWsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAuthWs>>,
   TError = unknown,
 >(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>>;
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>>;
 }) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetWsQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getGetAuthWsQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWs>>> = ({ signal }) => getWs(signal);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthWs>>> = ({ signal }) =>
+    getAuthWs(signal);
 
   return { queryKey, queryFn, staleTime: 10000, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getWs>>,
+    Awaited<ReturnType<typeof getAuthWs>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetWsQueryResult = NonNullable<Awaited<ReturnType<typeof getWs>>>;
-export type GetWsQueryError = unknown;
+export type GetAuthWsQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthWs>>>;
+export type GetAuthWsQueryError = unknown;
 
-export function useGetWs<TData = Awaited<ReturnType<typeof getWs>>, TError = unknown>(
+export function useGetAuthWs<TData = Awaited<ReturnType<typeof getAuthWs>>, TError = unknown>(
   options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>> &
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>> &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWs>>,
+          Awaited<ReturnType<typeof getAuthWs>>,
           TError,
-          Awaited<ReturnType<typeof getWs>>
+          Awaited<ReturnType<typeof getAuthWs>>
         >,
         'initialData'
       >;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWs<TData = Awaited<ReturnType<typeof getWs>>, TError = unknown>(
+export function useGetAuthWs<TData = Awaited<ReturnType<typeof getAuthWs>>, TError = unknown>(
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>> &
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>> &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWs>>,
+          Awaited<ReturnType<typeof getAuthWs>>,
           TError,
-          Awaited<ReturnType<typeof getWs>>
+          Awaited<ReturnType<typeof getAuthWs>>
         >,
         'initialData'
       >;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWs<TData = Awaited<ReturnType<typeof getWs>>, TError = unknown>(
-  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>> },
+export function useGetAuthWs<TData = Awaited<ReturnType<typeof getAuthWs>>, TError = unknown>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>>;
+  },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
  * @summary Kết nối Websocket
  */
 
-export function useGetWs<TData = Awaited<ReturnType<typeof getWs>>, TError = unknown>(
-  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData>> },
+export function useGetAuthWs<TData = Awaited<ReturnType<typeof getAuthWs>>, TError = unknown>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthWs>>, TError, TData>>;
+  },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetWsQueryOptions(options);
+  const queryOptions = getGetAuthWsQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

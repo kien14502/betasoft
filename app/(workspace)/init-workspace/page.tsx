@@ -1,9 +1,9 @@
 'use client';
-import { Button, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import Image from 'next/image';
 import CreateWorkSpace from './CreateWorkSpace';
 import JoinOrganization from './JoinOrganization';
+import { Button } from '@/components/ui/button';
 
 function InitWorkSpacePage() {
   const [action, setAction] = useState<'create' | 'join' | null>(null);
@@ -21,11 +21,7 @@ function InitWorkSpacePage() {
         Already have a Workspace?
       </div>
       <Button
-        onClick={() => {
-          console.log('hi');
-          setAction('create');
-        }}
-        type="primary"
+        onClick={() => setAction('create')}
         style={{
           width: '100%',
           height: '40px',
@@ -37,9 +33,6 @@ function InitWorkSpacePage() {
         Create Workspace
       </Button>
       <Button
-        color="primary"
-        variant="outlined"
-        htmlType="submit"
         style={{
           width: '100%',
           height: '40px',
@@ -54,32 +47,10 @@ function InitWorkSpacePage() {
   );
 
   return (
-    <Row justify="center">
-      <Col
-        xs={24}
-        sm={20}
-        md={16}
-        lg={12}
-        xl={10}
-        style={{
-          position: 'relative',
-          height: '100vh',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+    <div className="grid grid-cols-2">
+      <div className="relative h-screen w-full flex items-center">
         <div style={{ width: '100%', margin: 'auto', padding: '10%' }}>
-          <div
-            style={{
-              position: 'relative',
-              height: '20vh',
-              width: '60%',
-              display: 'flex',
-              alignItems: 'center',
-              margin: 'auto',
-            }}
-          >
+          <div className="relative h-[20vh] w-[60%] flex items-center mx-auto">
             <Image
               src={'/logo_company.png'}
               alt="logo-company"
@@ -88,11 +59,11 @@ function InitWorkSpacePage() {
             />
           </div>
           {action == null && <RedirectForm />}
-          {action == 'create' && <CreateWorkSpace goToJoin={() => setAction('join')} />}
+          {action == 'create' && <CreateWorkSpace joinWorkspace={() => setAction('join')} />}
           {action == 'join' && <JoinOrganization goToCreate={() => setAction('create')} />}
         </div>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 }
 

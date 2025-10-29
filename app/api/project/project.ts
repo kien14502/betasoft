@@ -31,6 +31,7 @@ import type {
   GetAuthProjectsProjectId200,
   GetAuthProjectsProjectIdDashboard200,
   GetAuthProjectsProjectIdMembers200,
+  GetAuthProjectsProjectIdMembersParams,
   PatchAuthProjectsProjectId200,
   PostAuthProjects200,
   PostAuthProjectsLaunch200,
@@ -733,16 +734,24 @@ export function useGetAuthProjectsProjectIdDashboard<
  * API lấy tất cả thành viên trong dự án có thể search theo tên, email, số điện thoại, vai trò và phân trang
  * @summary Lấy danh sách thành viên dự án (là người xem trở lên mới được xem, nếu là viewer thì chỉ khi project allow guest)
  */
-export const getAuthProjectsProjectIdMembers = (projectId: string, signal?: AbortSignal) => {
+export const getAuthProjectsProjectIdMembers = (
+  projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
+  signal?: AbortSignal,
+) => {
   return getAuthProjectsProjectIdMembersMutator<GetAuthProjectsProjectIdMembers200>({
     url: `/auth/projects/${projectId}/members`,
     method: 'GET',
+    params,
     signal,
   });
 };
 
-export const getGetAuthProjectsProjectIdMembersQueryKey = (projectId?: string) => {
-  return [`/auth/projects/${projectId}/members`] as const;
+export const getGetAuthProjectsProjectIdMembersQueryKey = (
+  projectId?: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
+) => {
+  return [`/auth/projects/${projectId}/members`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetAuthProjectsProjectIdMembersInfiniteQueryOptions = <
@@ -750,6 +759,7 @@ export const getGetAuthProjectsProjectIdMembersInfiniteQueryOptions = <
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
@@ -762,11 +772,12 @@ export const getGetAuthProjectsProjectIdMembersInfiniteQueryOptions = <
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetAuthProjectsProjectIdMembersQueryKey(projectId);
+  const queryKey =
+    queryOptions?.queryKey ?? getGetAuthProjectsProjectIdMembersQueryKey(projectId, params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthProjectsProjectIdMembers>>> = ({
     signal,
-  }) => getAuthProjectsProjectIdMembers(projectId, signal);
+  }) => getAuthProjectsProjectIdMembers(projectId, params, signal);
 
   return {
     queryKey,
@@ -791,6 +802,7 @@ export function useGetAuthProjectsProjectIdMembersInfinite<
   TError = unknown,
 >(
   projectId: string,
+  params: undefined | GetAuthProjectsProjectIdMembersParams,
   options: {
     query: Partial<
       UseInfiniteQueryOptions<
@@ -815,6 +827,7 @@ export function useGetAuthProjectsProjectIdMembersInfinite<
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
@@ -839,6 +852,7 @@ export function useGetAuthProjectsProjectIdMembersInfinite<
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
@@ -859,6 +873,7 @@ export function useGetAuthProjectsProjectIdMembersInfinite<
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<
@@ -870,7 +885,11 @@ export function useGetAuthProjectsProjectIdMembersInfinite<
   },
   queryClient?: QueryClient,
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetAuthProjectsProjectIdMembersInfiniteQueryOptions(projectId, options);
+  const queryOptions = getGetAuthProjectsProjectIdMembersInfiniteQueryOptions(
+    projectId,
+    params,
+    options,
+  );
 
   const query = useInfiniteQuery(queryOptions, queryClient) as UseInfiniteQueryResult<
     TData,
@@ -887,6 +906,7 @@ export const getGetAuthProjectsProjectIdMembersQueryOptions = <
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAuthProjectsProjectIdMembers>>, TError, TData>
@@ -895,11 +915,12 @@ export const getGetAuthProjectsProjectIdMembersQueryOptions = <
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetAuthProjectsProjectIdMembersQueryKey(projectId);
+  const queryKey =
+    queryOptions?.queryKey ?? getGetAuthProjectsProjectIdMembersQueryKey(projectId, params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthProjectsProjectIdMembers>>> = ({
     signal,
-  }) => getAuthProjectsProjectIdMembers(projectId, signal);
+  }) => getAuthProjectsProjectIdMembers(projectId, params, signal);
 
   return {
     queryKey,
@@ -924,6 +945,7 @@ export function useGetAuthProjectsProjectIdMembers<
   TError = unknown,
 >(
   projectId: string,
+  params: undefined | GetAuthProjectsProjectIdMembersParams,
   options: {
     query: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAuthProjectsProjectIdMembers>>, TError, TData>
@@ -944,6 +966,7 @@ export function useGetAuthProjectsProjectIdMembers<
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAuthProjectsProjectIdMembers>>, TError, TData>
@@ -964,6 +987,7 @@ export function useGetAuthProjectsProjectIdMembers<
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAuthProjectsProjectIdMembers>>, TError, TData>
@@ -980,6 +1004,7 @@ export function useGetAuthProjectsProjectIdMembers<
   TError = unknown,
 >(
   projectId: string,
+  params?: GetAuthProjectsProjectIdMembersParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getAuthProjectsProjectIdMembers>>, TError, TData>
@@ -987,7 +1012,7 @@ export function useGetAuthProjectsProjectIdMembers<
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetAuthProjectsProjectIdMembersQueryOptions(projectId, options);
+  const queryOptions = getGetAuthProjectsProjectIdMembersQueryOptions(projectId, params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

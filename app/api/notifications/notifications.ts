@@ -5,22 +5,34 @@
  * API documentation for Beta - an integrated workspace platform that helps teams work more efficiently through a unified ecosystem: team chat, collaborative documents, email, task management, and workflow automation.
  * OpenAPI spec version: 1.0.0
  */
-import { useMutation } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
+  DefinedUseQueryResult,
+  InfiniteData,
   MutationFunction,
   QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
 } from '@tanstack/react-query';
 
 import type {
-  RequestNotificationRequest,
+  GetNotificationsParams,
   RequestRegisterDeviceRequest,
   ResponseResponse,
 } from '../generated.schemas';
 
 import postAuthNotificationRegisterDeviceMutator from '../../../config/axios';
-import postAuthNotificationSendMutator from '../../../config/axios';
+import getNotificationsMutator from '../../../config/axios';
 
 /**
  * API đăng ký token device để nhận thông báo
@@ -104,83 +116,225 @@ export const usePostAuthNotificationRegisterDevice = <TError = unknown, TContext
   return useMutation(mutationOptions, queryClient);
 };
 /**
- * API gửi thông báo cho workspace
- * @summary Gửi thông báo
+ * API lấy danh sách thông báo cho người dùng với các bộ lọc như tiêu đề, trạng thái đã đọc, người gửi, khoảng thời gian
+ * @summary Lấy danh sách thông báo cho người dùng
  */
-export const postAuthNotificationSend = (
-  requestNotificationRequest: RequestNotificationRequest,
-  signal?: AbortSignal,
-) => {
-  return postAuthNotificationSendMutator<ResponseResponse>({
-    url: `/auth/notification/send`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: requestNotificationRequest,
+export const getNotifications = (params?: GetNotificationsParams, signal?: AbortSignal) => {
+  return getNotificationsMutator<ResponseResponse>({
+    url: `/notifications`,
+    method: 'GET',
+    params,
     signal,
   });
 };
 
-export const getPostAuthNotificationSendMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postAuthNotificationSend>>,
-    TError,
-    { data: RequestNotificationRequest },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof postAuthNotificationSend>>,
-  TError,
-  { data: RequestNotificationRequest },
-  TContext
-> => {
-  const mutationKey = ['postAuthNotificationSend'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postAuthNotificationSend>>,
-    { data: RequestNotificationRequest }
-  > = (props) => {
-    const { data } = props ?? {};
-
-    return postAuthNotificationSend(data);
-  };
-
-  return { mutationFn, ...mutationOptions };
+export const getGetNotificationsQueryKey = (params?: GetNotificationsParams) => {
+  return [`/notifications`, ...(params ? [params] : [])] as const;
 };
 
-export type PostAuthNotificationSendMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postAuthNotificationSend>>
->;
-export type PostAuthNotificationSendMutationBody = RequestNotificationRequest;
-export type PostAuthNotificationSendMutationError = unknown;
-
-/**
- * @summary Gửi thông báo
- */
-export const usePostAuthNotificationSend = <TError = unknown, TContext = unknown>(
+export const getGetNotificationsInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getNotifications>>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
   options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof postAuthNotificationSend>>,
-      TError,
-      { data: RequestNotificationRequest },
-      TContext
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetNotificationsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getNotifications>>> = ({ signal }) =>
+    getNotifications(params, signal);
+
+  return { queryKey, queryFn, staleTime: 10000, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getNotifications>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetNotificationsInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getNotifications>>
+>;
+export type GetNotificationsInfiniteQueryError = unknown;
+
+export function useGetNotificationsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getNotifications>>>,
+  TError = unknown,
+>(
+  params: undefined | GetNotificationsParams,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNotifications>>,
+          TError,
+          Awaited<ReturnType<typeof getNotifications>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetNotificationsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getNotifications>>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNotifications>>,
+          TError,
+          Awaited<ReturnType<typeof getNotifications>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetNotificationsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getNotifications>>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof postAuthNotificationSend>>,
-  TError,
-  { data: RequestNotificationRequest },
-  TContext
-> => {
-  const mutationOptions = getPostAuthNotificationSendMutationOptions(options);
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Lấy danh sách thông báo cho người dùng
+ */
 
-  return useMutation(mutationOptions, queryClient);
+export function useGetNotificationsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getNotifications>>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetNotificationsInfiniteQueryOptions(params, options);
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as UseInfiniteQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetNotificationsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getNotifications>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>>;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetNotificationsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getNotifications>>> = ({ signal }) =>
+    getNotifications(params, signal);
+
+  return { queryKey, queryFn, staleTime: 10000, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getNotifications>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
+
+export type GetNotificationsQueryResult = NonNullable<Awaited<ReturnType<typeof getNotifications>>>;
+export type GetNotificationsQueryError = unknown;
+
+export function useGetNotifications<
+  TData = Awaited<ReturnType<typeof getNotifications>>,
+  TError = unknown,
+>(
+  params: undefined | GetNotificationsParams,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNotifications>>,
+          TError,
+          Awaited<ReturnType<typeof getNotifications>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetNotifications<
+  TData = Awaited<ReturnType<typeof getNotifications>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNotifications>>,
+          TError,
+          Awaited<ReturnType<typeof getNotifications>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetNotifications<
+  TData = Awaited<ReturnType<typeof getNotifications>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Lấy danh sách thông báo cho người dùng
+ */
+
+export function useGetNotifications<
+  TData = Awaited<ReturnType<typeof getNotifications>>,
+  TError = unknown,
+>(
+  params?: GetNotificationsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetNotificationsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}

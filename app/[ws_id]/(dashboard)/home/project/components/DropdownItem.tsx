@@ -1,5 +1,4 @@
 import { cn } from '@/utils/common';
-import { Space, Typography } from 'antd';
 import Image from 'next/image';
 
 interface AccessOption {
@@ -22,8 +21,8 @@ const DropdownItem: React.FC<Props> = ({ options, onSelect, focus }) => {
     <div
       onClick={() => onSelect(options.value)}
       className={cn(
-        'p-4 flex items-center gap-4 !px-4 !py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-150 first:border-b first:border-[#AEAEB2]',
-        isFocus ? 'bg-[#E5F1FF] !border-l-[2px] !border-l-[#005AF4]' : '',
+        'p-4 flex items-center gap-4 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-150 first:border-b first:border-[#AEAEB2]',
+        isFocus ? 'bg-[#E5F1FF] border-l-2 border-l-[#005AF4]' : '',
       )}
     >
       <Image
@@ -32,20 +31,14 @@ const DropdownItem: React.FC<Props> = ({ options, onSelect, focus }) => {
         height={24}
         alt={'lock icon'}
       />
-      <Space direction="vertical" size={4}>
-        <Space size={8}>
-          <Typography.Text className={isFocus ? '!text-[#002E73]' : ''} strong>
-            {options.label}
-          </Typography.Text>
-        </Space>
-        <Typography.Text
-          type="secondary"
-          className={isFocus ? '!text-[#0045AC]' : ''}
-          style={{ fontSize: '12px' }}
-        >
+      <div>
+        <div>
+          <strong className={isFocus ? 'text-[#002E73]' : ''}>{options.label}</strong>
+        </div>
+        <p className={isFocus ? 'text-[#0045AC]' : ''} style={{ fontSize: '12px' }}>
           {options.description}
-        </Typography.Text>
-      </Space>
+        </p>
+      </div>
     </div>
   );
 };

@@ -1,19 +1,16 @@
 import { useGetAuthOrganizationsOrgIdMembers } from '@/app/api/organizations/organizations';
-import { Button, Dropdown, Form, Input, MenuProps, Select } from 'antd';
-import { AnyObject } from 'antd/es/_util/type';
-import { useForm } from 'antd/es/form/Form';
+
 import React, { useState } from 'react';
 import InviteMemberModal from './InviteMemberModal';
-import ListDataPage from '@/components/ListDataPage/ListTablePage';
 import { useStore } from '@/store';
 import { ResponseGetMembersInOrgResponse } from '@/app/api/generated.schemas';
+import { Button } from '@/components/ui/button';
 
 interface IWorkSpaceViewProps {
   idWorkSpace: string;
 }
 
 const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
-  const [form] = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [{ workspace }] = useStore();
@@ -22,7 +19,7 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
 
   const { workspaceActive } = workspace;
 
-  const menuAction = (_: unknown, record: AnyObject): MenuProps['items'] => [
+  const menuAction = () => [
     {
       key: '1',
       label: <Button onClick={() => {}}>Edit</Button>,
@@ -38,7 +35,7 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
   ];
   return (
     <div>
-      <ListDataPage
+      {/* <ListDataPage
         listHeader={{
           title: workspaceActive?.name || '',
           buttonActions: [
@@ -128,7 +125,7 @@ const WorkSpaceView = ({ idWorkSpace }: IWorkSpaceViewProps) => {
             },
           },
         }}
-      />
+      /> */}
       <InviteMemberModal
         id={idWorkSpace}
         isModalOpen={isModalOpen}

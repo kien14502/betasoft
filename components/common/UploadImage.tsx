@@ -1,123 +1,127 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload } from 'antd';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
-import ImgCrop from 'antd-img-crop';
+import { cn } from '@/lib/utils';
+import { Trash, Upload } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '../ui/button';
+import Image from 'next/image';
 import { usePostAuthFileUpload } from '@/app/api/files/files';
-import { showToast } from '@/utils/toast';
 
-interface UploadImageProps {
-  value?: UploadFile[];
-  maxImageUpload?: number;
-  onChange?: (fileList: UploadFile[]) => void;
-  aspect?: number;
-  width?: number;
-  height?: number;
-}
+type Props = {
+  value?: string;
+  onChange?: (value: string) => void;
+  isCallback?: boolean;
+};
 
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+const UploadImage = ({ value, onChange, isCallback = true }: Props) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [fileName, setFileName] = useState<Blob | null>(null);
+  const { mutate: uploadFile } = usePostAuthFileUpload();
 
-const getBase64 = (file: FileType): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
 
-export default function UploadImage({
-  value = [],
-  onChange,
-  maxImageUpload = 1,
-  width,
-  height,
-  aspect = 1,
-}: UploadImageProps) {
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [fileList, setFileList] = useState<UploadFile[]>(value);
-
-  const { mutateAsync: uploadFile } = usePostAuthFileUpload();
   useEffect(() => {
-    const isEqual =
-      value.length === fileList.length && value.every((v, i) => v.url === fileList[i].url);
-
-    if (!isEqual) {
-      setFileList(value);
+    if (!fileName) return;
+    if (isCallback) {
+      uploadFile(
+        { data: { file: fileName } },
+        {
+          onSuccess(data) {
+            onChange?.(data.data?.url || '');
+          },
+        },
+      );
+    } else {
+      onChange?.(URL.createObjectURL(fileName));
     }
-  }, [value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileName]);
 
-  // @ts-ignore
-  const handleCustomRequest = (options: any) => {
-    const { file, onSuccess, onError } = options;
-
-    uploadFile({ data: { file } })
-      .then((res) => {
-        onSuccess?.(res.data?.url);
-      })
-      .catch((err) => {
-        onError?.(err);
-        showToast(err.message, 'error');
-      });
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
   };
 
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      setFileName(file);
+
+      if (inputRef.current) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        inputRef.current.files = dataTransfer.files;
+
+        const event = new Event('change', { bubbles: true });
+        inputRef.current.dispatchEvent(event);
+      }
     }
-
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
   };
 
-  const handleChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-    onChange?.(newFileList);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFileName(file);
+    }
   };
 
-  const uploadButton = (
-    <button style={{ border: 0, background: 'none', width: width, height: height }} type="button">
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </button>
-  );
+  const handleClick = () => {
+    inputRef.current?.click();
+  };
+
+  const removeFile = () => {
+    setFileName(null);
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  };
   return (
-    <div style={{ width: width, height: height }}>
-      <ImgCrop rotationSlider aspect={aspect} showReset modalProps={{ destroyOnHidden: true }}>
-        <Upload
-          customRequest={handleCustomRequest}
-          listType="picture-card"
-          fileList={fileList}
-          onPreview={handlePreview}
-          onChange={handleChange}
-          style={{ width: width, height: height }}
-          itemRender={(originNode) => <div style={{ width, height }}>{originNode}</div>}
-        >
-          {fileList.length >= maxImageUpload ? null : uploadButton}
-        </Upload>
-      </ImgCrop>
-      {previewImage && (
-        <Image
-          wrapperStyle={{ display: 'none' }}
-          preview={{
-            visible: previewOpen,
-            onVisibleChange: (visible) => setPreviewOpen(visible),
-            afterOpenChange: (visible) => !visible && setPreviewImage(''),
-          }}
-          src={previewImage}
-          alt=""
-        />
+    <>
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={handleClick}
+        className={cn(
+          'relative flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 cursor-pointer transition-colors',
+          isDragging
+            ? 'border-primary bg-primary/5'
+            : 'border-border bg-muted/30 hover:bg-muted/50',
+          fileName && 'hidden',
+        )}
+      >
+        <Upload className="h-8 w-8 text-muted-foreground" />
+        <div className="text-center">
+          <p className="font-medium text-foreground">Drag and drop your file here</p>
+          <p className="text-sm text-muted-foreground">or click to browse</p>
+        </div>
+        <input ref={inputRef} type="file" className="hidden" onChange={handleInputChange} />
+      </div>
+      {(fileName || value) && (
+        <div className="relative rounded-md w-fit h-fit overflow-hidden group">
+          <Image
+            src={value ? value : URL.createObjectURL(fileName as Blob)}
+            width={100}
+            height={100}
+            alt={'avatar'}
+          />
+          <div className="absolute inset-0 opacity-0 flex items-center justify-center group-hover:opacity-100 transition-opacity">
+            <Button variant={'destructive'} size={'icon'} type="button" onClick={removeFile}>
+              <Trash />
+            </Button>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
-}
-
-export function normalizeImage(urls: string[] = []): UploadFile[] {
-  return urls.map((url, index) => ({
-    uid: String(index),
-    name: url.split('/').pop() || `img-${index}`,
-    status: 'done',
-    url,
-  }));
-}
+};
+export default UploadImage;

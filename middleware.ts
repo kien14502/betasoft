@@ -12,8 +12,6 @@ function decodeJwt(token: string) {
 const UNAUTHENTICATED_ONLY_ROUTES = ['/login', '/register', 'forgot-pass'];
 
 export function middleware(req: NextRequest) {
-  console.log(req);
-
   const token = req.cookies.get('accessToken')?.value;
   const { pathname } = req.nextUrl;
   const baseHomePathRegex = /^\/[^/]+\/home$/;
