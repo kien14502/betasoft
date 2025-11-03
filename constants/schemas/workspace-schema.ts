@@ -100,3 +100,15 @@ export const createProjectTaskSchema = z.object({
 });
 
 export type CreateProjectTaskSchemaType = z.infer<typeof createProjectTaskSchema>;
+
+export const taskFilterSchema = z.object({
+  list_id: z.array(z.string()).optional(),
+  // label: z.array(z.string()).optional(),
+  priority: z.array(z.string()).optional(),
+  assignee: z.array(z.string()).optional(),
+  due_date: z.string().optional(),
+  // created_by: z.string().optional(),
+  reporter: z.string().optional(),
+});
+
+export type TaskFilterSchema = z.infer<typeof taskFilterSchema>;

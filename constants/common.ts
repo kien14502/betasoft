@@ -1,4 +1,4 @@
-import { Lock, Unlock } from 'lucide-react';
+import { ChartNoAxesGantt, ChevronDown, ChevronUp, Lock, Unlock } from 'lucide-react';
 import { CreateProjectSchemaType } from './schemas/workspace-schema';
 
 const accessOptions = [
@@ -27,6 +27,58 @@ const accessOptions = [
 
 export default accessOptions;
 export type AccessOptionType = (typeof accessOptions)[number];
+
+export const urgencyOptions = [
+  // {
+  //   label: 'Highest',
+  //   value: 'highest',
+  //   icon: ChevronsUp,
+  //   color: {
+  //     bg: '#FFE8E9',
+  //     icon: '#F20005',
+  //   },
+  // },
+  {
+    label: 'High',
+    value: 'high',
+    icon: ChevronUp,
+    color: {
+      bg: '#FFE8E9',
+      icon: '#F20005',
+    },
+  },
+  {
+    label: 'Medium',
+    value: 'medium',
+    icon: ChartNoAxesGantt,
+    color: {
+      icon: '#FFBB00',
+      bg: '#FFEED4',
+    },
+  },
+  {
+    label: 'Low',
+    value: 'low',
+    icon: ChevronDown,
+    color: {
+      bg: '#E5F1FF',
+      icon: '#005AF4',
+    },
+  },
+  // {
+  //   label: 'Lowest',
+  //   value: 'lowest',
+  //   icon: ChevronsDown,
+  //   color: {
+  //     bg: '#E5F1FF',
+  //     icon: '#005AF4',
+  //   },
+  // },
+];
+
+export const getUrgencyOptions = (urgency: string) => {
+  return urgencyOptions.find((item) => item.value === urgency);
+};
 
 export const DEFAULT_TASK_LIST: CreateProjectSchemaType['task_list'] = [
   {
@@ -60,3 +112,5 @@ export const WORKSPACE_SIZE_OPTIONS = [
   { label: '101-250', value: '250' },
   { label: '250+', value: '1000' },
 ];
+
+export const USER_AVATAR_URL = '/icons/user-circle.svg';

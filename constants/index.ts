@@ -14,11 +14,11 @@ enum EToken {
 }
 
 enum EUrgency {
-  HIGHEST = 'highest',
+  // HIGHEST = 'highest',
   HIGH = 'high',
   MEDIUM = 'medium',
   LOW = 'low',
-  LOWEST = 'lowest',
+  // LOWEST = 'lowest',
 }
 
 enum EWorkspaceSizes {

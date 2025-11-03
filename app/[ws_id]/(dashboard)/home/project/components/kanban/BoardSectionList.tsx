@@ -54,7 +54,7 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks, sections }) => {
       <div className="flex items-start gap-4 h-full flex-1 overflow-x-auto">
         {Object.keys(boardSections).map((boardSectionKey) => (
           <div
-            className="bg-bg-secondary h-fit shrink-0 !p-4 rounded-md w-full max-w-[400px]"
+            className="bg-bg-secondary h-fit shrink-0 p-4 rounded-md w-full max-w-[400px]"
             key={boardSectionKey}
           >
             <BoardSection

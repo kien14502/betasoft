@@ -36,7 +36,7 @@ export function middleware(req: NextRequest) {
   }
 
   if (UNAUTHENTICATED_ONLY_ROUTES.includes(pathname) && token) {
-    return NextResponse.redirect(new URL('/home', req.url));
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   if (!UNAUTHENTICATED_ONLY_ROUTES.includes(pathname) && !token) {

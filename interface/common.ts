@@ -1,5 +1,5 @@
-import { ChartArea } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ChartArea, LucideProps } from 'lucide-react';
+import { ForwardRefExoticComponent, ReactNode, RefAttributes } from 'react';
 import { Control, FieldValues, Path } from 'react-hook-form';
 
 export interface IMenuItem {
@@ -26,3 +26,7 @@ export interface FormProps<T extends FieldValues> {
   label?: string;
   className?: string;
 }
+
+export type Icon = ForwardRefExoticComponent<
+  Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+>;

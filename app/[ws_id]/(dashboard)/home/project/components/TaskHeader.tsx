@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
+import TaskFilter from './filter/TaskFilter';
 
 type Props = {
   viewMode: 'kanban' | 'list';
@@ -33,7 +34,7 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
           // prefix={<Image width={16} height={16} src={'/icons/search.svg'} alt={''} />}
         />
       </div>
-      <div>filter</div>
+      <TaskFilter />
     </div>
   );
 };

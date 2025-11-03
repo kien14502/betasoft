@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import MenuDashboard from '@/components/layout/dashboard/MenuDashboard';
 import HomeHeader from '@/components/layout/HomeHeader';
@@ -19,7 +19,9 @@ function LayoutConfig({ children }: { children: React.ReactNode }) {
           flexDirection: 'column',
         }}
       >
-        <div className="h-full px-6 pb-6 flex w-full">{children}</div>
+        <div className="h-full px-6 pb-6 flex w-full">
+          <Suspense fallback={<div>Beta loading ....</div>}>{children}</Suspense>
+        </div>
       </div>
     </div>
   );

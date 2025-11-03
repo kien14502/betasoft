@@ -27,12 +27,14 @@ import type {
 
 import type {
   GetNotificationsParams,
+  RequestMarkNotificationsAsReadReq,
   RequestRegisterDeviceRequest,
   ResponseResponse,
 } from '../generated.schemas';
 
 import postAuthNotificationRegisterDeviceMutator from '../../../config/axios';
 import getNotificationsMutator from '../../../config/axios';
+import postNotificationsReadsMutator from '../../../config/axios';
 
 /**
  * API đăng ký token device để nhận thông báo
@@ -338,3 +340,84 @@ export function useGetNotifications<
 
   return query;
 }
+
+/**
+ * @summary Đánh dấu tin nhắn đã đọc
+ */
+export const postNotificationsReads = (
+  requestMarkNotificationsAsReadReq: RequestMarkNotificationsAsReadReq,
+  signal?: AbortSignal,
+) => {
+  return postNotificationsReadsMutator<ResponseResponse>({
+    url: `/notifications/reads`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: requestMarkNotificationsAsReadReq,
+    signal,
+  });
+};
+
+export const getPostNotificationsReadsMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postNotificationsReads>>,
+    TError,
+    { data: RequestMarkNotificationsAsReadReq },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postNotificationsReads>>,
+  TError,
+  { data: RequestMarkNotificationsAsReadReq },
+  TContext
+> => {
+  const mutationKey = ['postNotificationsReads'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postNotificationsReads>>,
+    { data: RequestMarkNotificationsAsReadReq }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postNotificationsReads(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostNotificationsReadsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postNotificationsReads>>
+>;
+export type PostNotificationsReadsMutationBody = RequestMarkNotificationsAsReadReq;
+export type PostNotificationsReadsMutationError = unknown;
+
+/**
+ * @summary Đánh dấu tin nhắn đã đọc
+ */
+export const usePostNotificationsReads = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postNotificationsReads>>,
+      TError,
+      { data: RequestMarkNotificationsAsReadReq },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postNotificationsReads>>,
+  TError,
+  { data: RequestMarkNotificationsAsReadReq },
+  TContext
+> => {
+  const mutationOptions = getPostNotificationsReadsMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};

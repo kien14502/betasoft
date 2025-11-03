@@ -20,6 +20,7 @@
   --color-gray-7: var(--gray-7);
   --color-gray-4: var(--gray-4);
   --color-gray-1: var(--gray-1);
+  --color-gray-2: var(--gray-2);
   --color-gray-5: var(--gray-5);
   --color-gray-8: var(--gray-8);
   --color-gray-90: var(--gray-90);
@@ -75,6 +76,7 @@
   --gray-7: #787878;
   --gray-4: #c7c7cc;
   --gray-1: #f2f2f7;
+  --gray-2: #e5e5ea;
   --gray-5: #aeaeb2;
   --gray-8: #404040;
   --gray-90: #21272a;

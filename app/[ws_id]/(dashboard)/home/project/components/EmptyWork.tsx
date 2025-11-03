@@ -3,6 +3,19 @@
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
+const CreateWorkModal = dynamic(() => import('../components/modals/CreateWorkModal'), {
+  loading: () => <div>loading...</div>,
+  ssr: false,
+});
 
 /* eslint-disable @next/next/no-img-element */
 const EmptyWork = () => {
@@ -20,19 +33,27 @@ const EmptyWork = () => {
         Requests from multiple sources are filtered into your queues, ready
         <br /> for triage and assignment.
       </span>
-      <button
-        onClick={toggle}
-        className="rounded-[64px] mt-6 shadow-btn font-semibold text-[18px] color-main flex items-center gap-3 py-4 px-6 active:scale-95 transition-all duration-100"
-      >
-        <Image width={32} height={32} src={'/icons/plus.svg'} alt={''} />
-        Create Work
-      </button>
-      <CreateWorkModal isOpen={isOpenModal} toggle={toggle} />
+      <Dialog>
+        <DialogTrigger asChild>
+          <button
+            onClick={toggle}
+            className="rounded-[64px] mt-6 shadow-btn font-semibold text-[18px] color-main flex items-center gap-3 py-4 px-6 active:scale-95 transition-all duration-100"
+          >
+            <Image width={32} height={32} src={'/icons/plus.svg'} alt={''} />
+            Create Work
+          </button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[876px] p-0 rounded-xl shadow-popup">
+          <DialogHeader className="border-b py-6 px-8 gap-1 border-gray-4">
+            <DialogTitle className="text-[#0045AC] text-2xl font-semibold">NEW TASK</DialogTitle>
+            <DialogDescription className="text-[#787878] text-sm font-normal">
+              Required fields are marked with an asterisk <span className="text-[#F20005]">*</span>
+            </DialogDescription>
+          </DialogHeader>
+          <CreateWorkModal toggle={toggle} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 export default EmptyWork;
-
-const CreateWorkModal = dynamic(() => import('../components/modals/CreateWorkModal'), {
-  loading: () => <div>loading...</div>,
-});

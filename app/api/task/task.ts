@@ -31,11 +31,12 @@ import type {
   GetAuthProjectsProjectIdTasks200,
   GetAuthProjectsProjectIdTasksParams,
   GetAuthTasksTaskId200,
+  PatchAuthTasks200,
   PostAuthTasks200,
-  PutAuthTasksTaskId200,
   PutAuthTasksTaskIdMove200,
   RequestCreateTaskRequest,
   RequestDeleteMultipleTasksRequest,
+  RequestMoveTaskFromBacklogsRequest,
   RequestMoveTaskRequest,
   RequestSubscribeTaskRequest,
   RequestUnSubscribeTaskRequest,
@@ -46,10 +47,12 @@ import type {
 import getAuthProjectsProjectIdKanbanMutator from '../../../config/axios';
 import getAuthProjectsProjectIdTasksMutator from '../../../config/axios';
 import deleteAuthTasksMutator from '../../../config/axios';
+import patchAuthTasksMutator from '../../../config/axios';
 import postAuthTasksMutator from '../../../config/axios';
 import getAuthTasksTaskIdMutator from '../../../config/axios';
-import putAuthTasksTaskIdMutator from '../../../config/axios';
 import putAuthTasksTaskIdMoveMutator from '../../../config/axios';
+import getAuthTasksBacklogsProjectIdMutator from '../../../config/axios';
+import patchAuthTasksBacklogsMoveMutator from '../../../config/axios';
 import deleteAuthTasksBatchDeleteMutator from '../../../config/axios';
 import postAuthTasksSubscribeMutator from '../../../config/axios';
 import postAuthTasksUnsubscribeMutator from '../../../config/axios';
@@ -669,6 +672,78 @@ export const useDeleteAuthTasks = <TError = unknown, TContext = unknown>(
   return useMutation(mutationOptions, queryClient);
 };
 /**
+ * API cập nhật thông tin task
+ * @summary Cập nhật task
+ */
+export const patchAuthTasks = (requestUpdateTaskRequest: RequestUpdateTaskRequest) => {
+  return patchAuthTasksMutator<PatchAuthTasks200>({
+    url: `/auth/tasks`,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    data: requestUpdateTaskRequest,
+  });
+};
+
+export const getPatchAuthTasksMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof patchAuthTasks>>,
+    TError,
+    { data: RequestUpdateTaskRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof patchAuthTasks>>,
+  TError,
+  { data: RequestUpdateTaskRequest },
+  TContext
+> => {
+  const mutationKey = ['patchAuthTasks'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof patchAuthTasks>>,
+    { data: RequestUpdateTaskRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return patchAuthTasks(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PatchAuthTasksMutationResult = NonNullable<Awaited<ReturnType<typeof patchAuthTasks>>>;
+export type PatchAuthTasksMutationBody = RequestUpdateTaskRequest;
+export type PatchAuthTasksMutationError = unknown;
+
+/**
+ * @summary Cập nhật task
+ */
+export const usePatchAuthTasks = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof patchAuthTasks>>,
+      TError,
+      { data: RequestUpdateTaskRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof patchAuthTasks>>,
+  TError,
+  { data: RequestUpdateTaskRequest },
+  TContext
+> => {
+  const mutationOptions = getPatchAuthTasksMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * API tạo task mới trong danh sách
  * @summary Tạo task mới
  */
@@ -980,86 +1055,6 @@ export function useGetAuthTasksTaskId<
 }
 
 /**
- * API cập nhật thông tin task
- * @summary Cập nhật task
- */
-export const putAuthTasksTaskId = (
-  taskId: string,
-  requestUpdateTaskRequest: RequestUpdateTaskRequest,
-) => {
-  return putAuthTasksTaskIdMutator<PutAuthTasksTaskId200>({
-    url: `/auth/tasks/${taskId}`,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    data: requestUpdateTaskRequest,
-  });
-};
-
-export const getPutAuthTasksTaskIdMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof putAuthTasksTaskId>>,
-    TError,
-    { taskId: string; data: RequestUpdateTaskRequest },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof putAuthTasksTaskId>>,
-  TError,
-  { taskId: string; data: RequestUpdateTaskRequest },
-  TContext
-> => {
-  const mutationKey = ['putAuthTasksTaskId'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof putAuthTasksTaskId>>,
-    { taskId: string; data: RequestUpdateTaskRequest }
-  > = (props) => {
-    const { taskId, data } = props ?? {};
-
-    return putAuthTasksTaskId(taskId, data);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type PutAuthTasksTaskIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putAuthTasksTaskId>>
->;
-export type PutAuthTasksTaskIdMutationBody = RequestUpdateTaskRequest;
-export type PutAuthTasksTaskIdMutationError = unknown;
-
-/**
- * @summary Cập nhật task
- */
-export const usePutAuthTasksTaskId = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof putAuthTasksTaskId>>,
-      TError,
-      { taskId: string; data: RequestUpdateTaskRequest },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof putAuthTasksTaskId>>,
-  TError,
-  { taskId: string; data: RequestUpdateTaskRequest },
-  TContext
-> => {
-  const mutationOptions = getPutAuthTasksTaskIdMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-/**
  * API di chuyển task sang list khác hoặc thay đổi vị trí
  * @summary Di chuyển task
  */
@@ -1136,6 +1131,352 @@ export const usePutAuthTasksTaskIdMove = <TError = unknown, TContext = unknown>(
   TContext
 > => {
   const mutationOptions = getPutAuthTasksTaskIdMoveMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
+ * API lấy tất cả task trong backlog của một dự án
+ * @summary Lấy danh sách task trong backlog
+ */
+export const getAuthTasksBacklogsProjectId = (projectId: string, signal?: AbortSignal) => {
+  return getAuthTasksBacklogsProjectIdMutator<ResponseResponse>({
+    url: `/auth/tasks/backlogs/${projectId}`,
+    method: 'GET',
+    signal,
+  });
+};
+
+export const getGetAuthTasksBacklogsProjectIdQueryKey = (projectId?: string) => {
+  return [`/auth/tasks/backlogs/${projectId}`] as const;
+};
+
+export const getGetAuthTasksBacklogsProjectIdInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAuthTasksBacklogsProjectIdQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>> = ({
+    signal,
+  }) => getAuthTasksBacklogsProjectId(projectId, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!projectId,
+    staleTime: 10000,
+    ...queryOptions,
+  } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetAuthTasksBacklogsProjectIdInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>
+>;
+export type GetAuthTasksBacklogsProjectIdInfiniteQueryError = unknown;
+
+export function useGetAuthTasksBacklogsProjectIdInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+          TError,
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetAuthTasksBacklogsProjectIdInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+          TError,
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetAuthTasksBacklogsProjectIdInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Lấy danh sách task trong backlog
+ */
+
+export function useGetAuthTasksBacklogsProjectIdInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<
+        Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetAuthTasksBacklogsProjectIdInfiniteQueryOptions(projectId, options);
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as UseInfiniteQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetAuthTasksBacklogsProjectIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>, TError, TData>
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAuthTasksBacklogsProjectIdQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>> = ({
+    signal,
+  }) => getAuthTasksBacklogsProjectId(projectId, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!projectId,
+    staleTime: 10000,
+    ...queryOptions,
+  } as UseQueryOptions<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>, TError, TData> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+};
+
+export type GetAuthTasksBacklogsProjectIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>
+>;
+export type GetAuthTasksBacklogsProjectIdQueryError = unknown;
+
+export function useGetAuthTasksBacklogsProjectId<
+  TData = Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+          TError,
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetAuthTasksBacklogsProjectId<
+  TData = Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+          TError,
+          Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>
+        >,
+        'initialData'
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetAuthTasksBacklogsProjectId<
+  TData = Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Lấy danh sách task trong backlog
+ */
+
+export function useGetAuthTasksBacklogsProjectId<
+  TData = Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>,
+  TError = unknown,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthTasksBacklogsProjectId>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetAuthTasksBacklogsProjectIdQueryOptions(projectId, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * API chuyển các task từ sprint về backlog của dự án
+ * @summary Chuyển task về backlog
+ */
+export const patchAuthTasksBacklogsMove = (
+  requestMoveTaskFromBacklogsRequest: RequestMoveTaskFromBacklogsRequest,
+) => {
+  return patchAuthTasksBacklogsMoveMutator<ResponseResponse>({
+    url: `/auth/tasks/backlogs/move`,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    data: requestMoveTaskFromBacklogsRequest,
+  });
+};
+
+export const getPatchAuthTasksBacklogsMoveMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof patchAuthTasksBacklogsMove>>,
+    TError,
+    { data: RequestMoveTaskFromBacklogsRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof patchAuthTasksBacklogsMove>>,
+  TError,
+  { data: RequestMoveTaskFromBacklogsRequest },
+  TContext
+> => {
+  const mutationKey = ['patchAuthTasksBacklogsMove'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof patchAuthTasksBacklogsMove>>,
+    { data: RequestMoveTaskFromBacklogsRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return patchAuthTasksBacklogsMove(data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PatchAuthTasksBacklogsMoveMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchAuthTasksBacklogsMove>>
+>;
+export type PatchAuthTasksBacklogsMoveMutationBody = RequestMoveTaskFromBacklogsRequest;
+export type PatchAuthTasksBacklogsMoveMutationError = unknown;
+
+/**
+ * @summary Chuyển task về backlog
+ */
+export const usePatchAuthTasksBacklogsMove = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof patchAuthTasksBacklogsMove>>,
+      TError,
+      { data: RequestMoveTaskFromBacklogsRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof patchAuthTasksBacklogsMove>>,
+  TError,
+  { data: RequestMoveTaskFromBacklogsRequest },
+  TContext
+> => {
+  const mutationOptions = getPatchAuthTasksBacklogsMoveMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };
