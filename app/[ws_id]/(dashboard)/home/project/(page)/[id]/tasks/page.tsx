@@ -2,29 +2,23 @@
 
 import { useContext, useState } from 'react';
 import TaskHeader from '../../../components/TaskHeader';
-import BoardSectionList from '../../../components/kanban/BoardSectionList';
-import ListTask from '../../../components/ListTask';
-import { useGetAuthTaskListsProjectId } from '@/app/api/task-list/task-list';
-import { useGetAuthProjectsProjectIdTasks } from '@/app/api/task/task';
-import { usePathname } from 'next/navigation';
-import { ProjectContext } from '@/components/providers/ProjectProvider';
 import EmptyWork from '../../../components/EmptyWork';
+import { TasksContext } from '@/components/providers/TasksProvider';
+import dynamic from 'next/dynamic';
+
+const ListTask = dynamic(() => import('../../../components/ListTask'), {
+  loading: () => <div>Loading...</div>,
+});
+
+const BoardSectionList = dynamic(() => import('../../../components/kanban/BoardSectionList'), {
+  loading: () => <div>Loading...</div>,
+});
 
 const TasksPage = () => {
-  const id = usePathname().split('/')[4];
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('list');
-  const { project } = useContext(ProjectContext);
-  console.log('project', project);
+  const { state } = useContext(TasksContext);
 
-  const { data: sections, isPending: sectionsLoading } = useGetAuthTaskListsProjectId(id);
-  const { data: taskData, isPending: tasksLoading } = useGetAuthProjectsProjectIdTasks(id, {
-    page: 1,
-    page_size: 10,
-    sprint_id: '6901e7efb4bdd3e8afec678e',
-  });
-
-  const tasks = taskData?.data?.tasks || [];
-  const isLoading = sectionsLoading || tasksLoading;
+  const tasks = state.tasks;
 
   return (
     <div className="flex flex-col gap-6">
@@ -33,10 +27,8 @@ const TasksPage = () => {
       ) : (
         <>
           <TaskHeader viewMode={viewMode} setViewMode={setViewMode} />
-          {viewMode === 'kanban' && (
-            <BoardSectionList init_tasks={tasks} sections={sections?.data ?? []} />
-          )}
-          {viewMode === 'list' && <ListTask data={taskData?.data} />}
+          {viewMode === 'kanban' && <BoardSectionList init_tasks={tasks} />}
+          {viewMode === 'list' && <ListTask data={state} />}
         </>
       )}
     </div>

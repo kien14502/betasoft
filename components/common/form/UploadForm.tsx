@@ -19,7 +19,6 @@ const DragDropUpload = <T extends FieldValues>({ name, label, className, control
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string>('');
-  console.log(fileName);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

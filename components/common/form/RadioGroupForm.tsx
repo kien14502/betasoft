@@ -17,35 +17,31 @@ const RadioGroupForm = <T extends FieldValues>({
   label,
   defaultValue,
   className,
-}: Props<T>) => {
-  console.log('options', options);
-
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className={cn('flex flex-col gap-2 space-y-0', className)}>
-          {label && <FormLabel className="mb-2">{label}</FormLabel>}
-          <FormControl>
-            <RadioGroup
-              defaultValue={defaultValue ?? field.value}
-              onValueChange={field.onChange}
-              value={field.value}
-            >
-              {options.map((option) => (
-                <div className="flex items-center space-x-2" key={option.value}>
-                  <RadioGroupItem value={option.value} id={option.value} />
-                  <Label htmlFor={option.value}>{option.label}</Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-};
+}: Props<T>) => (
+  <FormField
+    control={control}
+    name={name}
+    render={({ field }) => (
+      <FormItem className={cn('flex flex-col gap-2 space-y-0', className)}>
+        {label && <FormLabel className="mb-2">{label}</FormLabel>}
+        <FormControl>
+          <RadioGroup
+            defaultValue={defaultValue ?? field.value}
+            onValueChange={field.onChange}
+            value={field.value}
+          >
+            {options.map((option) => (
+              <div className="flex items-center space-x-2" key={option.value}>
+                <RadioGroupItem value={option.value} id={option.value} />
+                <Label htmlFor={option.value}>{option.label}</Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
+);
 
 export default RadioGroupForm;

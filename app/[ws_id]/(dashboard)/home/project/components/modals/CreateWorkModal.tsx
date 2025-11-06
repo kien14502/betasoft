@@ -48,8 +48,8 @@ const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
       { data: values },
       {
         onSuccess({ message }) {
-          showToast(message ?? '', 'success');
           toggle();
+          showToast(message ?? '', 'success');
         },
       },
     );

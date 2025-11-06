@@ -5,8 +5,8 @@ import { ChevronDown } from 'lucide-react';
 import { useContext } from 'react';
 import StatusBadge from '../StatusBadge';
 import { usePatchAuthTasks } from '@/app/api/task/task';
-import { useState } from 'react';
 import { useMemo } from 'react';
+import { TasksContext } from '@/components/providers/TasksProvider';
 
 type Props = {
   task: ResponseTaskResponse;
@@ -14,9 +14,9 @@ type Props = {
 
 const StatusCell = ({ task }: Props) => {
   const { project } = useContext(ProjectContext);
+  const { dispatch } = useContext(TasksContext);
   const cols = project?.columns || [];
   const { mutate: udpateTask } = usePatchAuthTasks();
-  const [currentStatus, setCurrentStatus] = useState<string>(task.list_id || '');
 
   const handleUpadteTask = (value: string) => {
     udpateTask(
@@ -30,15 +30,15 @@ const StatusCell = ({ task }: Props) => {
       },
       {
         onSuccess: (data) => {
-          setCurrentStatus(data.data?.list_id || '');
+          dispatch({ type: 'UPDATE_TASK', payload: data.data as ResponseTaskResponse });
         },
       },
     );
   };
 
   const status = useMemo(() => {
-    return project?.columns?.find((item) => item.id === currentStatus);
-  }, [currentStatus, project?.columns]);
+    return project?.columns?.find((item) => item.id === task.list_id);
+  }, [project?.columns, task.list_id]);
 
   return (
     <Popover>

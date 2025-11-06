@@ -63,8 +63,6 @@ export function TaskTable<T>({ columns, data }: Props<T>) {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-none">
                 {headerGroup.headers.map((header) => {
-                  console.log(header);
-
                   return (
                     <TableHead
                       style={{

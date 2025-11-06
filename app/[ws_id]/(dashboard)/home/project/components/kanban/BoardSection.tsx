@@ -2,10 +2,11 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import SortableTaskItem from './SortableTaskItem';
 import TaskItem from './TaskItem';
 import { useDroppable } from '@dnd-kit/core';
-import Image from 'next/image';
 import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/generated.schemas';
 import { Button } from '@/components/ui/button';
 import { Ellipsis } from 'lucide-react';
+import NewTask from './NewTask';
+import { memo } from 'react';
 
 type BoardSectionProps = {
   id: string;
@@ -17,6 +18,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
   const { setNodeRef } = useDroppable({
     id,
   });
+
   if (!section) return null;
   return (
     <div className="flex flex-col gap-4">
@@ -41,11 +43,8 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
           ))}
         </div>
       </SortableContext>
-      <button className="text-sm flex items-center font-medium gap-1.5 !py-2.5 !px-4">
-        <Image src={'/icons/plus.svg'} alt={''} width={20} height={20} />
-        New task
-      </button>
+      <NewTask section={section} />
     </div>
   );
 };
-export default BoardSection;
+export default memo(BoardSection);

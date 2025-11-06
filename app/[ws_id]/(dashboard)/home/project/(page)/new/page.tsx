@@ -1,13 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import {
-  RequestCreateLabelDataToCreate,
-  RequestCreateProjectRequest,
-  RequestCreateSprintRequest,
-  RequestTaskListDataToCreate,
-  ResponseOrgMember,
-} from '@/app/api/generated.schemas';
+
 import { usePostAuthProjects } from '@/app/api/project/project';
 import dynamic from 'next/dynamic';
 import { useContext, useEffect, useState } from 'react';
@@ -22,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { DEFAULT_TASK_LIST } from '@/constants/common';
 import { labels, sprints } from '@/utils/common';
+import { RequestCreateProjectRequest } from '@/app/api/generated.schemas';
 const TrackWork = dynamic(() => import('../../components/TrackWork'));
 
 const NewProjectPage = () => {
@@ -30,7 +25,6 @@ const NewProjectPage = () => {
   const { mutate: createProject } = usePostAuthProjects();
   const [openTrackworkModal, setOpenTrackworkModal] = useState<boolean>(false);
   const { profile } = useContext(AuthContext);
-  console.log(profile);
 
   const form = useForm<CreateProjectSchemaType>({
     resolver: zodResolver(createProjectSchema),
@@ -52,7 +46,7 @@ const NewProjectPage = () => {
 
   useEffect(() => {
     if (!profile) return;
-    form.setValue('lead', profile?.id);
+    form.setValue('lead', profile.user_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
@@ -61,9 +55,8 @@ const NewProjectPage = () => {
   };
 
   const handleCreateProject = () => {
-    console.log('form', form.getValues());
     createProject(
-      { data: form.getValues() },
+      { data: form.getValues() as RequestCreateProjectRequest },
       {
         onSuccess() {
           setOpenTrackworkModal(false);

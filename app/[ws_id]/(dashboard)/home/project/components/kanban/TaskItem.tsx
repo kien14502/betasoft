@@ -5,6 +5,8 @@ import useGrabbing from '@/hooks/useGrabbing';
 import { cn } from '@/utils/common';
 import Image from 'next/image';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Checkbox } from '@/components/ui/checkbox';
+import { memo, useCallback, useState } from 'react';
 
 type TaskItemProps = {
   task: ResponseTaskResponse;
@@ -12,9 +14,13 @@ type TaskItemProps = {
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const { boardRef, isGrabbing } = useGrabbing();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const toggleModal = useCallback(() => setOpenModal(!openModal), [openModal]);
 
   return (
     <div
+      onClick={toggleModal}
       style={{
         cursor: isGrabbing ? 'grabbing' : 'grab',
       }}
@@ -23,9 +29,10 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         'border flex flex-col gap-2 !py-3 !px-4 border-cool-gray-20 shadow-main rounded-md bg-white',
       )}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <Checkbox className="rounded-full" />
         <p className="font-semibold text-gray-90 text-sm">{task.title}</p>
-        <Button variant={'ghost'} size={'icon'}>
+        <Button className="ml-auto" variant={'ghost'} size={'icon'}>
           <Image width={20} height={20} src={'/icons/dots.svg'} alt={''} />
         </Button>
       </div>
@@ -56,4 +63,4 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     </div>
   );
 };
-export default TaskItem;
+export default memo(TaskItem);

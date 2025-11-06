@@ -3,9 +3,9 @@ import LabelView from './LabelView';
 import { Calendar, ChevronsUp, CircleUser, FolderClosed, KeyRound } from 'lucide-react';
 import Image from 'next/image';
 import { USER_AVATAR_URL } from '@/constants/common';
-import { useContext } from 'react';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import PriorityCell from '../../../cells/PriorityCell';
+import { useContext } from 'react';
 
 type Props = {
   task: ResponseTaskResponse;

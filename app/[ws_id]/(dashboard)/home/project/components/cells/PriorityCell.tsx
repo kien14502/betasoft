@@ -4,12 +4,12 @@ import {
 } from '@/app/api/generated.schemas';
 import { usePatchAuthTasks } from '@/app/api/task/task';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
+import { TasksContext } from '@/components/providers/TasksProvider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getUrgencyOptions, urgencyOptions } from '@/constants/common';
 import { cn } from '@/lib/utils';
 import { ChevronDown } from 'lucide-react';
 import { useContext } from 'react';
-import { useState } from 'react';
 
 type Props = {
   task: ResponseTaskResponse;
@@ -18,11 +18,11 @@ type Props = {
 
 const PriorityCell = ({ task, variant = 'default' }: Props) => {
   const { project } = useContext(ProjectContext);
+  const { dispatch } = useContext(TasksContext);
 
   const { mutate: udpateTask } = usePatchAuthTasks();
-  const [currentPriority, setCurrentPriority] = useState<string>(task.priority || '');
 
-  const urgency = getUrgencyOptions(currentPriority);
+  const urgency = getUrgencyOptions(task.priority || '');
 
   const handleUpadteTask = (value: string) => {
     udpateTask(
@@ -36,7 +36,7 @@ const PriorityCell = ({ task, variant = 'default' }: Props) => {
       },
       {
         onSuccess: (data) => {
-          setCurrentPriority(data.data?.priority || '');
+          dispatch({ type: 'UPDATE_TASK', payload: data.data as ResponseTaskResponse });
         },
       },
     );

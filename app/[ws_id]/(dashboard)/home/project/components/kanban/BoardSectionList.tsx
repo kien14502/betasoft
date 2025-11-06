@@ -1,18 +1,30 @@
 import { closestCorners, DndContext, DragOverlay } from '@dnd-kit/core';
 import BoardSection from './BoardSection';
 import TaskItem from './TaskItem';
-import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/generated.schemas';
+import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import useDndKanban from '@/hooks/useDndKanban';
 import { useMemo } from 'react';
-import Image from 'next/image';
-import { usePostAuthTasks } from '@/app/api/task/task';
+import CreateSection from './CreateSection';
+import { usePathname } from 'next/navigation';
+import { useGetAuthTaskListsProjectId } from '@/app/api/task-list/task-list';
 
 type Props = {
   init_tasks: ResponseTaskResponse[];
-  sections: ResponseTaskListResponse[];
 };
 
-const BoardSectionList: React.FC<Props> = ({ init_tasks, sections }) => {
+const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
+  const id = usePathname().split('/')[4];
+  const { data: sections } = useGetAuthTaskListsProjectId(id, {
+    query: { select: (data) => data.data || [] },
+  });
+
+  const getSection = useMemo(
+    () => (key: string) => {
+      return sections?.find((item) => item.id === key);
+    },
+    [sections],
+  );
+
   const {
     currentTask,
     boardSections,
@@ -21,27 +33,7 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks, sections }) => {
     handleDragOver,
     handleDragStart,
     sensors,
-  } = useDndKanban(init_tasks, sections);
-
-  const { mutate: createTask } = usePostAuthTasks();
-
-  const getSection = useMemo(
-    () => (key: string) => {
-      return sections.find((item) => item.id === key);
-    },
-    [sections],
-  );
-
-  const handleCreateTask = () => {
-    createTask({
-      data: {
-        list_id: '',
-        sprint_id: '',
-        title: '',
-        project_id: '',
-      },
-    });
-  };
+  } = useDndKanban(init_tasks, sections || []);
 
   return (
     <DndContext
@@ -54,8 +46,12 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks, sections }) => {
       <div className="flex items-start gap-4 h-full flex-1 overflow-x-auto">
         {Object.keys(boardSections).map((boardSectionKey) => (
           <div
-            className="bg-bg-secondary h-fit shrink-0 p-4 rounded-md w-full max-w-[400px]"
+            className="bg-bg-secondary ease-in-out transition-[height] duration-300 h-fit shrink-0 p-4 rounded-md w-full max-w-[400px]"
             key={boardSectionKey}
+            style={{
+              minHeight: 'fit-content',
+              height: 'auto',
+            }}
           >
             <BoardSection
               id={boardSectionKey}
@@ -67,9 +63,7 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks, sections }) => {
         <DragOverlay dropAnimation={dropAnimation}>
           {currentTask ? <TaskItem task={currentTask} /> : null}
         </DragOverlay>
-        <button className="p-2.5 shrink-0 rounded-xl bg-bg-secondary active:scale-95">
-          <Image src={'/icons/plus.svg'} width={20} height={20} alt={''} />
-        </button>
+        <CreateSection />
       </div>
     </DndContext>
   );
