@@ -1,26 +1,15 @@
-'use client';
-import React, { Suspense } from 'react';
-import { usePathname } from 'next/navigation';
-import MenuDashboard from '@/components/layout/dashboard/MenuDashboard';
-import HomeHeader from '@/components/layout/HomeHeader';
+import React from 'react';
 import MainHeader from '@/components/layout/MainHeader';
+import Sidebar from '@/components/layout/sidebar';
 
 function LayoutConfig({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
   return (
-    <div style={{ height: '100vh', background: '#F4FAFC' }}>
-      <MainHeader subHeader={<>{pathname.split('/').includes('home') && <HomeHeader />}</>} />
-      <MenuDashboard />
-      <div
-        style={{
-          marginLeft: '98px',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div className="h-full px-6 pb-6 flex w-full">
-          <Suspense fallback={<div>Beta loading ....</div>}>{children}</Suspense>
+    <div className="w-screen h-screen bg-secondary">
+      <Sidebar />
+      <div className="w-screen h-screen pl-14 bg-secondary overflow-hidden">
+        <div className="pl-8 py-4 px-4 flex-col w-full h-full flex">
+          <MainHeader />
+          {children}
         </div>
       </div>
     </div>

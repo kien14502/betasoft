@@ -23,16 +23,17 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       onClick={toggleModal}
       style={{
         cursor: isGrabbing ? 'grabbing' : 'grab',
+        boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',
       }}
       ref={boardRef}
       className={cn(
-        'border flex flex-col gap-2 !py-3 !px-4 border-cool-gray-20 shadow-main rounded-md bg-white',
+        'border flex flex-col gap-2 py-3 px-4 border-cool-gray-20 rounded-2xl bg-white',
       )}
     >
       <div className="flex items-center gap-2">
         <Checkbox className="rounded-full" />
         <p className="font-semibold text-gray-90 text-sm">{task.title}</p>
-        <Button className="ml-auto" variant={'ghost'} size={'icon'}>
+        <Button className="ml-auto" variant={'ghost'} size={'icon-sm'}>
           <Image width={20} height={20} src={'/icons/dots.svg'} alt={''} />
         </Button>
       </div>

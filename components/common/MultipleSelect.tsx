@@ -74,7 +74,7 @@ const MultipleSelect = <T extends Option>({
         <Button
           variant={'outline'}
           className={cn(
-            'flex items-center gap-2 h-8 shadow-popup! rounded-none',
+            'flex items-center gap-2 h-8 shadow-secondary! rounded-md',
             openModal && 'border-blue-4',
           )}
         >

@@ -99,3 +99,45 @@ export const sprints: RequestCreateSprintRequest[] = [
     goal: 'done',
   },
 ];
+
+type RGB = {
+  r: number;
+  g: number;
+  b: number;
+  a?: number;
+};
+
+/**
+ * Convert HEX → RGB(A)
+ */
+export function hexToRGB(hex: string): RGB {
+  // Remove #
+  hex = hex.replace(/^#/, '');
+
+  // Expand short form (#abc → #aabbcc)
+  if (hex.length === 3) {
+    hex = hex
+      .split('')
+      .map((c) => c + c)
+      .join('');
+  }
+
+  // Handle #RRGGBBAA (8-digit hex)
+  if (hex.length === 8) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const a = parseInt(hex.substring(6, 8), 16) / 255;
+    return { r, g, b, a };
+  }
+
+  // Standard #RRGGBB
+  if (hex.length === 6) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return { r, g, b };
+  }
+
+  throw new Error('Invalid HEX color format');
+}

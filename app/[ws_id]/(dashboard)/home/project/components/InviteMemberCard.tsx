@@ -1,6 +1,7 @@
 import { ResponseOrgMember } from '@/app/api/generated.schemas';
 import { CheckboxRound } from '@/components/common/CheckboxRound';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { USER_AVATAR_URL } from '@/constants/common';
 
 type Props = {
   member: ResponseOrgMember;
@@ -16,7 +17,7 @@ const InviteMemberCard: React.FC<Props> = ({ member, onChange, checked }) => {
     >
       <CheckboxRound checked={checked} onChange={() => onChange(member)} />
       <Avatar className="ml-4">
-        <AvatarImage src={member.profile_image} />
+        <AvatarImage src={member.profile_image || USER_AVATAR_URL} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <span className="ml-3 text-sm font-medium">{member.full_name}</span>

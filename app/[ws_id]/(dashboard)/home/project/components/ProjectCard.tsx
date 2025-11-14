@@ -14,9 +14,8 @@ const ProjectCard: React.FC<Props> = ({ data }) => {
   const { project, statistic } = data;
 
   const activeTask = (statistic?.total_tasks || 0) - (statistic?.completed_tasks || 0);
-
   return (
-    <div className="border relative rounded-3xl shadow-btn border-[#DDE1E6] bg-white px-6 py-4">
+    <div className="border relative rounded-3xl w-1/2 shadow-btn border-[#DDE1E6] bg-white px-6 py-4">
       <div className="text-[#787878] mt-3 text-sm">{timeAgo(project?.created_at)}</div>
       <div className="flex items-center gap-2">
         <Image

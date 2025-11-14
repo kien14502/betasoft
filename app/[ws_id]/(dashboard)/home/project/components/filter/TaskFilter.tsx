@@ -72,7 +72,7 @@ const TaskFilter = () => {
         />
         <DateRangePicker
           classNames={{
-            btn: 'rounded-none h-8 shadow-popup!',
+            btn: 'rounded-md h-8 shadow-secondary!',
           }}
           onUpdate={(values) => console.log(values)}
           initialDateFrom="2023-01-01"

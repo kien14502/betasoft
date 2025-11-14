@@ -4,9 +4,10 @@ import TaskItem from './TaskItem';
 import { useDroppable } from '@dnd-kit/core';
 import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/generated.schemas';
 import { Button } from '@/components/ui/button';
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, Plus } from 'lucide-react';
 import NewTask from './NewTask';
 import { memo } from 'react';
+import { hexToRGB } from '@/utils/common';
 
 type BoardSectionProps = {
   id: string;
@@ -20,22 +21,42 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
   });
 
   if (!section) return null;
+
+  const { b, g, r } = hexToRGB(section.color || '');
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2 w-full">
-        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: section.color }} />
-        <span className="text-text-primary text-sm font-medium capitalize">{section.name}</span>
-        <span>{section.tasks_count}</span>
-        <Button size={'icon'} variant={'ghost'} className="ml-auto">
-          <Ellipsis />
-        </Button>
+    <div
+      style={{
+        backgroundColor: `rgb(${r}, ${g}, ${b}, 0.2)`,
+        boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',
+      }}
+      className="p-4 gap-4 rounded-3xl"
+    >
+      <div className="flex items-center gap-2 w-full justify-between sticky top-0 z-50">
+        <div
+          className="p-1 pl-3 h-6 flex items-center rounded-2xl gap-2"
+          style={{ backgroundColor: section.color }}
+        >
+          <span className="text-xs font-medium uppercase text-white">{section.name}</span>
+          <div className="h-4 w-4 rounded-full bg-white text-[10px] flex items-center justify-center">
+            {tasks.length}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button size={'icon-sm'} variant={'ghost'} className="ml-auto">
+            <Plus color={section.color} />
+          </Button>
+          <Button size={'icon-sm'} variant={'ghost'} className="ml-auto">
+            <Ellipsis />
+          </Button>
+        </div>
       </div>
       <SortableContext
         id={id}
         items={tasks.map((item) => ({ ...item, id: item.id ?? '' }))}
         strategy={verticalListSortingStrategy}
       >
-        <div ref={setNodeRef} className="flex flex-col gap-4">
+        <div ref={setNodeRef} className="grid grid-rows-[auto_1fr] grid-flow-row min-h-full gap-4">
           {tasks.map((task) => (
             <SortableTaskItem key={task.id} id={task.id ?? ''}>
               <TaskItem task={task} />

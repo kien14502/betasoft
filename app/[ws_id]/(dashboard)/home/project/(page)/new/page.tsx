@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { usePostAuthProjects } from '@/app/api/project/project';
 import dynamic from 'next/dynamic';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import useGetIdWorkspace from '@/hooks/useGetIdWorkspace';
 import { AuthContext } from '@/components/providers/AuthProvider';
 import WrapperContent from '../../components/WrapperContent';
@@ -26,6 +26,8 @@ const NewProjectPage = () => {
   const [openTrackworkModal, setOpenTrackworkModal] = useState<boolean>(false);
   const { profile } = useContext(AuthContext);
 
+  console.log('profile', profile);
+
   const form = useForm<CreateProjectSchemaType>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
@@ -41,14 +43,10 @@ const NewProjectPage = () => {
         enable_time_tracking: true,
       },
       project_type: 'test',
+      name: '',
+      lead: profile?.id,
     },
   });
-
-  useEffect(() => {
-    if (!profile) return;
-    form.setValue('lead', profile.user_id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
 
   const onFinish = () => {
     toggleModal();

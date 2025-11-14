@@ -57,9 +57,9 @@ export function TaskTable<T>({ columns, data }: Props<T>) {
 
   return (
     <div className="w-full">
-      <div className="overflow-hidden">
+      <div className="overflow-hidden border rounded-2xl">
         <Table>
-          <TableHeader className="h-14 bg-bg-secondary">
+          <TableHeader className="h-14 bg-[#0045AC]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-none">
                 {headerGroup.headers.map((header) => {
@@ -71,7 +71,7 @@ export function TaskTable<T>({ columns, data }: Props<T>) {
                         maxWidth: `${header.column.columnDef.maxSize}px`,
                       }}
                       key={header.id}
-                      className={cn('first:rounded-l-2xl last:rounded-r-2xl')}
+                      className={cn('')}
                     >
                       {header.isPlaceholder
                         ? null

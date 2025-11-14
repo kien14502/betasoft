@@ -21,14 +21,16 @@ const TasksPage = () => {
   const tasks = state.tasks;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ boxSizing: 'border-box' }} className="h-full w-full flex flex-col">
       {tasks.length == 0 ? (
         <EmptyWork />
       ) : (
         <>
           <TaskHeader viewMode={viewMode} setViewMode={setViewMode} />
-          {viewMode === 'kanban' && <BoardSectionList init_tasks={tasks} />}
-          {viewMode === 'list' && <ListTask data={state} />}
+          <div className="mt-[18px] grow">
+            {viewMode === 'kanban' && <BoardSectionList init_tasks={tasks} />}
+            {viewMode === 'list' && <ListTask data={state} />}
+          </div>
         </>
       )}
     </div>

@@ -30,3 +30,10 @@ export interface FormProps<T extends FieldValues> {
 export type Icon = ForwardRefExoticComponent<
   Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
 >;
+
+export interface IconProps {
+  width?: number;
+  height?: number;
+  className?: string;
+  fill?: string;
+}

@@ -8,6 +8,7 @@ const axios = axiosInstance.create({
   baseURL: ENDPOINT.BASE_URL,
   timeout: 60000,
   headers: { 'Access-Control-Allow-Headers': 'Content-Type' },
+  withCredentials: true,
 });
 
 const isClient = typeof window !== 'undefined';

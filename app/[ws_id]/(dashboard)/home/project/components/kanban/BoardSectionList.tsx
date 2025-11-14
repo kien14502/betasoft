@@ -43,16 +43,9 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex items-start gap-4 h-full flex-1 overflow-x-auto">
+      <div className="grid grid-flow-col auto-cols-max gap-x-6">
         {Object.keys(boardSections).map((boardSectionKey) => (
-          <div
-            className="bg-bg-secondary ease-in-out transition-[height] duration-300 h-fit shrink-0 p-4 rounded-md w-full max-w-[400px]"
-            key={boardSectionKey}
-            style={{
-              minHeight: 'fit-content',
-              height: 'auto',
-            }}
-          >
+          <div className="w-[400px]" key={boardSectionKey}>
             <BoardSection
               id={boardSectionKey}
               tasks={boardSections[boardSectionKey]}

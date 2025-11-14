@@ -27,7 +27,7 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
     {
       accessorKey: 'title',
       header: () => (
-        <div className="flex items-center gap-1.5 text-gray-8 text-xs font-medium">
+        <div className="flex items-center gap-1.5 text-white text-xs font-medium">
           <ChartNoAxesGantt size={20} />
           Tasks
         </div>
@@ -56,7 +56,7 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
     {
       accessorKey: 'status',
       header: () => (
-        <div className="flex items-center gap-1.5 text-gray-8 text-xs font-medium">
+        <div className="flex items-center gap-1.5 text-white text-xs font-medium">
           <CircleDashed size={20} />
           Status
         </div>
@@ -70,7 +70,7 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
     {
       accessorKey: 'assignee',
       header: () => (
-        <div className="flex items-center gap-1.5 text-gray-8 text-xs font-medium">
+        <div className="flex items-center gap-1.5 text-white text-xs font-medium">
           <UserRound size={20} />
           Assignee
         </div>
@@ -97,12 +97,16 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
     {
       accessorKey: 'priority',
       header: () => (
-        <div className="flex items-center gap-1.5 text-gray-8 text-xs font-medium">
+        <div className="flex items-center gap-1.5 text-white text-xs font-medium">
           <ChevronsUp size={20} />
           Priority
         </div>
       ),
-      cell: ({ row }) => <PriorityCell task={row.original} />,
+      cell: ({ row }) => (
+        <div className="flex items-center justify-end w-full">
+          <PriorityCell task={row.original} />
+        </div>
+      ),
       size: 80,
       maxSize: 80,
       minSize: 80,
@@ -110,7 +114,7 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
     {
       accessorKey: 'due_date',
       header: () => (
-        <div className="flex items-center gap-1.5 text-gray-8 text-xs font-medium">
+        <div className="flex items-centerr gap-1.5 text-white text-xs font-medium">
           <AlarmClock size={20} />
           Due date
         </div>
@@ -126,7 +130,7 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
     {
       accessorKey: 'reporter',
       header: () => (
-        <div className="flex items-center gap-1.5 text-gray-8 text-xs font-medium">
+        <div className="flex items-center gap-1.5 text-white text-xs font-medium">
           <Bookmark size={20} />
           Reporter
         </div>

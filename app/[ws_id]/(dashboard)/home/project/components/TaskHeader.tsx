@@ -10,7 +10,7 @@ type Props = {
 
 const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between sticky top-0 left-0 bg-white">
       <div className="flex items-center gap-6 flex-1">
         <Button
           variant={'ghost'}
@@ -30,7 +30,7 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
         </Button>
         <Input
           placeholder="Search work"
-          className="max-w-[200px] h-10 rounded-none shadow-main"
+          className="max-w-[200px] h-10 rounded-md shadow-secondary!"
           // prefix={<Image width={16} height={16} src={'/icons/search.svg'} alt={''} />}
         />
       </div>
