@@ -25,12 +25,18 @@ export function Editor({
   onChange,
   onSerializedChange,
   onSend,
+  placeholder,
+  classNames,
 }: {
   editorState?: EditorState;
   editorSerializedState?: SerializedEditorState;
   onChange?: (editorState: EditorState) => void;
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
   onSend: () => void;
+  placeholder?: string;
+  classNames?: {
+    plugins?: string;
+  };
 }) {
   return (
     <div className="bg-background overflow-hidden border shadow-popup">
@@ -42,7 +48,7 @@ export function Editor({
         }}
       >
         <TooltipProvider>
-          <Plugins onSend={onSend} />
+          <Plugins className={classNames?.plugins} onSend={onSend} placeholder={placeholder} />
 
           <OnChangePlugin
             ignoreSelectionChange={true}

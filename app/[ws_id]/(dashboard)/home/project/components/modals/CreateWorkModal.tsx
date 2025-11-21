@@ -17,6 +17,8 @@ import SingleSelect from '@/components/common/SingleSelect';
 import { Calendar, UserRound } from 'lucide-react';
 import { DatePicker } from '@/components/common/DatePicker';
 import { fDate } from '@/utils/dayjs';
+import { TasksContext } from '@/components/providers/TasksProvider';
+import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 
 type Props = {
   toggle: () => void;
@@ -24,6 +26,7 @@ type Props = {
 
 const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
   const { project } = useContext(ProjectContext);
+  const { dispatch } = useContext(TasksContext);
   const form = useForm<CreateProjectTaskSchemaType>({
     defaultValues: {
       title: '',
@@ -47,9 +50,14 @@ const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
     createTask(
       { data: values },
       {
-        onSuccess({ message }) {
-          toggle();
-          showToast(message ?? '', 'success');
+        onSuccess({ message, data }) {
+          if (data) {
+            console.log('data', data);
+
+            dispatch({ type: 'ADD_TASK', payload: data as ResponseTaskResponse });
+            toggle();
+            showToast(message ?? '', 'success');
+          }
         },
       },
     );

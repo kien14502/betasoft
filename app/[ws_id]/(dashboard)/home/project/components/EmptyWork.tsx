@@ -33,7 +33,7 @@ const EmptyWork = () => {
         Requests from multiple sources are filtered into your queues, ready
         <br /> for triage and assignment.
       </span>
-      <Dialog>
+      <Dialog open={isOpenModal} onOpenChange={toggle}>
         <DialogTrigger asChild>
           <button
             onClick={toggle}

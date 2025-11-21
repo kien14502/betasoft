@@ -7,13 +7,15 @@ type Props = {
 
 const ProjectRouters = ({ children }: Props) => {
   return (
-    <div className="relative flex-1 shrink-0">
-      <div className="absolute -top-10 right-0 shrink-0 w-full h-10 z-50">
-        <div className="mx-auto h-full flex flex-col justify-end w-[calc(33.333vw+30px)]">
-          <TabItem />
+    <div className="h-full w-full flex flex-col flex-1 shrink-0">
+      <div className="relative">
+        <div className="absolute -top-10 right-0 shrink-0 w-full h-10 z-50">
+          <div className="mx-auto h-full flex flex-col justify-end w-[calc(33.333vw+30px)]">
+            <TabItem />
+          </div>
         </div>
       </div>
-      <div className="overflow-hidden bg-white py-4 rounded-4xl h-full shadow-secondary px-6">
+      <div className="bg-white overflow-hidden rounded-4xl h-full flex flex-col px-4 filter drop-shadow-secondary shadow-secondary py-4">
         {children}
       </div>
     </div>

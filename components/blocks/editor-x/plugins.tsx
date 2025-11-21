@@ -105,11 +105,19 @@ import { TWEET } from '@/components/editor/transformers/markdown-tweet-transform
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
-const placeholder = 'Press / for commands...';
 // const maxLength = 500;
 
-export function Plugins({ onSend }: { onSend: () => void }) {
+export function Plugins({
+  onSend,
+  placeholder = 'Press / for commands...',
+  className = '',
+}: {
+  onSend: () => void;
+  placeholder?: string;
+  className?: string;
+}) {
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
   const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false);
 
@@ -125,13 +133,14 @@ export function Plugins({ onSend }: { onSend: () => void }) {
         <AutoFocusPlugin />
         <RichTextPlugin
           contentEditable={
-            <div className="">
-              <div className="" ref={onRef}>
-                <ContentEditable
-                  placeholder={placeholder}
-                  className="ContentEditable__root relative block min-h-72 overflow-auto p-3 focus:outline-none"
-                />
-              </div>
+            <div className="" ref={onRef}>
+              <ContentEditable
+                placeholder={placeholder}
+                className={cn(
+                  'ContentEditable__root relative block min-h-72 overflow-auto p-3 focus:outline-none',
+                  className,
+                )}
+              />
             </div>
           }
           ErrorBoundary={LexicalErrorBoundary}
@@ -175,7 +184,7 @@ export function Plugins({ onSend }: { onSend: () => void }) {
             ...TEXT_MATCH_TRANSFORMERS,
           ]}
         />
-        <TypingPerfPlugin />
+        {/* <TypingPerfPlugin /> */}
         <TabFocusPlugin />
         <AutocompletePlugin />
         <AutoLinkPlugin />

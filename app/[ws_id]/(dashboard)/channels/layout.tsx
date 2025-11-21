@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import SidebarConverstation from './components/sidebar';
+import SidebarConverstation from './components/sidebar/SidebarConverstation';
 
 type Props = {
   children: ReactNode;
@@ -7,7 +7,7 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   return (
-    <div className="bg-white flex h-full w-full rounded-2xl shadow-secondary">
+    <div className="bg-white flex h-full w-full rounded-2xl shadow-secondary overflow-hidden">
       <SidebarConverstation />
       {children}
     </div>

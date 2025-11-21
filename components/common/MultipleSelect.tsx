@@ -47,7 +47,7 @@ const MultipleSelect = <T extends Option>({
     });
   };
 
-  const removeItem = (e: MouseEvent<HTMLButtonElement>, item: T) => {
+  const removeItem = (e: MouseEvent<HTMLDivElement>, item: T) => {
     e.preventDefault();
     setItemsSelected((prev) => prev.filter((_item) => _item.value !== item.value));
   };
@@ -72,9 +72,10 @@ const MultipleSelect = <T extends Option>({
     <Popover open={openModal} onOpenChange={setOpenModal}>
       <PopoverTrigger asChild>
         <Button
+          suppressHydrationWarning
           variant={'outline'}
           className={cn(
-            'flex items-center gap-2 h-8 shadow-secondary! rounded-md',
+            'flex items-center gap-2 h-7 shadow-secondary! rounded-md text-xs font-normal',
             openModal && 'border-blue-4',
           )}
         >
@@ -84,14 +85,13 @@ const MultipleSelect = <T extends Option>({
               {itemsToShow.map((item) => (
                 <div key={item.value} className="relative">
                   {renderItem ? <>{renderItem(item)}</> : <span>{item.label}</span>}
-                  <button
+                  <div
                     className="bg-gray-4 rounded-full absolute -top-2 -right-2"
-                    type="button"
                     onClick={(e) => removeItem(e, item)}
                     suppressHydrationWarning
                   >
                     <X className="size-3" />
-                  </button>
+                  </div>
                 </div>
               ))}
             </>
@@ -111,13 +111,12 @@ const MultipleSelect = <T extends Option>({
                 {itemsToHide.map((item) => (
                   <div key={item.value} className="relative">
                     {renderItem ? <>{renderItem(item)}</> : <span>{item.label}</span>}
-                    <button
+                    <div
                       className="bg-gray-4 rounded-full absolute -top-2 -right-2"
-                      type="button"
                       onClick={(e) => removeItem(e, item)}
                     >
                       <X className="size-3" />
-                    </button>
+                    </div>
                   </div>
                 ))}
               </HoverCardContent>

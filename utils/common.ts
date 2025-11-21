@@ -7,6 +7,7 @@ import {
   ResponseProjectsWithProjectMemberRole,
 } from '@/app/api/generated.schemas';
 import { clsx, type ClassValue } from 'clsx';
+import { UseFormReturn } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -75,10 +76,11 @@ export const getAvatarMember = (members: ResponseMembersWithProjectMemberRole[],
 };
 
 export const fEnumToArray = (enumObj: Record<string, string | number>) => {
-  return Object.entries(enumObj).map(([key, value]) => ({
+  const rs = Object.entries(enumObj).map(([key, value]) => ({
     label: key,
     value: value.toString(),
   }));
+  return rs;
 };
 
 export const labels: RequestCreateLabelDataToCreate[] = [
@@ -141,3 +143,9 @@ export function hexToRGB(hex: string): RGB {
 
   throw new Error('Invalid HEX color format');
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isFormReady = (form: UseFormReturn<any>) => {
+  const isActive = !form.formState.isValid || form.formState.isSubmitting;
+  return isActive;
+};

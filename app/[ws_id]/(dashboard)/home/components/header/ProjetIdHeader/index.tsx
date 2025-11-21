@@ -3,7 +3,7 @@ import Description from './Description';
 import ProjectSelector from './ProjectSelector';
 
 const ProjectIdHeader = () => (
-  <div className="relative h-20 shrink-0 my-6">
+  <div className="relative h-20 shrink-0">
     <div className="absolute inset-0 grid grid-cols-3">
       <div className="h-full rounded-l-3xl rounded-br-[64px] bg-white shadow-secondary"></div>
       <div className="h-1/2 bg-white shadow-secondary"></div>

@@ -5,7 +5,7 @@ import { InputWithPrefix } from '../common/InputPrefix';
 
 const MainHeader = () => {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between h-(--header-height) pt-4 px-4 pb-4">
       <Subheader />
       <div className="flex items-center gap-3 ml-auto">
         <button className="rounded-2xl shrink-0 bg-white p-2 shadow-secondary">

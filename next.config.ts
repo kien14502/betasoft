@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
         pathname: '/**', // Allows any path under this hostname
       },
     ],
+    unoptimized: true,
   },
 };
 

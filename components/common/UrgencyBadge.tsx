@@ -18,7 +18,9 @@ const UrgencyBadge: React.FC<Props> = ({ value }) => {
   return (
     <div
       style={{ background: map[value] }}
-      className={cn('!p-2 rounded-xl flex gap-2 items-center w-fit text-sm font-medium capitalize')}
+      className={cn(
+        'px-2 py-1 rounded-xl flex gap-2 items-center w-fit text-xs font-medium capitalize',
+      )}
     >
       <Image width={16} height={16} src={`/icons/${value}.svg`} alt={''} />
       {value}

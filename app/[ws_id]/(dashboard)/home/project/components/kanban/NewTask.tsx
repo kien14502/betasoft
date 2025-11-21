@@ -62,7 +62,7 @@ const NewTask = ({ section }: Props) => {
   };
 
   return (
-    <div className="w-full" ref={inputRef}>
+    <div className="w-full mt-2" ref={inputRef}>
       {isAddTask ? (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

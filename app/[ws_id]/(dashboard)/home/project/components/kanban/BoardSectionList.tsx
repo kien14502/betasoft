@@ -36,29 +36,31 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
   } = useDndKanban(init_tasks, sections || []);
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="grid grid-flow-col auto-cols-max gap-x-6">
-        {Object.keys(boardSections).map((boardSectionKey) => (
-          <div className="w-[400px]" key={boardSectionKey}>
-            <BoardSection
-              id={boardSectionKey}
-              tasks={boardSections[boardSectionKey]}
-              section={getSection(boardSectionKey)}
-            />
-          </div>
-        ))}
-        <DragOverlay dropAnimation={dropAnimation}>
-          {currentTask ? <TaskItem task={currentTask} /> : null}
-        </DragOverlay>
-        <CreateSection />
-      </div>
-    </DndContext>
+    <div style={{ overflow: 'auto hidden' }} className="h-full px-2 pt-4 flex flex-col">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <ul className="grid auto-cols-max grid-flow-col gap-x-6 h-full max-h-full flex-1 shrink-0">
+          {Object.keys(boardSections).map((boardSectionKey) => (
+            <li className="w-[400px] max-h-full h-full flex flex-col" key={boardSectionKey}>
+              <BoardSection
+                id={boardSectionKey}
+                tasks={boardSections[boardSectionKey]}
+                section={getSection(boardSectionKey)}
+              />
+            </li>
+          ))}
+          <DragOverlay dropAnimation={dropAnimation}>
+            {currentTask ? <TaskItem task={currentTask} /> : null}
+          </DragOverlay>
+          <CreateSection />
+        </ul>
+      </DndContext>
+    </div>
   );
 };
 export default BoardSectionList;

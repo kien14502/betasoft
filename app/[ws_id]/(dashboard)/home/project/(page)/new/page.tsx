@@ -26,8 +26,6 @@ const NewProjectPage = () => {
   const [openTrackworkModal, setOpenTrackworkModal] = useState<boolean>(false);
   const { profile } = useContext(AuthContext);
 
-  console.log('profile', profile);
-
   const form = useForm<CreateProjectSchemaType>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {

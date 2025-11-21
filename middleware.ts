@@ -9,7 +9,7 @@ function decodeJwt(token: string) {
   return JSON.parse(json);
 }
 
-const UNAUTHENTICATED_ONLY_ROUTES = ['/login', '/register', 'forgot-pass'];
+const UNAUTHENTICATED_ONLY_ROUTES = ['/login', '/register', '/forgot-pass', '/verify-email'];
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('accessToken')?.value;
@@ -46,11 +46,12 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Áp dụng cho tất cả route trừ static (login, 403, public assets)
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|login|403).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
     '/login',
     '/home/:path*',
+    '/verify-email/:path*',
+    '/public',
   ],
 };

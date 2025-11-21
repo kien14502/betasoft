@@ -31,6 +31,16 @@ enum EWorkspaceSizes {
   '250-mo' = 1000,
 }
 
+export const wsSizeOptions = [
+  { label: '2 - 5', value: 5 },
+  { label: '6 - 10', value: 10 },
+  { label: '11 - 20', value: 20 },
+  { label: '21 - 50', value: 50 },
+  { label: '51 - 100', value: 100 },
+  { label: '101 - 250', value: 250 },
+  { label: '250 - more', value: 1000 },
+];
+
 enum EWorkSpaceRegion {
   'us-east' = 'US East',
   'us-west' = 'US West',

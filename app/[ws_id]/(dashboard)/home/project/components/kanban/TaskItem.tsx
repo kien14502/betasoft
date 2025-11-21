@@ -1,6 +1,5 @@
 import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import UrgencyBadge from '@/components/common/UrgencyBadge';
-import { Button } from '@/components/ui/button';
 import useGrabbing from '@/hooks/useGrabbing';
 import { cn } from '@/utils/common';
 import Image from 'next/image';
@@ -33,9 +32,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       <div className="flex items-center gap-2">
         <Checkbox className="rounded-full" />
         <p className="font-semibold text-gray-90 text-sm">{task.title}</p>
-        <Button className="ml-auto" variant={'ghost'} size={'icon-sm'}>
+        <button className="ml-auto">
           <Image width={20} height={20} src={'/icons/dots.svg'} alt={''} />
-        </Button>
+        </button>
       </div>
       <div className="flex items-center justify-between">
         <span className="text-xs text-gray-8">Assignee:</span>

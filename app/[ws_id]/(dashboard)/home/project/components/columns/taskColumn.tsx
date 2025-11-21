@@ -6,6 +6,7 @@ import {
   ChartNoAxesGantt,
   ChevronsUp,
   CircleDashed,
+  PanelRightOpen,
   UserRound,
 } from 'lucide-react';
 import TaskCellAction from '../cells/TaskCellAction';
@@ -16,11 +17,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import StatusCell from '../cells/StatusCell';
 import PriorityCell from '../cells/PriorityCell';
 
-import dynamic from 'next/dynamic';
-
-const TaskDetailSheet = dynamic(() => import('../modals/TaskDetailSheet'), {
-  ssr: false,
-});
+import { Button } from '@/components/ui/button';
+import { useCallback, useContext, useEffect } from 'react';
+import { ModalTaskTableContext } from '../../providers/ModalTaskTableProvider';
 
 const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
   return [
@@ -45,7 +44,7 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
             <div className="text-sm font-medium line-clamp-1 max-w-[250px] overflow-hidden text-ellipsis">
               {original.title}
             </div>
-            <TaskDetailSheet task={original} />
+            <ButtonModal task={original} />
           </div>
         );
       },
@@ -161,3 +160,29 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
   ];
 };
 export default taskColumn;
+
+const ButtonModal = ({ task }: { task: ResponseTaskResponse }) => {
+  const { isShowModal, setShowModal, setContent } = useContext(ModalTaskTableContext);
+
+  const toggle = useCallback(() => {
+    setShowModal(!isShowModal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isShowModal]);
+
+  useEffect(() => {
+    if (!isShowModal) return;
+    setContent(task);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [task, isShowModal]);
+
+  return (
+    <Button
+      onClick={toggle}
+      size={'icon'}
+      variant={'outline'}
+      className="absolute hidden group-hover:flex right-2"
+    >
+      <PanelRightOpen size={20} />
+    </Button>
+  );
+};

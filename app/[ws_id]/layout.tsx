@@ -1,4 +1,4 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { getListWorkspace } from '@/services/workspace-service';
 import { notFound, redirect } from 'next/navigation';
@@ -25,10 +25,6 @@ const LayoutWorkspaceLaunched = async ({ children, params }: Props) => {
   }
 
   // Always redirect if workspace exists
-  return (
-    <AuthProvider>
-      <Suspense fallback={<div>...Beta Loading</div>}>{children}</Suspense>
-    </AuthProvider>
-  );
+  return <AuthProvider>{children}</AuthProvider>;
 };
 export default LayoutWorkspaceLaunched;

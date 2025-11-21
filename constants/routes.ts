@@ -1,4 +1,5 @@
 import { CalendarIcon, ChannelIcon, DocumentIcon, HomeIcon, TaskIcon } from '@/components/icons';
+import { Earth, MessageCircle } from 'lucide-react';
 
 export const mainRoutes = [
   { label: 'Home', path: '/home', icon: HomeIcon },
@@ -20,4 +21,17 @@ export const projectRoutes = [
   { name: 'Tasks', path: 'tasks', icon: '/icons/task-fill.svg' },
   { name: 'Document', path: 'document', icon: '/icons/docs-fill.svg' },
   { name: 'Calendar', path: 'calendar', icon: '/icons/calendar-fill.svg' },
+];
+
+export const chatRoutes = [
+  {
+    name: 'Message',
+    path: 'workspace',
+    icon: MessageCircle,
+  },
+  {
+    name: 'Golobal',
+    path: 'global',
+    icon: Earth,
+  },
 ];

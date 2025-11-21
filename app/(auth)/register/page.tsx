@@ -1,34 +1,31 @@
-'use client';
-import React, { useState } from 'react';
-import RegisterCard from './RegisterCard';
+import React from 'react';
 import Image from 'next/image';
-import VerifyCode from './VerifyCode';
-import { RequestRegisterRequest } from '@/app/api/generated.schemas';
-import CreatePass from './CreatePass';
+import { Button } from '@/components/ui/button';
+import CreateAccount from '../components/CreateAccount';
+import Link from 'next/link';
 
 function Page() {
-  const [dataPayload, setDataPayload] = useState<RequestRegisterRequest>({
-    email: '',
-    step: 1,
-  });
-
   return (
-    <div className="grid grid-cols-2">
-      <div className="col-span-1">
-        <Image
-          src="/logo_register.png"
-          alt="logo_register"
-          fill
-          style={{ objectFit: 'cover', objectPosition: 'center' }}
-          priority
-        />
+    <>
+      <div className="flex flex-col gap-2">
+        <p className="text-[40px] font-medium">Sign Up Free</p>
+        <span className="text-xs text-gray-4">
+          Join us today to unlock exclusive features that will boost your team&apos;s productivity!
+        </span>
       </div>
-      <div className="col-span-1">
-        {dataPayload.step == 1 && <RegisterCard setDataPayload={setDataPayload} />}
-        {dataPayload.step == 2 && <VerifyCode data={dataPayload} setData={setDataPayload} />}
-        {dataPayload.step == 3 && <CreatePass data={dataPayload} setData={setDataPayload} />}
+      <Button className="border-[#5096F1] h-[52px] rounded-xl" variant={'outline'}>
+        <Image width={28} height={28} src={'icons/google.svg'} alt="" />
+        Continue with Google
+      </Button>
+      <div className="text-center text-sm">Or continue with</div>
+      <CreateAccount />
+      <div className="flex items-center gap-1 justify-center text-sm">
+        <span>Already have an account?</span>
+        <Link href={'/login'} className="text-blue-4!">
+          Login
+        </Link>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -11,12 +11,7 @@ const TabItem = () => {
   const pathname = usePathname().split('/').filter(Boolean);
 
   return (
-    <div
-      style={{
-        boxShadow: '0px 2px 2px 0px hsba(205, 100%, 43%, 0.1) inset',
-      }}
-      className="flex items-end h-9 w-full justify-between"
-    >
+    <div className="flex items-end h-9 w-full justify-between">
       <Image height={36} width={58.44} src={'/icons/wave-left.svg'} alt={''} />
       <div className="w-full bg-blue-1 flex items-center justify-between h-9">
         {projectRoutes.map((route) => {

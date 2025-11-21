@@ -45,7 +45,7 @@ const WorkspaceSelector = () => {
         {currentWs?.organization?.name}
         <ChevronDown className="text-gray-5" size={16} />
       </PopoverTrigger>
-      <PopoverContent className="p-0 rounded-none py-2">
+      <PopoverContent align="end" className="p-0 max-h-[300px] overflow-x-auto rounded-none py-2">
         {workspaceList.map((ws) => (
           <Link
             href={pathname.replace(/\/[a-f0-9]+\//, `/${ws.organization?.id}/`)}

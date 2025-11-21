@@ -30,7 +30,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
         backgroundColor: `rgb(${r}, ${g}, ${b}, 0.2)`,
         boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',
       }}
-      className="p-4 gap-4 rounded-3xl"
+      className="p-4 gap-4 rounded-3xl min-h-0 max-h-full flex flex-col h-fit"
     >
       <div className="flex items-center gap-2 w-full justify-between sticky top-0 z-50">
         <div
@@ -56,7 +56,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
         items={tasks.map((item) => ({ ...item, id: item.id ?? '' }))}
         strategy={verticalListSortingStrategy}
       >
-        <div ref={setNodeRef} className="grid grid-rows-[auto_1fr] grid-flow-row min-h-full gap-4">
+        <div ref={setNodeRef} className="flex-1 min-h-0 flex flex-col gap-2">
           {tasks.map((task) => (
             <SortableTaskItem key={task.id} id={task.id ?? ''}>
               <TaskItem task={task} />
