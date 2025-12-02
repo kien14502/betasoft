@@ -1,27 +1,37 @@
 'use client';
-
-import { ProjectDetails } from '@/interface/project';
+import { ResponseProjectWithColLabelAndSprint } from '@/app/api/generated.schemas';
+import { useGetAuthProjectsProjectId } from '@/app/api/project/project';
+import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 import { createContext } from 'react';
 
 type ProjectContext = {
-  project: ProjectDetails | undefined;
+  project: ResponseProjectWithColLabelAndSprint | undefined;
+  isPending: boolean;
 };
 
 export const ProjectContext = createContext<ProjectContext>({
   project: undefined,
+  isPending: false,
 });
 
 type Props = {
   children: ReactNode;
-  project: ProjectDetails;
+  id: string;
 };
 
-export const ProjectProvider = ({ children, project }: Props) => {
+export const ProjectProvider = ({ children, id }: Props) => {
+  const { data: projectData, isPending, isError } = useGetAuthProjectsProjectId(id);
+
+  if (isError) notFound();
+
+  const project = projectData?.data;
+
   return (
     <ProjectContext.Provider
       value={{
         project,
+        isPending,
       }}
     >
       {children}

@@ -3,7 +3,16 @@ import { API_ENDPOINT } from '@/constants/endpoint';
 import { ResponseSuccess } from '@/interface/common';
 import { ProjectDetails } from '@/interface/project';
 
-export const getProject = async (id: string): Promise<ResponseSuccess<ProjectDetails>> => {
-  const res = await axios.get(API_ENDPOINT.PROJECT + `/${id}`);
+export const getProject = async (
+  id: string,
+  accessToken: string,
+): Promise<ResponseSuccess<ProjectDetails>> => {
+  const res = await axios.get(API_ENDPOINT.PROJECT + `/${id}`, {
+    headers: {
+      Authorization: 'Bearer' + accessToken,
+    },
+  });
+  console.log('Res', res);
+
   return res.data;
 };
