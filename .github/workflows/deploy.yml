@@ -66,11 +66,6 @@ jobs:
             echo "ℹ️ .env file not found"
           fi
 
-      - name: Wait for services to be healthy
-        run: |
-          echo "⏳ Waiting for services to be healthy..."
-          timeout 120 sh -c 'until docker compose -f ${{ env.COMPOSE_FILE }} ps | grep -q "healthy"; do sleep 2; done' || echo "⚠️  Warning: Some services may not be healthy yet"
-
       - name: Show deployment status
         run: |
           echo "=== 📊 Services Status ==="
