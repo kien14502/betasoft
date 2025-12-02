@@ -2,43 +2,42 @@
 
 import { useContext, useState } from 'react';
 import TaskHeader from '../../../components/TaskHeader';
-import BoardSectionList from '../../../components/kanban/BoardSectionList';
-import ListTask from '../../../components/ListTask';
-import { useGetAuthTaskListsProjectId } from '@/app/api/task-list/task-list';
-import { useGetAuthProjectsProjectIdTasks } from '@/app/api/task/task';
-import { usePathname } from 'next/navigation';
 import EmptyWork from '../../../components/EmptyWork';
-import { ProjectContext } from '@/components/providers/ProjectProvider';
+import { TasksContext } from '@/components/providers/TasksProvider';
+import dynamic from 'next/dynamic';
+import ModalTaskTableProvider from '../../../providers/ModalTaskTableProvider';
+
+const ListTask = dynamic(() => import('../../../components/ListTask'), {
+  loading: () => <div>Loading...</div>,
+});
+
+const BoardSectionList = dynamic(() => import('../../../components/kanban/BoardSectionList'), {
+  loading: () => <div>Loading...</div>,
+});
 
 const TasksPage = () => {
-  const id = usePathname().split('/')[4];
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('list');
-  const { project } = useContext(ProjectContext);
-  const { data: sections, isPending: sectionsLoading } = useGetAuthTaskListsProjectId(id);
-  const { data: tasks, isPending: tasksLoading } = useGetAuthProjectsProjectIdTasks(id, {
-    page: 1,
-    page_size: 10,
-    sprint_id: project?.sprint_active?.id ?? '',
-  });
+  const { state } = useContext(TasksContext);
 
-  const isLoading = sectionsLoading || tasksLoading;
+  const tasks = state.tasks;
 
   return (
-    <div className="flex flex-col gap-6">
-      {!tasks ? (
-        <EmptyWork />
-      ) : (
-        <>
-          <TaskHeader viewMode={viewMode} setViewMode={setViewMode} />
-          {viewMode === 'kanban' && (
-            <BoardSectionList
-              init_tasks={tasks?.data?.tasks ?? []}
-              sections={sections?.data ?? []}
-            />
-          )}
-          {viewMode === 'list' && <ListTask />}
-        </>
-      )}
+    <div className="w-full min-h-0 grid grid-rows-[auto_1fr] flex-1">
+      <>
+        {tasks.length == 0 ? (
+          <EmptyWork />
+        ) : (
+          <>
+            <TaskHeader viewMode={viewMode} setViewMode={setViewMode} />
+            {viewMode === 'kanban' && <BoardSectionList init_tasks={tasks} />}
+            {viewMode === 'list' && (
+              <ModalTaskTableProvider>
+                <ListTask data={state} />
+              </ModalTaskTableProvider>
+            )}
+          </>
+        )}
+      </>
     </div>
   );
 };

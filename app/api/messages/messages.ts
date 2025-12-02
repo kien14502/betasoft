@@ -291,7 +291,7 @@ export const postChatRoomId = (
   signal?: AbortSignal,
 ) => {
   return postChatRoomIdMutator<ResponseResponse>({
-    url: `/chat/${roomId}`,
+    url: `/auth/chat/rooms/${roomId}/messages`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: requestCreateMessageRequest,

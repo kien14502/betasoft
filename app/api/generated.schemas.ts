@@ -90,7 +90,6 @@ export interface ModelsMetaData {
 export type ModelsOrganizationInvitationStatus =
   (typeof ModelsOrganizationInvitationStatus)[keyof typeof ModelsOrganizationInvitationStatus];
 
- 
 export const ModelsOrganizationInvitationStatus = {
   OrgInvitationStatusPending: 'pending',
   OrgInvitationStatusAccepted: 'accepted',
@@ -120,7 +119,6 @@ export interface ModelsProject {
 export type ModelsProjectMemberRole =
   (typeof ModelsProjectMemberRole)[keyof typeof ModelsProjectMemberRole];
 
- 
 export const ModelsProjectMemberRole = {
   ProjectMemberRoleAdmin: 'admin',
   ProjectMemberRoleSubAdmin: 'sub_admin',
@@ -182,8 +180,6 @@ export interface ModelsTask {
   completed_at?: string;
   created_at?: string;
   created_by?: string;
-  /** days */
-  cycle_time?: number;
   description?: string;
   due_date?: string;
   due_reminder?: ModelsDueReminder;
@@ -199,8 +195,6 @@ export interface ModelsTask {
   reporter?: string;
   sprint_id?: string;
   start_date?: string;
-  started_at?: string;
-  swimlane_priority?: number;
   title: string;
   updated_at?: string;
 }
@@ -214,7 +208,6 @@ export interface ModelsTaskListBasic {
 
 export type ModelsTaskPriority = (typeof ModelsTaskPriority)[keyof typeof ModelsTaskPriority];
 
- 
 export const ModelsTaskPriority = {
   TaskPriorityHigh: 'high',
   TaskPriorityMedium: 'medium',
@@ -241,7 +234,6 @@ export interface ModelsUser {
 
 export type ModelsUserRole = (typeof ModelsUserRole)[keyof typeof ModelsUserRole];
 
- 
 export const ModelsUserRole = {
   UserRoleUser: 'user',
   UserRoleAdmin: 'admin',
@@ -259,13 +251,13 @@ export interface RequestActiveNextSprintRequest {
 export type RequestAddProjectMemberRequestRole =
   (typeof RequestAddProjectMemberRequestRole)[keyof typeof RequestAddProjectMemberRequestRole];
 
- 
 export const RequestAddProjectMemberRequestRole = {
   member: 'member',
   viewer: 'viewer',
 } as const;
 
 export interface RequestAddProjectMemberRequest {
+  org_id: string;
   project_id: string;
   role: RequestAddProjectMemberRequestRole;
   user_id: string;
@@ -292,7 +284,7 @@ export interface RequestCreateLabelRequest {
 
 export interface RequestCreateMessageRequest {
   /** Maximum 2000 characters */
-  content: number[];
+  content: string;
   image_url?: string;
   type_content: number;
 }
@@ -350,7 +342,6 @@ export interface RequestCreateTaskListRequest {
 export type RequestCreateTaskRequestPriority =
   (typeof RequestCreateTaskRequestPriority)[keyof typeof RequestCreateTaskRequestPriority];
 
- 
 export const RequestCreateTaskRequestPriority = {
   low: 'low',
   medium: 'medium',
@@ -441,6 +432,16 @@ export interface RequestLoginRequest {
   password: string;
 }
 
+export interface RequestMarkNotificationsAsReadReq {
+  noti_ids: string[];
+}
+
+export interface RequestMoveTaskFromBacklogsRequest {
+  project_id: string;
+  sprint_id: string;
+  task_ids: string[];
+}
+
 export interface RequestMoveTaskRequest {
   target_list_id: string;
   target_position: number;
@@ -505,7 +506,6 @@ export interface RequestUpdateLabelRequest {
 export type RequestUpdateMemberRoleRequestRole =
   (typeof RequestUpdateMemberRoleRequestRole)[keyof typeof RequestUpdateMemberRoleRequestRole];
 
- 
 export const RequestUpdateMemberRoleRequestRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -541,7 +541,6 @@ export interface RequestUpdateProfileRequest {
 export type RequestUpdateProjectMemberRoleRequestRole =
   (typeof RequestUpdateProjectMemberRoleRequestRole)[keyof typeof RequestUpdateProjectMemberRoleRequestRole];
 
- 
 export const RequestUpdateProjectMemberRoleRequestRole = {
   member: 'member',
   viewer: 'viewer',
@@ -587,7 +586,6 @@ export interface RequestUpdateTaskListRequest {
 export type RequestUpdateTaskRequestPriority =
   (typeof RequestUpdateTaskRequestPriority)[keyof typeof RequestUpdateTaskRequestPriority];
 
- 
 export const RequestUpdateTaskRequestPriority = {
   low: 'low',
   medium: 'medium',
@@ -665,7 +663,7 @@ export interface ResponseGetUserInfoResponse {
   phone_number?: string;
   profile_image?: string;
   updated_at?: string;
-  user_id?: string;
+  id?: string;
 }
 
 export interface ResponseGetUserOrgsResponse {
@@ -1215,7 +1213,6 @@ export type GetAuthProjectsProjectIdMembersParams = {
 export type GetAuthProjectsProjectIdMembersRole =
   (typeof GetAuthProjectsProjectIdMembersRole)[keyof typeof GetAuthProjectsProjectIdMembersRole];
 
- 
 export const GetAuthProjectsProjectIdMembersRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -1320,7 +1317,6 @@ export type GetAuthProjectsMyProjectsOrgIdParams = {
 export type GetAuthProjectsMyProjectsOrgIdProjectType =
   (typeof GetAuthProjectsMyProjectsOrgIdProjectType)[keyof typeof GetAuthProjectsMyProjectsOrgIdProjectType];
 
- 
 export const GetAuthProjectsMyProjectsOrgIdProjectType = {
   internal: 'internal',
   external: 'external',
@@ -1329,7 +1325,6 @@ export const GetAuthProjectsMyProjectsOrgIdProjectType = {
 export type GetAuthProjectsMyProjectsOrgIdRole =
   (typeof GetAuthProjectsMyProjectsOrgIdRole)[keyof typeof GetAuthProjectsMyProjectsOrgIdRole];
 
- 
 export const GetAuthProjectsMyProjectsOrgIdRole = {
   admin: 'admin',
   sub_admin: 'sub_admin',
@@ -1340,7 +1335,6 @@ export const GetAuthProjectsMyProjectsOrgIdRole = {
 export type GetAuthProjectsMyProjectsOrgIdStatus =
   (typeof GetAuthProjectsMyProjectsOrgIdStatus)[keyof typeof GetAuthProjectsMyProjectsOrgIdStatus];
 
- 
 export const GetAuthProjectsMyProjectsOrgIdStatus = {
   active: 'active',
   inactive: 'inactive',
@@ -1415,6 +1409,12 @@ export type GetAuthTaskListsProjectId200AllOf = {
 
 export type GetAuthTaskListsProjectId200 = ResponseResponse & GetAuthTaskListsProjectId200AllOf;
 
+export type PatchAuthTasks200AllOf = {
+  data?: ModelsTask;
+};
+
+export type PatchAuthTasks200 = ResponseResponse & PatchAuthTasks200AllOf;
+
 export type PostAuthTasks200AllOf = {
   data?: ModelsTask;
 };
@@ -1426,12 +1426,6 @@ export type GetAuthTasksTaskId200AllOf = {
 };
 
 export type GetAuthTasksTaskId200 = ResponseResponse & GetAuthTasksTaskId200AllOf;
-
-export type PutAuthTasksTaskId200AllOf = {
-  data?: ModelsTask;
-};
-
-export type PutAuthTasksTaskId200 = ResponseResponse & PutAuthTasksTaskId200AllOf;
 
 export type PutAuthTasksTaskIdMove200AllOf = {
   data?: ResponseTaskResponse;

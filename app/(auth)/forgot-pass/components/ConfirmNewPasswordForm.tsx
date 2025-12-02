@@ -1,6 +1,7 @@
 import { usePostForgotPassword } from '@/app/api/users/users';
 import InputForm from '@/components/common/form/InputField';
 import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
 import {
   requestForgotPasswordSchema,
   RequestForgotPasswordSchemaType,
@@ -8,7 +9,7 @@ import {
 import { showToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { Form, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 type Props = {
   step: number;

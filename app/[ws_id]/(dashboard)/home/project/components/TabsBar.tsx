@@ -2,6 +2,7 @@
 
 import Tabs from '@/components/common/Tabs';
 import { Tab } from '@/interface/common';
+import { Calendar, ClipboardList, FileText, House, MessageCircleMore } from 'lucide-react';
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -24,26 +25,26 @@ const projectRoutes: Tab[] = [
   {
     name: 'Summary',
     key: 'summary',
-    icon: <div></div>,
+    icon: <House />,
   },
   {
     name: 'Sprint',
     key: 'sprint',
-    icon: <div></div>,
+    icon: <ClipboardList />,
   },
   {
     name: 'Tasks',
     key: 'tasks',
-    icon: <div></div>,
+    icon: <MessageCircleMore />,
   },
   {
     name: 'Documents',
     key: 'documents',
-    icon: <div></div>,
+    icon: <FileText />,
   },
   {
     name: 'Calendar',
     key: 'calendar',
-    icon: <div></div>,
+    icon: <Calendar />,
   },
 ];

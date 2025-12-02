@@ -1,11 +1,12 @@
-import { ReactNode } from 'react';
+import { ChartArea, LucideProps } from 'lucide-react';
+import { ForwardRefExoticComponent, ReactNode, RefAttributes } from 'react';
 import { Control, FieldValues, Path } from 'react-hook-form';
 
 export interface IMenuItem {
   label: string;
   index: string;
   path: string;
-  icon?: any;
+  icon?: typeof ChartArea;
   children?: IMenuItem[] | null;
 }
 
@@ -24,4 +25,21 @@ export interface FormProps<T extends FieldValues> {
   name: Path<T>;
   label?: string;
   className?: string;
+}
+
+export type Icon = ForwardRefExoticComponent<
+  Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+>;
+
+export interface IconProps {
+  width?: number;
+  height?: number;
+  className?: string;
+  fill?: string;
+}
+
+export interface ResponseSuccess<T> {
+  code: string;
+  data: T;
+  message: string;
 }

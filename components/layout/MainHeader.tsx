@@ -1,26 +1,30 @@
 import Image from 'next/image';
-import { ReactNode } from 'react';
+import Subheader from './Subheader';
+import WorkspaceSelector from './WorkspaceSelector';
+import { InputWithPrefix } from '../common/InputPrefix';
 
-type Props = {
-  subHeader: ReactNode;
-};
-
-const MainHeader: React.FC<Props> = ({ subHeader }) => (
-  <div className="flex justify-between !p-6 !pb-4 sticky top-0 z-50">
-    <div className="flex items-center gap-3 rounded-[64px] bg-white shadow-btn !py-3 !px-4">
-      <Image className="object-cover" src={'/logo-company.svg'} width={32} height={32} alt={''} />
-      <span>BETASOFT</span>
-    </div>
-    {subHeader}
-    <div className="flex items-center gap-3">
-      <div className="bg-white !py-3 !px-4 rounded-[64px] shadow-btn gap-2.5 flex items-center justify-center">
-        <Image width={24} height={24} src={'/icons/search.svg'} alt={''} />
-        <input className="outline-none" placeholder="Search for..." />
+const MainHeader = () => {
+  return (
+    <div className="flex justify-between h-(--header-height) pt-4 px-4 pb-4">
+      <Subheader />
+      <div className="flex items-center gap-3 ml-auto">
+        <button className="rounded-2xl shrink-0 bg-white p-2 shadow-secondary">
+          <Image
+            className="shrink-0 object-center"
+            src={'/icons/bell.svg'}
+            width={24}
+            height={24}
+            alt={''}
+          />
+        </button>
+        <InputWithPrefix
+          prefix={<Image width={24} height={24} src={'/icons/search.svg'} alt="" />}
+          className="px-4 py-2 h-10 rounded-xl max-w-[180px] bg-white shadow-secondary!"
+          placeholder="Search for ..."
+        />
+        <WorkspaceSelector />
       </div>
-      <button className="rounded-full bg-white !p-3 shadow-btn">
-        <Image src={'/icons/bell.svg'} width={24} height={24} alt={''} />
-      </button>
     </div>
-  </div>
-);
+  );
+};
 export default MainHeader;

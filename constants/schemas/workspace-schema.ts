@@ -3,14 +3,14 @@ import { emailRegex } from '../regex';
 
 export const createWorkspaceSchema = z.object({
   name: z.string().min(3, 'Workspace name must be at least 3 characters'),
-  size: z.number().min(1, 'Workspace size must be at least 1'),
+  size: z.string().min(1, 'Workspace size must be at least 1'),
 });
 export type CreateWorkSpaceSchemaType = z.infer<typeof createWorkspaceSchema>;
 
 export const newWorkSpaceSchema = z.object({
   id: z.string().optional(),
-  industry: z.string().min(3).max(100),
-  avatar: z.array(z.string().url()).optional(),
+  // industry: z.string().min(3).max(100).optional(),
+  avatar: z.string().url().optional(),
   name: z.string().min(3).max(100),
   size: z.number().min(1).optional(),
   region: z.string().optional(),
@@ -39,7 +39,6 @@ export const createProjectSchema = z.object({
       color: z.string().optional(),
       description: z.string().optional(),
       name: z.string(),
-      project_id: z.string(),
     }),
   ),
   lead: z.string().optional(),
@@ -101,3 +100,18 @@ export const createProjectTaskSchema = z.object({
 });
 
 export type CreateProjectTaskSchemaType = z.infer<typeof createProjectTaskSchema>;
+
+export const taskFilterSchema = z.object({
+  list_id: z.array(z.string()).optional(),
+  // label: z.array(z.string()).optional(),
+  priority: z.array(z.string()).optional(),
+  assignee: z.array(z.string()).optional(),
+  due_date: z.string().optional(),
+  // created_by: z.string().optional(),
+  reporter: z.string().optional(),
+  title: z.string().optional(),
+  label: z.array(z.string()).optional(),
+  start_date: z.string().optional(),
+});
+
+export type TaskFilterSchema = z.infer<typeof taskFilterSchema>;

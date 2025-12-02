@@ -1,10 +1,11 @@
 import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import UrgencyBadge from '@/components/common/UrgencyBadge';
-import { Button } from '@/components/ui/button';
 import useGrabbing from '@/hooks/useGrabbing';
 import { cn } from '@/utils/common';
 import Image from 'next/image';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Checkbox } from '@/components/ui/checkbox';
+import { memo, useCallback, useState } from 'react';
 
 type TaskItemProps = {
   task: ResponseTaskResponse;
@@ -12,22 +13,28 @@ type TaskItemProps = {
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const { boardRef, isGrabbing } = useGrabbing();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const toggleModal = useCallback(() => setOpenModal(!openModal), [openModal]);
 
   return (
     <div
+      onClick={toggleModal}
       style={{
         cursor: isGrabbing ? 'grabbing' : 'grab',
+        boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',
       }}
       ref={boardRef}
       className={cn(
-        'border flex flex-col gap-2 !py-3 !px-4 border-cool-gray-20 shadow-main rounded-md bg-white',
+        'border flex flex-col gap-2 py-3 px-4 border-cool-gray-20 rounded-2xl bg-white',
       )}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <Checkbox className="rounded-full" />
         <p className="font-semibold text-gray-90 text-sm">{task.title}</p>
-        <Button>
+        <button className="ml-auto">
           <Image width={20} height={20} src={'/icons/dots.svg'} alt={''} />
-        </Button>
+        </button>
       </div>
       <div className="flex items-center justify-between">
         <span className="text-xs text-gray-8">Assignee:</span>
@@ -56,4 +63,4 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     </div>
   );
 };
-export default TaskItem;
+export default memo(TaskItem);

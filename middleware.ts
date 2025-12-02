@@ -3,54 +3,70 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 function decodeJwt(token: string) {
-  const payload = token.split('.')[1];
-  const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
-  const json = Buffer.from(base64, 'base64').toString('utf-8');
-  return JSON.parse(json);
+  try {
+    const payload = token.split('.')[1];
+    const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
 }
 
-const UNAUTHENTICATED_ONLY_ROUTES = ['/login', '/register', 'forgot-pass'];
+const AUTH_FREE_ROUTES = ['/login', '/register', '/forgot-pass', '/verify-email'];
+const ADMIN_PREFIX = '/admin';
+const HOME_BASE_REGEX = /^\/[^/]+\/home$/;
+// const NOT_FOUND_ROUTE = '/not-found';
 
-export function middleware(req: NextRequest) {
-  const token = req.cookies.get('accessToken')?.value;
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const baseHomePathRegex = /^\/[^/]+\/home$/;
+  const token = req.cookies.get('accessToken')?.value;
+  const isAuthFree = AUTH_FREE_ROUTES.includes(pathname);
 
-  if (!UNAUTHENTICATED_ONLY_ROUTES.includes(pathname) && token) {
+  // --------- CASE 1: NO TOKEN → USER MUST LOGIN ----------
+  if (!token && !isAuthFree) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  // --------- CASE 2: HAS TOKEN ----------
+  if (token) {
     const payload = decodeJwt(token);
 
-    // 1. Check hết hạn
-    if (payload.exp && Date.now() / 1000 > payload.exp) {
-      return NextResponse.redirect(new URL('/login', req.url));
+    // token hỏng -> remove + login
+    // if (!payload) {
+    //   const resp = NextResponse.redirect(new URL('/login', req.url));
+    //   resp.cookies.delete('accessToken');
+    //   return resp;
+    // }
+
+    // hết hạn -> remove + login
+    // if (payload.exp && Date.now() / 1000 > payload.exp) {
+    //   const resp = NextResponse.redirect(new URL('/login', req.url));
+    //   resp.cookies.delete('accessToken');
+    //   return resp;
+    // }
+
+    // user đã login → chặn vào /login, /register, ...
+    if (isAuthFree) {
+      return NextResponse.redirect(new URL('/', req.url));
     }
 
+    // --------- ROLE CHECKS ----------
     const role = payload.role;
 
-    // 2. Check cho /admin/**
-    if (pathname.startsWith('/admin') && role !== 'admin') {
+    // 1. /admin/** → chỉ admin
+    if (pathname.startsWith(ADMIN_PREFIX) && role !== 'admin') {
       return NextResponse.redirect(new URL('/401', req.url));
     }
-    if (baseHomePathRegex.test(pathname) && role !== 'admin') {
+
+    // 2. /{workspace}/home → nếu không phải admin thì redirect đến overview
+    if (HOME_BASE_REGEX.test(pathname) && role !== 'admin') {
       return NextResponse.redirect(new URL(pathname + '/overview', req.url));
     }
-  }
-
-  if (UNAUTHENTICATED_ONLY_ROUTES.includes(pathname) && token) {
-    return NextResponse.redirect(new URL('/home', req.url));
-  }
-
-  if (!UNAUTHENTICATED_ONLY_ROUTES.includes(pathname) && !token) {
-    return NextResponse.redirect(new URL('/login', req.url));
   }
 
   return NextResponse.next();
 }
 
-// Áp dụng cho tất cả route trừ static (login, 403, public assets)
 export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|login|403).*)',
-    '/login',
-    '/home/:path*',
-  ],
+  matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)',
 };

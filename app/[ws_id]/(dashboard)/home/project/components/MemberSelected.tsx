@@ -1,5 +1,6 @@
 import { ResponseOrgMember } from '@/app/api/generated.schemas';
 import { Button } from '@/components/ui/button';
+import { USER_AVATAR_URL } from '@/constants/common';
 import Image from 'next/image';
 
 type Props = {
@@ -14,7 +15,7 @@ const MemberSelected: React.FC<Props> = ({ member, onRemove }) => {
         className="object-center rounded-full"
         width={32}
         height={32}
-        src={member.profile_image ?? ''}
+        src={member.profile_image || USER_AVATAR_URL}
         alt={''}
       />
       <span className="ml-3 text-[#002E73] text-sm font-medium">{member.full_name}</span>

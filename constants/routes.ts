@@ -1,54 +1,40 @@
-import { IMenuItem } from '../interface/common';
+import { CalendarIcon, ChannelIcon, DocumentIcon, HomeIcon, TaskIcon } from '@/components/icons';
 
-export const mainRoutes: IMenuItem[] = [
-  {
-    label: 'Home',
-    index: 'home',
-    path: '/home',
-    // icon: HomeOutlined,
-  },
-  {
-    label: 'Tasks',
-    index: 'tasks',
-    path: '/tasks',
-    // icon: OrderedListOutlined,
-  },
-  {
-    label: 'Channels',
-    index: 'channels',
-    path: '/channels',
-    // icon: CommentOutlined,
-  },
-  {
-    label: 'Documents',
-    index: 'documents',
-    path: '/documents',
-    // icon: FolderOutlined,
-  },
-  {
-    label: 'Calendar',
-    index: 'Calendar',
-    path: '/calendar',
-    // icon: CalendarOutlined,
-    children: [
-      {
-        label: 'Item 1',
-        index: 'g1',
-        path: '/calendar/1',
-        children: [{ label: 'Option 1', index: 'setting:1', path: '/setting/1' }],
-      },
-      {
-        label: 'Item 2',
-        index: 'g2',
-        path: '/setting/2',
-      },
-    ],
-  },
+export const GLOBAL = 'global';
+
+export const mainRoutes = [
+  { label: 'Home', path: '/home', icon: HomeIcon },
+  { label: 'Tasks', path: '/tasks', icon: TaskIcon },
+  { label: 'Chat', path: '/channels', icon: ChannelIcon },
+  { label: 'Docs', path: '/documents', icon: DocumentIcon },
+  { label: 'Calendar', path: '/calendar', icon: CalendarIcon },
 ];
 
 export const homeRoutes = [
-  { name: 'Overview', path: '/overview' },
-  { name: 'Project', path: '/project' },
-  { name: 'Team', path: '/team' },
-  { name: 'Members', path: '/members' },
+  { name: 'Overview', path: 'overview' },
+  { name: 'Project', path: 'project' },
+  { name: 'Team', path: 'team' },
+  { name: 'Members', path: 'members' },
+];
+
+export const projectRoutes = [
+  { name: 'Summary', path: 'summary', icon: '/icons/pie-chart-fill.svg' },
+  { name: 'Tasks', path: 'tasks', icon: '/icons/task-fill.svg' },
+  { name: 'Document', path: 'document', icon: '/icons/docs-fill.svg' },
+  { name: 'Calendar', path: 'calendar', icon: '/icons/calendar-fill.svg' },
+];
+
+export const channelRoutes = [
+  {
+    name: 'DMs',
+    path: 'dms',
+  },
+  {
+    name: 'Group',
+    path: 'group',
+  },
+  {
+    name: 'Project',
+    path: 'project',
+  },
 ];

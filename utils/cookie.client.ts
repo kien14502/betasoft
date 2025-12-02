@@ -7,8 +7,14 @@ export function getClientCookie(name: string): string | undefined {
 
 export function setClientCookie(name: string, value: string, maxAge?: number) {
   let cookieStr = `${name}=${value}; path=/`;
+
   if (maxAge) cookieStr += `; max-age=${maxAge}`;
-  cookieStr += '; secure; samesite=strict';
+  // chỉ khi dùng HTTPS
+  // cookieStr += '; secure';
+
+  // an toàn hơn strict, không bị mất khi reload
+  cookieStr += '; samesite=lax';
+
   document.cookie = cookieStr;
 }
 

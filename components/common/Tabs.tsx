@@ -14,7 +14,7 @@ const Tabs: React.FC<Props> = ({ tabs, activeTab, setActiveTab }) => (
       <button
         key={tab.key}
         onClick={() => setActiveTab(tab.key)}
-        className="relative !pb-3 w-[113px] !pt-1 flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+        className="relative pb-3 w-[113px] pt-1 flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
       >
         <div
           className={cn(

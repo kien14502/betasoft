@@ -31,8 +31,8 @@ const SelectForm = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className={cn('flex flex-col gap-2 space-y-0', className)}>
+          {label && <Label className="mb-2">{label}</Label>}
           <FormControl>
-            {label && <Label className="mb-2">{label}</Label>}
             <Select {...field}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder={placeholder} />

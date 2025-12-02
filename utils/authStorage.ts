@@ -1,5 +1,6 @@
 enum AUTH_STORAGE_KEY {
   USER_DATA = 'userData',
+  ACCESS_TOKEN = 'accessToken',
 }
 
 export type AuthStorageKey = keyof typeof AUTH_STORAGE_KEY;
@@ -22,6 +23,7 @@ const getAuthStorage = <T>(key: AuthStorageKey): T | null => {
   const authStorage = appStorage();
   if (authStorage) {
     const item = authStorage.getItem(AUTH_STORAGE_KEY[key]);
+
     return item ? JSON.parse(item) : null;
   }
   return null;

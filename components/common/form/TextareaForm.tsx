@@ -8,7 +8,7 @@ type Props<T extends FieldValues> = FormProps<T> & {
   placeholder?: string;
   rows?: number;
   maxLength?: number;
-};
+} & React.ComponentProps<'textarea'>;
 
 const TextareaForm = <T extends FieldValues>({
   name,
@@ -18,6 +18,7 @@ const TextareaForm = <T extends FieldValues>({
   placeholder,
   rows = 10,
   maxLength,
+  ...props
 }: Props<T>) => {
   return (
     <FormField
@@ -38,6 +39,7 @@ const TextareaForm = <T extends FieldValues>({
                 fieldState.error && 'border-destructive',
               )}
               {...field}
+              {...props}
             />
           </FormControl>
           {maxLength && (

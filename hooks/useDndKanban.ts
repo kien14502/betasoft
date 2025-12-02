@@ -20,7 +20,11 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useEffect, useState } from 'react';
 
-const useDndKanban = (init_tasks: ResponseTaskResponse[], sections: ResponseTaskListResponse[]) => {
+const useDndKanban = (
+  init_tasks: ResponseTaskResponse[],
+  sections: ResponseTaskListResponse[],
+  onChange: (payload: DragOverEvent) => void,
+) => {
   const [boardSections, setBoardSections] = useState<BoardSections>({});
   const [activeTaskId, setActiveTaskId] = useState<UniqueIdentifier | null>(null);
 
@@ -72,7 +76,9 @@ const useDndKanban = (init_tasks: ResponseTaskResponse[], sections: ResponseTask
     });
   };
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+  const handleDragEnd = (dragEndEvent: DragEndEvent) => {
+    const { active, over } = dragEndEvent;
+
     const activeContainer = findBoardSectionContainer(boardSections, active.id as string);
     const overContainer = findBoardSectionContainer(boardSections, over?.id as string);
 
@@ -84,6 +90,7 @@ const useDndKanban = (init_tasks: ResponseTaskResponse[], sections: ResponseTask
     const overIndex = boardSections[overContainer].findIndex((task) => task.id === over?.id);
 
     if (activeIndex !== overIndex) {
+      onChange(dragEndEvent);
       setBoardSections((boardSection) => ({
         ...boardSection,
         [overContainer]: arrayMove(boardSection[overContainer], activeIndex, overIndex),

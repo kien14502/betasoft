@@ -1,6 +1,7 @@
 import { ResponseProjectWithColLabelAndSprint } from '@/app/api/generated.schemas';
 import { useGetAuthProjectsProjectId } from '@/app/api/project/project';
-import { createContext, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { createContext } from 'react';
 
 type ProjectContext = {
   project: ResponseProjectWithColLabelAndSprint | undefined;

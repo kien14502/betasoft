@@ -7,7 +7,9 @@ import {
   ResponseProjectsWithProjectMemberRole,
 } from '@/app/api/generated.schemas';
 import { clsx, type ClassValue } from 'clsx';
+import { UseFormReturn } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
+import { showToast } from './toast';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -75,10 +77,11 @@ export const getAvatarMember = (members: ResponseMembersWithProjectMemberRole[],
 };
 
 export const fEnumToArray = (enumObj: Record<string, string | number>) => {
-  return Object.entries(enumObj).map(([key, value]) => ({
+  const rs = Object.entries(enumObj).map(([key, value]) => ({
     label: key,
     value: value.toString(),
   }));
+  return rs;
 };
 
 export const labels: RequestCreateLabelDataToCreate[] = [
@@ -92,10 +95,76 @@ export const labels: RequestCreateLabelDataToCreate[] = [
 
 export const sprints: RequestCreateSprintRequest[] = [
   {
-    begin_at: '1',
-    end_at: '2',
-    name: 'test',
+    name: 'Sprint 1',
+    begin_at: '2025-01-01T00:00:00Z',
+    end_at: '2026-01-14T23:59:59Z',
     is_active: true,
-    goal: 'done',
+    goal: 'Initial sprint setup',
   },
 ];
+
+type RGB = {
+  r: number;
+  g: number;
+  b: number;
+  a?: number;
+};
+
+/**
+ * Convert HEX → RGB(A)
+ */
+export function hexToRGB(hex: string): RGB {
+  // Remove #
+  hex = hex.replace(/^#/, '');
+
+  // Expand short form (#abc → #aabbcc)
+  if (hex.length === 3) {
+    hex = hex
+      .split('')
+      .map((c) => c + c)
+      .join('');
+  }
+
+  // Handle #RRGGBBAA (8-digit hex)
+  if (hex.length === 8) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const a = parseInt(hex.substring(6, 8), 16) / 255;
+    return { r, g, b, a };
+  }
+
+  // Standard #RRGGBB
+  if (hex.length === 6) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return { r, g, b };
+  }
+
+  throw new Error('Invalid HEX color format');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isFormReady = (form: UseFormReturn<any>) => {
+  const isActive = !form.formState.isValid || form.formState.isSubmitting;
+  return isActive;
+};
+
+export function encodeBase64(text: string) {
+  const buffer = Buffer.from(text, 'utf8');
+
+  const base64String = buffer.toString('base64');
+
+  return base64String;
+}
+
+export function decodeBase64(base64String: string) {
+  const buffer = Buffer.from(base64String, 'base64');
+
+  const decodedText = buffer.toString('utf8');
+
+  return decodedText;
+}
+
+export const commingSoonToast = () => showToast('🚧 This feature is coming soon! 🚧', 'info');

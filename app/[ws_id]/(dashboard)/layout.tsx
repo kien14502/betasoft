@@ -1,25 +1,21 @@
-'use client';
 import React from 'react';
-import { usePathname } from 'next/navigation';
-import MenuDashboard from '@/components/layout/dashboard/MenuDashboard';
-import HomeHeader from '@/components/layout/HomeHeader';
 import MainHeader from '@/components/layout/MainHeader';
+import Sidebar from '@/components/layout/sidebar';
 
 function LayoutConfig({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  return <> {children}</>;
 
   return (
-    <div style={{ height: '100vh', background: '#F4FAFC' }}>
-      <MainHeader subHeader={<>{pathname.split('/').includes('home') && <HomeHeader />}</>} />
-      <MenuDashboard />
-      <div
-        style={{
-          marginLeft: '98px',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div className="h-full px-6 pb-6 flex w-full">{children}</div>
+    <div className="w-screen h-screen bg-secondary overflow-hidden">
+      <Sidebar />
+      <div className="w-screen h-screen flex flex-col pl-14 bg-secondary overflow-hidden">
+        <MainHeader />
+        <div className="flex flex-col min-h-0 h-[calc(100vh-64px)]">
+          {/* {children} */}
+          <div className="overflow-hidden min-h-0 h-full flex flex-col p-4 pt-2 gap-4">
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   );

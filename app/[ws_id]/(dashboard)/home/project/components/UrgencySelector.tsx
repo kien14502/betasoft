@@ -1,9 +1,10 @@
+import { RequestCreateTaskRequestPriority } from '@/app/api/generated.schemas';
 import { EUrgency } from '@/constants';
 import { cn } from '@/utils/common';
 import Image from 'next/image';
 
 type Props = {
-  onChange?: (value: string) => void;
+  onChange?: (value: RequestCreateTaskRequestPriority) => void;
   value?: string;
 };
 

@@ -1,14 +1,13 @@
 'use client';
 
 import { useGetAuthOrganizations } from '@/app/api/organizations/organizations';
-import { AuthContext } from '@/components/providers/AuthProvider';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { getSelector, useAppSelector } from '@/hooks/useRedux';
+import { launchWorkspace } from '@/services/workspace-service';
 
 const LaunchApp = () => {
-  const router = useRouter();
-  const { profile } = useContext(AuthContext);
+  const { user } = useAppSelector(getSelector('auth'));
   const { data } = useGetAuthOrganizations({
     page: 1,
     page_size: 10,
@@ -16,21 +15,26 @@ const LaunchApp = () => {
 
   const workspaces = data?.data;
 
-  const onLaunch = (id: string) => {
-    router.push('/' + id);
+  const onLaunchWorkspace = (id: string) => {
+    launchWorkspace(id);
   };
 
   return (
-    <div className="w-full flex items-start flex-col">
-      <span>Workspace for {profile?.full_name}</span>
-      <div className="w-full flex flex-col gap-2">
-        {workspaces?.organizations?.map((item, i) => (
-          <div key={i} className="w-full flex items-center justify-between">
-            {item.organization?.name}
-            <Button onClick={() => onLaunch(item.organization?.id || '')}>Lanch</Button>
-          </div>
-        ))}
-      </div>
+    <div className="w-full flex items-start flex-col bg-white p-2 rounded-lg gap-4">
+      <span>Workspace for {user?.full_name}</span>
+      <ScrollArea className="w-full h-[200px]">
+        <div className="flex flex-col gap-2">
+          {workspaces?.organizations?.map((item, i) => (
+            <div key={i} className="w-full flex items-center gap-2 justify-between">
+              {item.organization?.name}
+              <Button onClick={() => onLaunchWorkspace(item.organization?.id || '')}>Launch</Button>
+              {/* <Link href={item.organization?.id + '/home/overview' || ''}>
+                <Button>Launch</Button>
+              </Link> */}
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 };
