@@ -29,7 +29,7 @@ const handleMonveTask = async (payload: TaskDetails) => {
 };
 
 const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
-  const id = usePathname().split('/')[4];
+  const id = usePathname().split('/')[3];
   const { project } = useContext(ProjectContext);
   const { mutate: onMoveTask } = useMutation({
     mutationFn: handleMonveTask,

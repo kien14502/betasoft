@@ -1,3 +1,5 @@
+'use client';
+
 import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import { useGetAuthProjectsProjectIdTasks } from '@/app/api/task/task';
 import React, {

@@ -31,7 +31,7 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
   const pathname = usePathname().split('/').filter(Boolean);
 
   const { data: taskData } = useGetAuthProjectsProjectIdTasks(
-    pathname[3],
+    pathname[2],
     {
       page: 1,
       page_size: 10,

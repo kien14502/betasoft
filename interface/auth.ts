@@ -27,6 +27,9 @@ export interface Organization {
   industry: string;
   size: number;
   region: string;
+  admin_count: number;
+  member_count: number;
+  sub_admin_count: number;
   created_at: string;
   updated_at: string;
 }

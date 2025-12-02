@@ -1,35 +1,36 @@
-import { Organization } from '@/interface/auth';
+import { User } from '@/interface/auth';
 import { createSlice } from '@reduxjs/toolkit';
-import { getInforWorkspace } from './action';
+import { getMembers } from './action';
 
 export type WorkspaceState = {
-  info: Organization | null;
+  members: User[];
   loading: boolean;
   error?: string | null;
 };
 
 const initialState: WorkspaceState = {
-  info: null,
   loading: false,
+  members: [],
   error: null,
 };
 
 const workspaceSlice = createSlice({
-  name: 'workspace',
+  name: 'member_workspace',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // Dùng builder.addCase liên tiếp (chaining)
     builder
-      .addCase(getInforWorkspace.fulfilled, (state, action) => {
-        state.info = action.payload;
+      .addCase(getMembers.fulfilled, (state, action) => {
+        state.members = action.payload;
         state.loading = false;
         state.error = null;
       })
-      .addCase(getInforWorkspace.pending, (state) => {
+      .addCase(getMembers.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getInforWorkspace.rejected, (state, action) => {
+      .addCase(getMembers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch members';
       });

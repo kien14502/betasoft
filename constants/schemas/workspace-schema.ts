@@ -23,6 +23,12 @@ export const inviteMemberSchema = z.object({
 });
 export type InviteMemberSchemaType = z.infer<typeof inviteMemberSchema>;
 
+export const joinWorkspaceSchema = z.object({
+  invite_code: z.string().length(6),
+});
+
+export type JoinWorkspaceSchema = z.infer<typeof joinWorkspaceSchema>;
+
 export interface RequestCreateLabelDataToCreate {
   color?: string;
   description?: string;

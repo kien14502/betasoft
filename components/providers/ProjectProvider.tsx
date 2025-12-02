@@ -1,32 +1,27 @@
-import { ResponseProjectWithColLabelAndSprint } from '@/app/api/generated.schemas';
-import { useGetAuthProjectsProjectId } from '@/app/api/project/project';
+'use client';
+
+import { ProjectDetails } from '@/interface/project';
 import { ReactNode } from 'react';
 import { createContext } from 'react';
 
 type ProjectContext = {
-  project: ResponseProjectWithColLabelAndSprint | undefined;
-  isPending: boolean;
+  project: ProjectDetails | undefined;
 };
 
 export const ProjectContext = createContext<ProjectContext>({
   project: undefined,
-  isPending: false,
 });
 
 type Props = {
   children: ReactNode;
-  id: string;
+  project: ProjectDetails;
 };
 
-export const ProjectProvider = ({ children, id }: Props) => {
-  const { data: projectData, isPending } = useGetAuthProjectsProjectId(id);
-  const project = projectData?.data;
-
+export const ProjectProvider = ({ children, project }: Props) => {
   return (
     <ProjectContext.Provider
       value={{
         project,
-        isPending,
       }}
     >
       {children}
