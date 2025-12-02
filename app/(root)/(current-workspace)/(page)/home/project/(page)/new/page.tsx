@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { usePostAuthProjects } from '@/app/api/project/project';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import useGetIdWorkspace from '@/hooks/useGetIdWorkspace';
 import WrapperContent from '../../components/WrapperContent';
 import InformationForm from '../../components/InformationForm';
 import AddMembers from '../../components/AddMembers';
@@ -22,7 +21,7 @@ import { useAppSelector, getSelector } from '@/hooks/useRedux';
 const TrackWork = dynamic(() => import('../../components/TrackWork'));
 
 const NewProjectPage = () => {
-  const { idWs } = useGetIdWorkspace();
+  const { info } = useAppSelector(getSelector('workspace'));
   const router = useRouter();
   const { mutate: createProject, isPending } = usePostAuthProjects();
   const [openTrackworkModal, setOpenTrackworkModal] = useState<boolean>(false);
@@ -33,7 +32,7 @@ const NewProjectPage = () => {
       task_list: DEFAULT_TASK_LIST,
       labels: labels,
       sprints: sprints,
-      org_id: idWs,
+      org_id: info?.id,
       is_team: false,
       settings: {
         allow_guests: true,
@@ -52,6 +51,11 @@ const NewProjectPage = () => {
   };
 
   useEffect(() => {
+    form.setValue('org_id', info?.id || '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [info]);
+
+  useEffect(() => {
     form.setValue('lead', profile?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
@@ -63,7 +67,7 @@ const NewProjectPage = () => {
         onSuccess({ data, message }) {
           showToast(message || 'Create project successfully', 'success');
           setOpenTrackworkModal(false);
-          router.push(`/${idWs}/home/project/${data?.id}`);
+          router.push(`/home/project/${data?.id}`);
         },
       },
     );
@@ -94,12 +98,14 @@ const NewProjectPage = () => {
             subTitle={'You can add members after creating the project in Project Settings.'}
           >
             <AddMembers
+              idWs={info?.id || ''}
               onChangeMemberSeleted={(members) =>
                 form.setValue(
                   'members',
                   members.map((item) => item.id ?? ''),
                 )
               }
+              memberCount={info?.member_count || 0}
             />
           </WrapperContent>
         </div>

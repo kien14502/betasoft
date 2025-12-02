@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 const Subheader = () => {
   const pathname = usePathname().split('/').filter(Boolean);
 
-  switch (pathname[1]) {
+  switch (pathname[0]) {
     case 'home':
       return (
         <div className="bg-white shadow-secondary p-1 shadow-sidebar border border-[#AED2FF] flex flex-row items-center shadow-btn rounded-2xl">

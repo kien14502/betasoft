@@ -19,7 +19,7 @@ export const homeRoutes = [
 
 export const projectRoutes = [
   { name: 'Summary', path: 'summary', icon: '/icons/pie-chart-fill.svg' },
-  { name: 'Tasks', path: 'tasks', icon: '/icons/task-fill.svg' },
+  { name: 'Tasks', path: 'tasks-project', icon: '/icons/task-fill.svg' },
   { name: 'Document', path: 'document', icon: '/icons/docs-fill.svg' },
   { name: 'Calendar', path: 'calendar', icon: '/icons/calendar-fill.svg' },
 ];

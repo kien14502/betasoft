@@ -35,3 +35,7 @@ export const searchChar = (input: string, compare: string) => {
   const fCompare = fVNTones(compare.toLowerCase());
   return fInput.includes(fCompare);
 };
+
+export const mergeUrl = (urls: string[]): string => {
+  return '/' + urls.join('/');
+};

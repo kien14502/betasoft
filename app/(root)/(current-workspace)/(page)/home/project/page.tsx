@@ -5,17 +5,17 @@ import { Pagination } from '@/interface/common';
 import { useState } from 'react';
 import ProjectCard from './components/ProjectCard';
 import { useGetAuthProjectsMyProjectsOrgId } from '@/app/api/project/project';
-import useGetIdWorkspace from '@/hooks/useGetIdWorkspace';
 import ProjectLoading from './components/ProjectsLoading';
 import { groupRoleProjects } from '@/utils/common';
 import ProjectWrapper from './components/ProjectWrapper';
 import ProjectHeader from '../components/header/ProjectHeader';
+import { getSelector, useAppSelector } from '@/hooks/useRedux';
 
 const ProjectPage = () => {
-  const { idWs } = useGetIdWorkspace();
+  const { info } = useAppSelector(getSelector('workspace'));
   const [pagination] = useState<Pagination>({ page: 1, page_size: 10 });
   const { data, isPending } = useGetAuthProjectsMyProjectsOrgId(
-    idWs ?? '',
+    info?.id || '',
     {
       ...pagination,
       is_team: false,
@@ -32,7 +32,7 @@ const ProjectPage = () => {
     <div className="gap-4 h-full max-h-full flex flex-col">
       {projects.length > 0 ? (
         <>
-          <ProjectHeader wsId={idWs} />
+          <ProjectHeader />
           <div className="grid grid-cols-2 gap-8 px-24 w-full flex-1 pb-4 min-h-0">
             <ProjectWrapper type="owner" isEmpty={adminProjects.length === 0}>
               {adminProjects.map((item) => (

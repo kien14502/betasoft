@@ -8,6 +8,11 @@ export const API_ENDPOINT = {
     GET_ROOM: (id: string) => `/auth/chat/rooms/${id}/messages`,
   },
   WORKSPACE: {
+    '': '/auth/organizations',
     LAUNCH: '/auth/organizations/launch',
+    JOIN: '/auth/organizations/join',
+  },
+  PROJECT: {
+    '': '/auth/projects',
   },
 };
