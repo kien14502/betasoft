@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM --platform=linux/amd64 node:22-alpine AS builder
 
 # Install pnpm
 RUN npm i -g pnpm@10.20
@@ -10,8 +10,7 @@ COPY package*.json pnpm-lock.yaml ./
 
 # Configure pnpm for Docker and install dependencies
 RUN pnpm config set node-linker hoisted && \
-    pnpm install --ignore-scripts --frozen-lockfile
-
+    pnpm install --ignore-scripts --no-frozen-lockfile
 
 # Copy source code
 COPY . .
@@ -25,7 +24,7 @@ RUN pnpm run build
 # --------------------------
 # PRODUCTION IMAGE
 # --------------------------
-FROM node:22-alpine AS runner
+FROM --platform=linux/amd64 node:22-alpine AS runner
 
 WORKDIR /app
 

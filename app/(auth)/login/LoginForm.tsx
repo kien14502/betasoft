@@ -16,7 +16,7 @@ import RememberAccount from '../components/RememberAccount';
 import GoogleButton from '../components/GoogleButton';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { setAuth } from '@/lib/features/auth/authSlice';
-import { ResponseGetUserInfoResponse } from '@/app/api/generated.schemas';
+import { User } from '@/interface/auth';
 
 export default function Login() {
   const { mutate, isPending } = usePostLogin();
@@ -38,7 +38,7 @@ export default function Login() {
         onSuccess: (res) => {
           const token = res.data?.token || '';
           setClientCookie(EToken.ACCESS_TOKEN, token);
-          dispatch(setAuth(res.data?.user as ResponseGetUserInfoResponse));
+          dispatch(setAuth(res.data?.user as unknown as User));
           saveAuthStorage('ACCESS_TOKEN', token);
           router.push('/');
         },
