@@ -45,7 +45,7 @@ jobs:
           PORT=${{ secrets.PORT }}
 
           # JWT Configuration
-          NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_BE_BASE_URL=${{ secrets.NEXT_PUBLIC_BE_BASE_URL }}
           EOF
 
           echo "✅ .env file created from GitHub Secrets"
