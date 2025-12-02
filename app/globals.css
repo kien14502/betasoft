@@ -12,6 +12,7 @@
   --shadow-main: var(--shadow-main);
   --shadow-popup: var(--shadow-popup);
   --shadow-secondary: var(--shadow-secondary);
+  --shadow-secondary-inset: var(--shadow-secondary-inset);
   --shadow-secondary-foreground: var(--shadow-secondary-foreground);
   --radius-md: 8px;
   --color-text-primary: var(--text-primary);
@@ -74,10 +75,21 @@
   --cool-gray-90: #21272a;
   --bg-secondary: #f2f2f7;
   --shadow-secondary: 0px 0px 4px 0px #00000033;
+  --shadow-secondary-inset: 0px 0px 4px 0px #00000033 inset;
   --shadow-main: 0px 0px 10px 2px #0000001a;
   --shadow-popup: 0px 0px 8px 0px #00000029;
   --shadow-secondary-foreground: 0px 0px 4px 0px hsba(0, 0%, 0%, 0.2);
   --color-gradient: linear-gradient(180deg, #ffd900 0%, #ffae00 100%);
+  --color-channel-global: linear-gradient(
+    180deg,
+    #5900ff 0%,
+    #e300e7 35.99%,
+    #ff0055 71.98%,
+    #ff9100 100%
+  );
+  /* --color-channel-global:
+    linear-gradient(108.98deg, #917ffb 27.06%, #3f2daf 90.91%),
+    linear-gradient(180deg, #5900ff 0%, #e300e7 35.99%, #ff0055 71.98%, #ff9100 100%); */
   --text-primary: #131315;
   --blue-5: #002e73;
   --blue-1: #e5f1ff;
@@ -130,6 +142,8 @@
 
   /* another */
   --header-height: 80px;
+  --header-channel-width: 425px;
+  --message-width: 320px;
 }
 
 body {

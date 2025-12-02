@@ -18,7 +18,7 @@ const ProjectPage = () => {
     idWs ?? '',
     {
       ...pagination,
-      is_team: true,
+      is_team: false,
     },
     { query: { select: (data) => data.data } },
   );
@@ -33,13 +33,11 @@ const ProjectPage = () => {
       {projects.length > 0 ? (
         <>
           <ProjectHeader wsId={idWs} />
-          <div className="grid grid-cols-2 gap-8 px-24 w-full max-h-full h-full">
+          <div className="grid grid-cols-2 gap-8 px-24 w-full flex-1 pb-4 min-h-0">
             <ProjectWrapper type="owner" isEmpty={adminProjects.length === 0}>
-              <div className="flex flex-wrap gap-6">
-                {adminProjects.map((item) => (
-                  <ProjectCard key={item.project?.id} data={item} />
-                ))}
-              </div>
+              {adminProjects.map((item) => (
+                <ProjectCard key={item.project?.id} data={item} />
+              ))}
             </ProjectWrapper>
             <ProjectWrapper type="member" isEmpty={otherProjects.length === 0}>
               {otherProjects.map((item) => (

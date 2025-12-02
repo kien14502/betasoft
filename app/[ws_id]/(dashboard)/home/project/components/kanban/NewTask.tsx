@@ -13,6 +13,8 @@ import {
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/generated.schemas';
 import { TasksContext } from '@/components/providers/TasksProvider';
+import { hexToRGB } from '@/utils/common';
+import { Plus } from 'lucide-react';
 
 type Props = {
   section: ResponseTaskListResponse;
@@ -60,9 +62,19 @@ const NewTask = ({ section }: Props) => {
       form.handleSubmit(onSubmit)();
     }
   };
+  const { b, g, r } = hexToRGB(section.color || '');
 
   return (
-    <div className="w-full mt-2" ref={inputRef}>
+    <div
+      style={
+        {
+          // backgroundColor: `rgb(${r}, ${g}, ${b}, 0.3)`,
+          // backdropFilter: 'blur(5px)',
+        }
+      }
+      className="w-full mt-2"
+      ref={inputRef}
+    >
       {isAddTask ? (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -79,10 +91,11 @@ const NewTask = ({ section }: Props) => {
         </Form>
       ) : (
         <button
+          // style={{ backdropFilter: 'blur(5px)' }}
           onClick={toggle}
-          className="text-sm opacity-0 w-full hover:opacity-100 hover:bg-gray-5 rounded flex items-center font-medium gap-1.5 !py-2.5 !px-4"
+          className="text-sm w-full flex items-center font-medium gap-1.5 py-2.5 justify-center overflow-hidden px-4"
         >
-          <Image src={'/icons/plus.svg'} alt={''} width={20} height={20} />
+          <Plus size={20} color={section.color} />
           New task
         </button>
       )}

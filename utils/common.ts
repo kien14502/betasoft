@@ -9,6 +9,7 @@ import {
 import { clsx, type ClassValue } from 'clsx';
 import { UseFormReturn } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
+import { showToast } from './toast';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -94,11 +95,11 @@ export const labels: RequestCreateLabelDataToCreate[] = [
 
 export const sprints: RequestCreateSprintRequest[] = [
   {
-    begin_at: '1',
-    end_at: '2',
-    name: 'test',
+    name: 'Sprint 1',
+    begin_at: '2025-01-01T00:00:00Z',
+    end_at: '2026-01-14T23:59:59Z',
     is_active: true,
-    goal: 'done',
+    goal: 'Initial sprint setup',
   },
 ];
 
@@ -149,3 +150,21 @@ export const isFormReady = (form: UseFormReturn<any>) => {
   const isActive = !form.formState.isValid || form.formState.isSubmitting;
   return isActive;
 };
+
+export function encodeBase64(text: string) {
+  const buffer = Buffer.from(text, 'utf8');
+
+  const base64String = buffer.toString('base64');
+
+  return base64String;
+}
+
+export function decodeBase64(base64String: string) {
+  const buffer = Buffer.from(base64String, 'base64');
+
+  const decodedText = buffer.toString('utf8');
+
+  return decodedText;
+}
+
+export const commingSoonToast = () => showToast('🚧 This feature is coming soon! 🚧', 'info');

@@ -58,6 +58,18 @@ enum EWorkSpaceIndustry {
   Consulting = 'Consulting',
 }
 
+enum ESocketAction {
+  JOIN_ROOM = 'joinRoom',
+  LEAVE_ROOM = 'leaveRoom',
+  JOIN_USER = 'joinUser',
+  SEND_MESSAGE = 'sendMessage',
+  START_TYPING = 'startTyping',
+  STOP_TYPING = 'stopTyping',
+  TOGGLE_ONLINE = 'toggleOnline',
+  TOGGLE_OFFLINE = 'toggleOffline',
+  NEW_MESSAGE = 'new_message',
+}
+
 export {
   EToken,
   ERole,
@@ -66,4 +78,5 @@ export {
   EWorkspaceSizes,
   EWorkSpaceRegion,
   EWorkSpaceIndustry,
+  ESocketAction,
 };

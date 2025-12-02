@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import TaskFilter from './filter/TaskFilter';
 import { Form } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
@@ -12,6 +11,9 @@ import { useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { useGetAuthProjectsProjectIdTasks } from '@/app/api/task/task';
+import { cn } from '@/lib/utils';
+import CheckListIcon from '@/components/icons/CheckListIcon';
+import ChartBarIcon from '@/components/icons/ChartBarIcon';
 
 type Props = {
   viewMode: 'kanban' | 'list';
@@ -27,7 +29,6 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
   const { project } = useContext(ProjectContext);
   const { dispatch } = useContext(TasksContext);
   const pathname = usePathname().split('/').filter(Boolean);
-  console.log(pathname[3]);
 
   const { data: taskData } = useGetAuthProjectsProjectIdTasks(
     pathname[3],
@@ -60,21 +61,21 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
           <div className="flex items-center gap-4">
             <Button
               type="button"
-              variant={viewMode !== 'list' ? 'secondary' : 'ghost'}
+              variant={viewMode !== 'list' ? 'secondary' : 'active'}
               size={'icon-lg'}
               onClick={() => setViewMode('list')}
-              className={viewMode === 'list' ? 'bg-[#0045AC]' : ''}
+              className={cn('rounded-[10px]')}
             >
-              <Image src={'/icons/check-list.svg'} width={20} height={20} alt={''} />
+              <CheckListIcon fill={viewMode !== 'list' ? '#C0C0C0' : 'white'} />
             </Button>
             <Button
               type="button"
               size={'icon-lg'}
-              variant={viewMode !== 'kanban' ? 'secondary' : 'ghost'}
+              variant={viewMode !== 'kanban' ? 'secondary' : 'active'}
               onClick={() => setViewMode('kanban')}
-              className={viewMode === 'kanban' ? 'bg-[#0045AC]' : ''}
+              className={cn('rounded-[10px]')}
             >
-              <Image src={'/icons/chart-bar.svg'} width={20} height={20} alt={''} />
+              <ChartBarIcon fill={viewMode !== 'kanban' ? '#C0C0C0' : 'white'} />
             </Button>
           </div>
           <div className="h-8 w-px bg-gray-7" />

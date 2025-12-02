@@ -12,8 +12,14 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**', // Allows any path under this hostname
       },
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+        port: '',
+        pathname: '/**', // Allows any path under this hostname
+      },
     ],
-    unoptimized: true,
+    // unoptimized: true,
   },
 };
 

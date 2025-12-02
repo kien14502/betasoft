@@ -1,17 +1,17 @@
 'use client';
 
 import { SettingIcon } from '@/components/icons';
-import { AuthContext } from '@/components/providers/AuthProvider';
 import { USER_AVATAR_URL } from '@/constants/common';
 import { mainRoutes } from '@/constants/routes';
+import { useAppSelector, getSelector } from '@/hooks/useRedux';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 
 const Sidebar = () => {
-  const { profile } = useContext(AuthContext);
+  const { user: profile } = useAppSelector(getSelector('auth'));
   const [isCollapse, setIsCollapse] = useState<boolean>(true);
   const pathname = usePathname().split('/').filter(Boolean);
 

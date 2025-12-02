@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import ProjectEmpty from './ProjectEmpty';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type Props = {
   children: ReactNode;
@@ -9,8 +10,8 @@ type Props = {
 };
 
 const ProjectWrapper = ({ children, type, isEmpty }: Props) => (
-  <div className="px-8 py-6 max-h-full overflow-x-hidden rounded-4xl col-span-1 flex flex-col gap-6 shadow-secondary bg-white">
-    <div className="flex items-center gap-2">
+  <div className="py-6 max-h-full overflow-hidden rounded-4xl col-span-1 flex flex-col shadow-secondary bg-white">
+    <div className="flex items-center gap-2 px-8">
       <Image
         width={40}
         height={40}
@@ -32,7 +33,13 @@ const ProjectWrapper = ({ children, type, isEmpty }: Props) => (
         )}
       </div>
     </div>
-    {isEmpty ? <ProjectEmpty /> : <>{children}</>}
+    {isEmpty ? (
+      <ProjectEmpty />
+    ) : (
+      <ScrollArea className="flex-1 min-h-0 w-full">
+        <div className="grid grid-cols-2 gap-6 w-full px-8 py-6">{children}</div>
+      </ScrollArea>
+    )}
   </div>
 );
 export default ProjectWrapper;

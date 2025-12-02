@@ -1,41 +1,21 @@
 'use client';
-import { ResponseGetUserInfoResponse } from '@/app/api/generated.schemas';
 import { useGetAuthUserProfile } from '@/app/api/users/users';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { setAuth } from '@/lib/features/auth/authSlice';
+import { ReactNode, useEffect } from 'react';
 
-type AuthContext = {
-  profile: ResponseGetUserInfoResponse | null;
-  isAuthenticated: boolean;
-};
+const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const dispatch = useAppDispatch();
 
-const defaultAuthContext: AuthContext = {
-  profile: null,
-  isAuthenticated: false,
-};
-
-type AuthProviderProps = {
-  children: ReactNode;
-};
-
-export const AuthContext = createContext<AuthContext>(defaultAuthContext);
-
-const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [profile, setProfile] = useState<ResponseGetUserInfoResponse | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { data, isError } = useGetAuthUserProfile();
+  const { data } = useGetAuthUserProfile({ query: { select: (res) => res.data } });
 
   useEffect(() => {
     if (data) {
-      setProfile(data.data ?? null);
-      setIsAuthenticated(true);
-    } else if (isError) {
-      setProfile(null);
-      setIsAuthenticated(false);
+      dispatch(setAuth(data));
     }
-  }, [data, isError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, profile }}>{children}</AuthContext.Provider>
-  );
+  return <>{children}</>;
 };
 export default AuthProvider;

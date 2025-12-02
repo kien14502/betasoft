@@ -14,9 +14,13 @@ import { Form } from '@/components/ui/form';
 import InputForm from '@/components/common/form/InputField';
 import RememberAccount from '../components/RememberAccount';
 import GoogleButton from '../components/GoogleButton';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { setAuth } from '@/lib/features/auth/authSlice';
+import { ResponseGetUserInfoResponse } from '@/app/api/generated.schemas';
 
 export default function Login() {
   const { mutate, isPending } = usePostLogin();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const form = useForm<LoginSchemaType>({
     defaultValues: {
@@ -34,7 +38,8 @@ export default function Login() {
         onSuccess: (res) => {
           const token = res.data?.token || '';
           setClientCookie(EToken.ACCESS_TOKEN, token);
-          saveAuthStorage('USER_DATA', res.data?.user || {});
+          dispatch(setAuth(res.data?.user as ResponseGetUserInfoResponse));
+          saveAuthStorage('ACCESS_TOKEN', token);
           router.push('/');
         },
       },

@@ -8,6 +8,7 @@ import { Ellipsis, Plus } from 'lucide-react';
 import NewTask from './NewTask';
 import { memo } from 'react';
 import { hexToRGB } from '@/utils/common';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type BoardSectionProps = {
   id: string;
@@ -30,9 +31,9 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
         backgroundColor: `rgb(${r}, ${g}, ${b}, 0.2)`,
         boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',
       }}
-      className="p-4 gap-4 rounded-3xl min-h-0 max-h-full flex flex-col h-fit"
+      className="rounded-3xl min-h-0 flex flex-col h-fit pb-4 relative"
     >
-      <div className="flex items-center gap-2 w-full justify-between sticky top-0 z-50">
+      <div className="flex items-center px-4 pt-4 gap-2 w-full justify-between">
         <div
           className="p-1 pl-3 h-6 flex items-center rounded-2xl gap-2"
           style={{ backgroundColor: section.color }}
@@ -56,13 +57,15 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
         items={tasks.map((item) => ({ ...item, id: item.id ?? '' }))}
         strategy={verticalListSortingStrategy}
       >
-        <div ref={setNodeRef} className="flex-1 min-h-0 flex flex-col gap-2">
-          {tasks.map((task) => (
-            <SortableTaskItem key={task.id} id={task.id ?? ''}>
-              <TaskItem task={task} />
-            </SortableTaskItem>
-          ))}
-        </div>
+        <ScrollArea ref={setNodeRef} className="overflow-x-hidden">
+          <div className="p-4 pb-0 flex flex-col gap-4  pb-2">
+            {tasks.map((task) => (
+              <SortableTaskItem key={task.id} id={task.id ?? ''}>
+                <TaskItem task={task} />
+              </SortableTaskItem>
+            ))}
+          </div>
+        </ScrollArea>
       </SortableContext>
       <NewTask section={section} />
     </div>

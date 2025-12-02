@@ -1,40 +1,35 @@
-import TextareaForm from '@/components/common/form/TextareaForm';
 import { Form } from '@/components/ui/form';
-import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import InputForm from '@/components/common/form/InputField';
+import ColorPicker from '@/components/common/ColorPicker';
 
 const CreateSection = () => {
-  const inputRef = useRef<HTMLDivElement>(null);
-  const [isAddTask, setIsAddTask] = useState<boolean>(false);
   const form = useForm();
-  const toggle = () => setIsAddTask(!isAddTask);
-
-  const onSubmit = () => {};
 
   return (
-    <div className="w-[200px] shrink-0" ref={inputRef}>
-      {isAddTask ? (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button className="shadow-secondary rounded-xl" variant={'secondary'} size={'icon-lg'}>
+          <Plus />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="p-1 sm:max-w-[400px]">
         <Form {...form}>
-          <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
-            <TextareaForm
-              className="bg-white shadow-popup h-[100px]"
+          <form className="flex items-center gap-2">
+            <ColorPicker onColorChange={(value) => form.setValue('color', value)} />
+            <InputForm
+              className="w-full"
+              placeholder="New section"
               control={form.control}
-              name={'title'}
-              rows={4}
-              placeholder="Enter task title..."
+              name="section"
             />
           </form>
         </Form>
-      ) : (
-        <button
-          onClick={toggle}
-          className="p-2.5 shrink-0 rounded-xl bg-bg-secondary active:scale-95"
-        >
-          <Image src={'/icons/plus.svg'} width={20} height={20} alt={''} />
-        </button>
-      )}
-    </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 export default CreateSection;

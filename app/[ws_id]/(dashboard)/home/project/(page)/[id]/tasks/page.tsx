@@ -22,7 +22,7 @@ const TasksPage = () => {
   const tasks = state.tasks;
 
   return (
-    <div className="w-full h-full min-h-0 grid grid-rows-[auto_1fr]">
+    <div className="w-full min-h-0 grid grid-rows-[auto_1fr] flex-1">
       <>
         {tasks.length == 0 ? (
           <EmptyWork />

@@ -9,7 +9,7 @@ import {
   // DialogTrigger,
 } from '@/components/ui/dialog';
 import { CreateProjectSchemaType } from '@/constants/schemas/workspace-schema';
-import { Plus, Trash } from 'lucide-react';
+import { Loader, Plus, Trash } from 'lucide-react';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 
 type Props = {
@@ -17,9 +17,10 @@ type Props = {
   form: UseFormReturn<CreateProjectSchemaType>;
   open: boolean;
   setOpen: (open: boolean) => void;
+  isLoading?: boolean;
 };
 
-const TrackWork: React.FC<Props> = ({ onFinish, open, setOpen, form }) => {
+const TrackWork: React.FC<Props> = ({ onFinish, open, setOpen, form, isLoading }) => {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'task_list',
@@ -87,7 +88,14 @@ const TrackWork: React.FC<Props> = ({ onFinish, open, setOpen, form }) => {
           >
             Cancel
           </Button>
-          <Button onClick={onFinish} type="button" variant={'ghost'} className="flex-1">
+          <Button
+            onClick={onFinish}
+            type="button"
+            variant={'ghost'}
+            className="flex-1"
+            disabled={isLoading}
+          >
+            {isLoading && <Loader className="animate-spin" size={20} />}
             Finish
           </Button>
         </div>

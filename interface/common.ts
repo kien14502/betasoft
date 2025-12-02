@@ -37,3 +37,9 @@ export interface IconProps {
   className?: string;
   fill?: string;
 }
+
+export interface ResponseSuccess<T> {
+  code: string;
+  data: T;
+  message: string;
+}

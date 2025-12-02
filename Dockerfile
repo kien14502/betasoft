@@ -12,6 +12,7 @@ COPY package*.json pnpm-lock.yaml ./
 RUN pnpm config set node-linker hoisted && \
     pnpm install --ignore-scripts --frozen-lockfile
 
+
 # Copy source code
 COPY . .
 
@@ -21,34 +22,41 @@ RUN pnpm exec next telemetry disable
 # Build the application
 RUN pnpm run build
 
-# Production stage
+# --------------------------
+# PRODUCTION IMAGE
+# --------------------------
 FROM node:22-alpine AS runner
 
 WORKDIR /app
 
-# Set environment variables
-ENV PORT=3000
 ENV NODE_ENV=production
-ENV HOSTNAME="0.0.0.0"
+ENV PORT=3000
 
-# Create non-root user for security
+# ⭐ Quan trọng:
+# Next.js không cần HOSTNAME trong docker (gây lỗi đôi khi)
+# và cũng không ảnh hưởng đến cookie
+# nên bỏ luôn dòng ENV HOSTNAME="0.0.0.0"
+
+# Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy built assets from builder
+# Copy built assets
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Switch to non-root user
+# Switch user
 USER nextjs
 
-# Expose port
-EXPOSE ${PORT}
+EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+# --------------------------
+# ⭐ FIX HEALTHCHECK
+# Next.js cần HTTP nội bộ, không cần HTTPS
+# --------------------------
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+#     CMD wget -qO- http://localhost:3000/health || exit 1
 
-# Start the application
+# Start app
 CMD ["node", "server.js"]

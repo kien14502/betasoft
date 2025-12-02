@@ -4,9 +4,8 @@ import { useRouter } from 'next/navigation';
 
 import { usePostAuthProjects } from '@/app/api/project/project';
 import dynamic from 'next/dynamic';
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useGetIdWorkspace from '@/hooks/useGetIdWorkspace';
-import { AuthContext } from '@/components/providers/AuthProvider';
 import WrapperContent from '../../components/WrapperContent';
 import InformationForm from '../../components/InformationForm';
 import AddMembers from '../../components/AddMembers';
@@ -17,15 +16,17 @@ import { Form } from '@/components/ui/form';
 import { DEFAULT_TASK_LIST } from '@/constants/common';
 import { labels, sprints } from '@/utils/common';
 import { RequestCreateProjectRequest } from '@/app/api/generated.schemas';
+import { showToast } from '@/utils/toast';
+import { useAppSelector, getSelector } from '@/hooks/useRedux';
+
 const TrackWork = dynamic(() => import('../../components/TrackWork'));
 
 const NewProjectPage = () => {
   const { idWs } = useGetIdWorkspace();
   const router = useRouter();
-  const { mutate: createProject } = usePostAuthProjects();
+  const { mutate: createProject, isPending } = usePostAuthProjects();
   const [openTrackworkModal, setOpenTrackworkModal] = useState<boolean>(false);
-  const { profile } = useContext(AuthContext);
-
+  const { user: profile } = useAppSelector(getSelector('auth'));
   const form = useForm<CreateProjectSchemaType>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
@@ -33,7 +34,7 @@ const NewProjectPage = () => {
       labels: labels,
       sprints: sprints,
       org_id: idWs,
-      is_team: true,
+      is_team: false,
       settings: {
         allow_guests: true,
         enable_due_dates: true,
@@ -50,12 +51,19 @@ const NewProjectPage = () => {
     toggleModal();
   };
 
+  useEffect(() => {
+    form.setValue('lead', profile?.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
+
   const handleCreateProject = () => {
     createProject(
       { data: form.getValues() as RequestCreateProjectRequest },
       {
-        onSuccess() {
+        onSuccess({ data, message }) {
+          showToast(message || 'Create project successfully', 'success');
           setOpenTrackworkModal(false);
+          router.push(`/${idWs}/home/project/${data?.id}`);
         },
       },
     );
@@ -115,6 +123,7 @@ const NewProjectPage = () => {
           open={openTrackworkModal}
           setOpen={setOpenTrackworkModal}
           form={form}
+          isLoading={isPending}
         />
       </form>
     </Form>

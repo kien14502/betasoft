@@ -19,7 +19,7 @@ const ContentLeft = ({ task }: Props) => {
       </Button>
       <TabsContent
         contents={[
-          { body: <CommentTask />, value: 'Comment' },
+          { body: <CommentTask taskId={task.id || ''} />, value: 'Comment' },
           { body: <TaskActivity />, value: 'Activities' },
         ]}
         defaultValue="Comment"

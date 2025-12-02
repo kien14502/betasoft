@@ -44,7 +44,7 @@ import patchAuthRoomRoomIdMutator from '../../../config/axios';
  */
 export const postAuthRoom = (requestRoomRequest: RequestRoomRequest, signal?: AbortSignal) => {
   return postAuthRoomMutator<PostAuthRoom200 | PostAuthRoom201>({
-    url: `/auth/room/`,
+    url: `/auth/chat/rooms`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: requestRoomRequest,
@@ -108,7 +108,6 @@ export const usePostAuthRoom = <TError = unknown, TContext = unknown>(
   TContext
 > => {
   const mutationOptions = getPostAuthRoomMutationOptions(options);
-
   return useMutation(mutationOptions, queryClient);
 };
 /**

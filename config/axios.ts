@@ -7,8 +7,7 @@ import { getClientCookie } from '../utils/cookie.client';
 const axios = axiosInstance.create({
   baseURL: ENDPOINT.BASE_URL,
   timeout: 60000,
-  headers: { 'Access-Control-Allow-Headers': 'Content-Type' },
-  withCredentials: true,
+  headers: { 'Access-Control-Allow-Headers': 'Content-Type', 'Content-Type': 'application/json' },
 });
 
 const isClient = typeof window !== 'undefined';

@@ -1,13 +1,4 @@
-import MessageConverstation from '../../components/converstation/MessageConverstation';
-import MessageSidebar from '../../components/sidebar/MessageSidebar';
-
-const GlobalConverstation = () => {
-  return (
-    <div className="flex w-full">
-      <MessageSidebar />
-      <MessageConverstation />
-    </div>
-  );
+const GlobalPage = () => {
+  return <div>nothing in here</div>;
 };
-
-export default GlobalConverstation;
+export default GlobalPage;
