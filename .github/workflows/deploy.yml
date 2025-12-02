@@ -66,13 +66,13 @@ jobs:
             echo "ℹ️ .env file not found"
           fi
 
-      - name: Show deployment status
-        run: |
-          echo "=== 📊 Services Status ==="
-          docker compose -f ${{ env.COMPOSE_FILE }} ps
-          echo ""
-          echo "=== 📝 App Logs (last 50 lines) ==="
-          docker compose -f ${{ env.COMPOSE_FILE }} logs --tail=50 app
+      # - name: Show deployment status
+      #   run: |
+      #     echo "=== 📊 Services Status ==="
+      #     docker compose -f ${{ env.COMPOSE_FILE }} ps
+      #     echo ""
+      #     echo "=== 📝 App Logs (last 50 lines) ==="
+      #     docker compose -f ${{ env.COMPOSE_FILE }} logs --tail=50 app
 
       - name: Cleanup
         run: |
