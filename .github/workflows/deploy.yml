@@ -1,33 +1,102 @@
-name: CI Frontend
+name: CD — Docker Build & Deploy
 
 on:
-  pull_request:
-    branches: [main, develop]
   push:
-    branches: [main, develop]
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  COMPOSE_FILE: docker-compose.yml
 
 jobs:
-  build-test-lint:
-    runs-on: ubuntu-latest
+  docker-build-and-deploy:
+    runs-on: self-hosted
+    environment: production
 
     steps:
-      - name: Checkout code
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+      - name: Verify secrets are available
+        run: |
+          echo "🔍 Verifying GitHub Secrets..."
 
-      - name: Install dependencies
-        run: npm ci
+          MISSING_SECRETS=""
 
-      - name: Run Lint (ESLint)
-        run: npm run lint
+          # Check each required secret
+          [ -z "${{ secrets.PORT }}" ] && MISSING_SECRETS="$MISSING_SECRETS PORT"
 
-      - name: Run Prettier check
-        run: npm run prettier:check
+          if [ ! -z "$MISSING_SECRETS" ]; then
+            echo "❌ Missing required secrets:$MISSING_SECRETS"
+            echo ""
+            echo "Please add these secrets in GitHub:"
+            echo "Settings → Secrets and variables → Actions → New repository secret"
+            exit 1
+          fi
 
-    #   - name: Run Tests
-    #     run: npm test -- --ci --coverage
+          echo "✅ All required secrets are configured"
+
+      - name: Create .env file from GitHub Secrets
+        run: |
+          cat > .env << EOF
+          # App Configuration
+          NODE_ENV=production
+          PORT=${{ secrets.PORT }}
+
+          # JWT Configuration
+          NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+          EOF
+
+          echo "✅ .env file created from GitHub Secrets"
+
+      - name: Deploy with Docker Compose
+        run: |
+          docker compose -f ${{ env.COMPOSE_FILE }} down --remove-orphans || true
+          docker compose -f ${{ env.COMPOSE_FILE }} up -d --build --force-recreate
+
+      - name: Remove generated .env file
+        if: always()
+        run: |
+          echo "🗑️ Removing generated .env file..."
+          if [ -f .env ]; then
+            rm -f .env
+            echo "✅ .env file removed"
+          else
+            echo "ℹ️ .env file not found"
+          fi
+
+      - name: Wait for services to be healthy
+        run: |
+          echo "⏳ Waiting for services to be healthy..."
+          timeout 120 sh -c 'until docker compose -f ${{ env.COMPOSE_FILE }} ps | grep -q "healthy"; do sleep 2; done' || echo "⚠️  Warning: Some services may not be healthy yet"
+
+      - name: Show deployment status
+        run: |
+          echo "=== 📊 Services Status ==="
+          docker compose -f ${{ env.COMPOSE_FILE }} ps
+          echo ""
+          echo "=== 📝 App Logs (last 50 lines) ==="
+          docker compose -f ${{ env.COMPOSE_FILE }} logs --tail=50 app
+
+      - name: Cleanup
+        run: |
+          echo "🧹 Cleaning up unused Docker resources..."
+          docker image prune -af
+          docker network prune -f
+          echo "✅ Cleanup completed"
+      - name: Deployment Summary
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ ========================================="
+            echo "✅  Deployment Successful!"
+            echo "✅ ========================================="
+            echo "📍 App is running at: http://localhost:4000"
+            echo "📍 Kafka UI: http://localhost:8080"
+          else
+            echo "❌ ========================================="
+            echo "❌  Deployment Failed!"
+            echo "❌ ========================================="
+            echo "📋 Check logs above for details"
+          fi
