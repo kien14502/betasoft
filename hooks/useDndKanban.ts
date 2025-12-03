@@ -90,13 +90,13 @@ const useDndKanban = (
     const overIndex = boardSections[overContainer].findIndex((task) => task.id === over?.id);
 
     if (activeIndex !== overIndex) {
-      onChange(dragEndEvent);
+      // onChange(dragEndEvent);
       setBoardSections((boardSection) => ({
         ...boardSection,
         [overContainer]: arrayMove(boardSection[overContainer], activeIndex, overIndex),
       }));
     }
-
+    onChange(dragEndEvent);
     setActiveTaskId(null);
   };
 

@@ -13,20 +13,31 @@ import { getSelector, useAppSelector } from '@/hooks/useRedux';
 
 const ProjectPage = () => {
   const { info } = useAppSelector(getSelector('workspace'));
+  const workspaceId = info?.id;
   const [pagination] = useState<Pagination>({ page: 1, page_size: 10 });
+
+  const shouldFetchProjects = Boolean(workspaceId);
+
   const { data, isPending } = useGetAuthProjectsMyProjectsOrgId(
-    info?.id || '',
+    workspaceId ?? '',
     {
       ...pagination,
       is_team: false,
     },
-    { query: { select: (data) => data.data } },
+    {
+      query: {
+        enabled: shouldFetchProjects,
+        select: (response) => response.data,
+      },
+    },
   );
 
   const projects = data?.projects ?? [];
   const { adminProjects, otherProjects } = groupRoleProjects(projects ?? []);
 
-  if (isPending) return <ProjectLoading />;
+  if (!shouldFetchProjects || isPending) {
+    return <ProjectLoading />;
+  }
 
   return (
     <div className="gap-4 h-full max-h-full flex flex-col">

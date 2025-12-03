@@ -14,16 +14,24 @@ import { mergeUrl } from '@/lib/utils';
 
 const ProjectSelector = () => {
   const { info } = useAppSelector(getSelector('workspace'));
+  const workspaceId = info?.id;
   const { project } = useContext(ProjectContext);
 
-  const { data } = useGetAuthProjectsMyProjectsOrgId(
-    info?.id || '',
+  const shouldFetchProjects = Boolean(workspaceId);
+
+  const { data, isPending } = useGetAuthProjectsMyProjectsOrgId(
+    workspaceId ?? '',
     {
       page: 1,
       page_size: 10,
       is_team: false,
     },
-    { query: { select: (data) => data.data } },
+    {
+      query: {
+        enabled: shouldFetchProjects,
+        select: (response) => response.data,
+      },
+    },
   );
 
   const currentPrj = useMemo(() => {
@@ -31,10 +39,14 @@ const ProjectSelector = () => {
     return rs;
   }, [data?.projects, project?.project?.id]);
 
+  if (!shouldFetchProjects || isPending) {
+    return <Skeleton className="h-10 w-40" />;
+  }
+
   return (
     <>
       <div className="text-sm flex items-center">
-        <Link className="text-[#787878]" href={'/' + [info?.id || '', 'home', 'project'].join('/')}>
+        <Link className="text-[#787878]" href={'/' + ['home', 'project'].join('/')}>
           PROJECTS
         </Link>
         <p className="font-medium uppercase"> / {project?.project?.name}</p>

@@ -1,8 +1,8 @@
 'use client';
 import { ResponseProjectWithColLabelAndSprint } from '@/app/api/generated.schemas';
 import { useGetAuthProjectsProjectId } from '@/app/api/project/project';
-import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect } from 'react';
 import { createContext } from 'react';
 
 type ProjectContext = {
@@ -21,9 +21,17 @@ type Props = {
 };
 
 export const ProjectProvider = ({ children, id }: Props) => {
+  const router = useRouter();
   const { data: projectData, isPending, isError } = useGetAuthProjectsProjectId(id);
 
-  if (isError) notFound();
+  useEffect(() => {
+    if (!isError) return;
+    router.replace('/home/project');
+  }, [isError, router]);
+
+  if (isError) {
+    return null;
+  }
 
   const project = projectData?.data;
 

@@ -11,7 +11,7 @@ const Subheader = () => {
   switch (pathname[0]) {
     case 'home':
       return (
-        <div className="bg-white shadow-secondary p-1 shadow-sidebar border border-[#AED2FF] flex flex-row items-center shadow-btn rounded-2xl">
+        <div className="bg-white shadow-secondary w-fit fixed top-0 p-1 shadow-sidebar border border-[#AED2FF] flex flex-row items-center shadow-btn rounded-2xl">
           {homeRoutes.map((item) => (
             <Link key={item.path} href={item.path}>
               <div

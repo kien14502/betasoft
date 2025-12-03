@@ -1,4 +1,4 @@
-import CreateWorkspaceForm from '../../../components/CreateWorkspaceForm';
+import CreateWorkspaceForm from '@/app/(root)/components/CreateWorkspaceForm';
 
 const CreateWorkspace = () => (
   <div className="bg-white max-w-[784px] w-full flex flex-col gap-12 rounded-4xl p-16 pt-12 shadow-secondary">

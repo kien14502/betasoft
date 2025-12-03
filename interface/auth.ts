@@ -1,3 +1,5 @@
+import { Organization } from './workspace';
+
 export interface User {
   id: string;
   full_name: string;
@@ -17,19 +19,4 @@ export interface User {
 
 export interface MetaData {
   organization: Organization;
-}
-
-export interface Organization {
-  id: string;
-  name: string;
-  avatar: string;
-  description: string;
-  industry: string;
-  size: number;
-  region: string;
-  admin_count: number;
-  member_count: number;
-  sub_admin_count: number;
-  created_at: string;
-  updated_at: string;
 }
