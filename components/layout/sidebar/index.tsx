@@ -33,7 +33,7 @@ const Sidebar = () => {
           return (
             <Link
               className={cn('text-white! text-xs', isActive && 'bg-white rounded-[64px]')}
-              href={`/${pathname[0]}` + route.path}
+              href={route.path}
               key={route.path}
             >
               {isCollapse ? (

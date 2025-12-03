@@ -1,19 +1,26 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { getSelector, useAppSelector } from '@/hooks/useRedux';
 import { mergeUrl } from '@/lib/utils';
-import { redirect } from 'next/navigation';
 
 const RootPage = () => {
+  const router = useRouter();
   const { user } = useAppSelector(getSelector('auth'));
 
-  const workspace = user?.meta_data.organization;
+  const workspace = user?.meta_data?.organization;
 
-  if (workspace) {
-    redirect(mergeUrl(['home', 'overview']));
-  } else {
-    redirect('/workspace');
-  }
+  useEffect(() => {
+    if (workspace) {
+      router.replace(mergeUrl(['home', 'overview']));
+    } else {
+      router.replace('/workspace');
+    }
+  }, [router, workspace]);
+
+  return null;
 };
 
 export default RootPage;

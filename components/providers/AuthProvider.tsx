@@ -3,6 +3,7 @@ import { useGetAuthUserProfile } from '@/app/api/users/users';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { User } from '@/interface/auth';
 import { setAuth } from '@/lib/features/auth/authSlice';
+import { getListWorkspaces } from '@/lib/features/list-workspace/action';
 import { getInforWorkspace, getMembers } from '@/lib/features/workspace/action';
 import { ReactNode, useEffect } from 'react';
 
@@ -14,6 +15,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (data) {
       dispatch(setAuth(data as User));
+      dispatch(getListWorkspaces());
       const wsId = data.meta_data?.organization?.id;
       if (wsId) {
         dispatch(getInforWorkspace({ id: wsId }));

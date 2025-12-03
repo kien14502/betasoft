@@ -14,6 +14,7 @@ import {
 import workspaceSlice from './features/workspace/workspaceSlice';
 import memberWsSlice from './features/workspace/memberWsSlice';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
+import listWorkspaceSlice from './features/list-workspace/listWorkspaceSlice';
 
 const createNoopStorage = () => {
   return {
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   auth: authSlice,
   workspace: workspaceSlice,
   memberWorkspace: memberWsSlice,
+  listWorkspace: listWorkspaceSlice,
 });
 
 const persistedReducer = persistReducer(

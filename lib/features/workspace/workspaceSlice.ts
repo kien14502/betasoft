@@ -1,9 +1,9 @@
-import { Organization } from '@/interface/auth';
 import { createSlice } from '@reduxjs/toolkit';
 import { getInforWorkspace } from './action';
+import { DetailWorkspace } from '@/interface/workspace';
 
 export type WorkspaceState = {
-  info: Organization | null;
+  info: DetailWorkspace | null;
   loading: boolean;
   error?: string | null;
 };

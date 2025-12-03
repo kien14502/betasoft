@@ -67,6 +67,8 @@
   --radius-5xl: var(--radius-5xl);
   --breakpoint-md: 768px;
   --shadow-blur: var(--shadow-blur);
+  --animate-fade-in-up: var(--animate-fade-in-up);
+  --animate-wave: var(--animate-wave);
 }
 
 :root {
@@ -144,6 +146,9 @@
   --header-height: 80px;
   --header-channel-width: 425px;
   --message-width: 320px;
+  --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
+  --animate-wave: wave 2s ease-in-out infinite;
+  --header-top: 16px;
 }
 
 body {
@@ -250,5 +255,30 @@ button:hover {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
   }
 }

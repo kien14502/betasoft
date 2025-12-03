@@ -1,8 +1,8 @@
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ButtonWrapper from '../../components/ButtonWrapper';
-import LaunchApp from '../../components/LaunchApps';
 import Image from 'next/image';
+import ButtonWrapper from '../components/ButtonWrapper';
+import LaunchApp from '../components/LaunchApps';
 
 const WorkspacePage = () => (
   <div className="rounded-[64px] bg-[#FFFFFF1A] flex items-center gap-16 justify-center flex-col p-16 pt-12 backdrop-blur-xl">

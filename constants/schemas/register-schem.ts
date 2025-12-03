@@ -45,7 +45,7 @@ export const createPasswordSchema = z
         'Password must include at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.',
       ),
 
-    confirmPassword: z.string().min(8, 'Confirm password must be at least 8 characters long'), // Match min length of password
+    confirmPassword: z.string().min(6, 'Confirm password must be at least 8 characters long'), // Match min length of password
 
     fullname: z
       .string()
