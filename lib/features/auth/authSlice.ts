@@ -1,6 +1,6 @@
 import { User } from '@/interface/auth';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getMe } from './actions';
+import { getMe, launchWorkspaceUser } from './actions';
 
 interface AuthState {
   user: User | null;
@@ -49,6 +49,16 @@ const authSlice = createSlice({
     builder.addCase(getMe.fulfilled, (state, { payload }) => {
       state.user = payload;
     });
+    builder
+      .addCase(launchWorkspaceUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(launchWorkspaceUser.fulfilled, (state, { payload }) => {
+        if (state.user?.meta_data?.organization && payload) {
+          state.user.meta_data.organization = payload;
+        }
+        state.isLoading = false;
+      });
   },
 });
 

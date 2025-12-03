@@ -4,18 +4,32 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { USER_AVATAR_URL } from '@/constants/common';
-import Link from 'next/link';
-import { getSelector, useAppSelector } from '@/hooks/useRedux';
+import { getSelector, useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { Button } from '../ui/button';
+import { launchWorkspaceUser } from '@/lib/features/auth/actions';
+import { useRouter } from 'next/navigation';
 
 const WorkspaceSelector = () => {
+  const router = useRouter();
   const { items } = useAppSelector(getSelector('listWorkspace'));
   const { info } = useAppSelector(getSelector('workspace'));
+  const { user } = useAppSelector(getSelector('auth'));
+  const dispatch = useAppDispatch();
 
   if (items.length === 0) return null;
 
+  const onLaunch = (id: string) => {
+    if (id === user?.meta_data.organization.id) return;
+    dispatch(launchWorkspaceUser(id))
+      .unwrap()
+      .then(() => {
+        router.replace('/home/overview');
+      });
+  };
+
   return (
     <Popover>
-      <PopoverTrigger className="shadow-secondary gap-2 shrink-0 flex items-center rounded-xl py-2 bg-white border text-sm px-3">
+      <PopoverTrigger className="shadow-secondary gap-2 max-w-[200px] w-full shrink-0 flex items-center rounded-xl py-2 bg-white border text-sm px-3">
         <Image
           className="rounded-md object-center"
           width={24}
@@ -23,15 +37,18 @@ const WorkspaceSelector = () => {
           src={info?.avatar || USER_AVATAR_URL}
           alt=""
         />
-        {info?.name || 'Select workspace'}
-        <ChevronDown className="text-gray-5" size={16} />
+        <span className="text-ellipsis truncate overflow-hidden">
+          {info?.name || 'Select workspace'}
+        </span>
+        <ChevronDown className="text-gray-5 ml-auto shrink-0" size={16} />
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0 max-h-[300px] overflow-x-auto rounded-none py-2">
         {items.map((ws) => (
-          <Link
-            href={ws?.organization.id || ''}
-            className="flex items-center py-2 relative px-3 group cursor-pointer gap-2 text-sm"
+          <Button
+            className="flex items-center w-full justify-start py-2 relative px-3 group cursor-pointer gap-2 text-sm"
             key={ws?.organization.id || ''}
+            variant={'ghost'}
+            onClick={() => onLaunch(ws?.organization.id)}
           >
             <Image
               className="rounded-md object-center"
@@ -42,7 +59,7 @@ const WorkspaceSelector = () => {
             />
             {ws?.organization.name}
             <div className="absolute top-0 left-0 w-0.5 h-full bg-blue-4 hidden group-hover:block" />
-          </Link>
+          </Button>
         ))}
       </PopoverContent>
     </Popover>

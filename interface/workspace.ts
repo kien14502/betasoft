@@ -1,15 +1,5 @@
 export interface Organization {
-  organization: {
-    id: string;
-    name: string;
-    avatar: string;
-    description: string;
-    industry: string;
-    size: number;
-    region: string;
-    created_at: string;
-    updated_at: string;
-  };
+  organization: DetailWorkspace;
   roles: string[];
   joined_at: string;
 }

@@ -2,7 +2,6 @@
 
 import { getSelector, useAppSelector } from '@/hooks/useRedux';
 import { ReactNode } from 'react';
-import HomeHeader from './home/components/header/HomeHeader';
 import EmptyLaunchedWorkspace from '../components/EmptyLaunchedWorkspace';
 
 type Props = {
@@ -15,11 +14,6 @@ const Layout = ({ children }: Props) => {
 
   if (!isLaunchedWs) return <EmptyLaunchedWorkspace />;
 
-  return (
-    <>
-      <HomeHeader />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 export default Layout;

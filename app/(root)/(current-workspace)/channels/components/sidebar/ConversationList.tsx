@@ -11,13 +11,15 @@ type Props = {
 const ConversationList = ({}: Props) => {
   const { data: groups, isPending } = useGetRooms({ page: 1, page_size: 10 });
 
+  console.log(groups);
+
   if (isPending) return <ConversationListLoading />;
 
   return (
     <div className="flex flex-col gap-2 w-full flex-1 min-h-0">
       {groups?.map((group) => (
         <Link
-          href={'channels/' + group.id}
+          href={'/channels/' + group.id}
           key={group.id}
           className="flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3"
         >

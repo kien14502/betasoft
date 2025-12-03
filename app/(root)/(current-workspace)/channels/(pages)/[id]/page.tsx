@@ -7,7 +7,7 @@ type Props = {
 const Page = async ({ params }: Props) => {
   const { id } = await params;
 
-  return <ConversationContainer />;
+  return <ConversationContainer id={id} />;
 };
 
 export default Page;
