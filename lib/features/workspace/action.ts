@@ -20,7 +20,6 @@ export const getMembers = createAsyncThunk(
 
 export const getInforWorkspace = createAsyncThunk(
   'ws/info',
-
   async ({ id }: ID, { rejectWithValue }) => {
     try {
       const res = await getWorkspace(id);

@@ -19,7 +19,9 @@ export const getListWorkspace = async (): Promise<
   return res.data;
 };
 
-export const launchWorkspace = async (org_id: string) => {
+export const launchWorkspace = async (
+  org_id: string,
+): Promise<ResponseSuccess<DetailWorkspace>> => {
   const res = await axios.post(API_ENDPOINT.WORKSPACE.LAUNCH, {
     org_id,
   });

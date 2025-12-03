@@ -1,4 +1,4 @@
-import { Organization } from './workspace';
+import { DetailWorkspace } from './workspace';
 
 export interface User {
   id: string;
@@ -18,5 +18,5 @@ export interface User {
 }
 
 export interface MetaData {
-  organization: Organization;
+  organization: DetailWorkspace;
 }

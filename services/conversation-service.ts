@@ -23,7 +23,7 @@ export const useGetRooms = (payload: Pagination) => {
 export const getRoom = async (
   id: string,
   pagin: Pagination,
-): Promise<ResponseSuccess<RoomData[]>> => {
+): Promise<ResponseSuccess<RoomData>> => {
   const res = await axios.get(API_ENDPOINT.ROOM.GET_ROOM(id), {
     params: pagin,
   });

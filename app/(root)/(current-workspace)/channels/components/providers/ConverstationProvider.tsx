@@ -1,8 +1,12 @@
 'use client';
 
+import { usePostChatRoomId } from '@/app/api/messages/messages';
 import { ESocketAction } from '@/constants';
+import { Message } from '@/constants/schemas/task-comment-schema';
 import { useWS } from '@/hooks/socket-provider';
 import { MessageData } from '@/interface/web-socket';
+import { useGetRoom } from '@/services/conversation-service';
+import { encodeBase64 } from '@/utils/common';
 import { GroupedMessage, groupMessagesByUserWithTime } from '@/utils/message';
 import React, {
   createContext,
@@ -18,6 +22,7 @@ interface ConversationContextType {
   addMessage: (message: MessageData) => void;
   clearMessages: () => void;
   removeMessage: (id: string) => void;
+  sendMessage: (payload: Message, callback: () => void) => void;
 }
 
 const ConversationContext = createContext<ConversationContextType | undefined>(undefined);
@@ -30,20 +35,21 @@ type Props = {
 export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const { isConnected, ws } = useWS();
+  const { mutate: createMeessage } = usePostChatRoomId();
 
   useEffect(() => {
     if (!isConnected) return;
     ws?.send(
       JSON.stringify({
         action: ESocketAction.JOIN_ROOM,
-        room: '69242a25e4c7b711b675fb72',
+        room: roomId,
       }),
     );
     return () => {
       ws?.send(
         JSON.stringify({
           action: ESocketAction.LEAVE_ROOM,
-          room: '69242a25e4c7b711b675fb72',
+          room: roomId,
         }),
       );
     };
@@ -76,6 +82,20 @@ export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
     setMessages((prev) => prev.filter((msg) => msg.id !== id));
   }, []);
 
+  const sendMessage = (values: Message, callback: () => void) => {
+    createMeessage(
+      {
+        roomId: roomId,
+        data: { content: encodeBase64(values.content), type_content: 1 },
+      },
+      {
+        onSuccess: () => {
+          callback();
+        },
+      },
+    );
+  };
+
   return (
     <ConversationContext.Provider
       value={{
@@ -83,6 +103,7 @@ export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
         addMessage,
         clearMessages,
         removeMessage,
+        sendMessage,
       }}
     >
       {children}

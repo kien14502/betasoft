@@ -9,7 +9,7 @@ function LayoutConfig({ children }: { children: React.ReactNode }) {
       <div className="w-screen h-screen flex flex-col pl-14 bg-secondary overflow-hidden">
         <MainHeader />
         <div className="flex flex-col min-h-0 h-[calc(100vh-64px)]">
-          <div className="overflow-hidden min-h-0 h-full flex flex-col p-4 pt-2 gap-4">
+          <div className="overflow-x-hidden min-h-0 h-full flex flex-col p-4 pt-2 gap-4">
             {children}
           </div>
         </div>

@@ -3,8 +3,9 @@
 import { useGetAuthOrganizations } from '@/app/api/organizations/organizations';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getSelector, useAppSelector } from '@/hooks/useRedux';
-import { launchWorkspace } from '@/services/workspace-service';
+import { getSelector, useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { launchWorkspaceUser } from '@/lib/features/auth/actions';
+import { useRouter } from 'next/navigation';
 
 const LaunchApp = () => {
   const { user } = useAppSelector(getSelector('auth'));
@@ -12,11 +13,17 @@ const LaunchApp = () => {
     page: 1,
     page_size: 10,
   });
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const workspaces = data?.data;
 
   const onLaunchWorkspace = (id: string) => {
-    launchWorkspace(id);
+    dispatch(launchWorkspaceUser(id))
+      .unwrap()
+      .then(() => {
+        router.replace('/home/overview');
+      });
   };
 
   return (
@@ -24,15 +31,21 @@ const LaunchApp = () => {
       <span>Workspace for {user?.full_name}</span>
       <ScrollArea className="w-full h-[200px]">
         <div className="flex flex-col gap-2">
-          {workspaces?.organizations?.map((item, i) => (
-            <div key={i} className="w-full flex items-center gap-2 justify-between">
-              {item.organization?.name}
-              <Button onClick={() => onLaunchWorkspace(item.organization?.id || '')}>Launch</Button>
-              {/* <Link href={item.organization?.id + '/home/overview' || ''}>
-                <Button>Launch</Button>
-              </Link> */}
-            </div>
-          ))}
+          {workspaces?.organizations?.map((item, i) => {
+            const isLaunched = user?.meta_data.organization.id === item.organization?.id;
+            return (
+              <div key={i} className="w-full flex items-center gap-2 justify-between">
+                {item.organization?.name}
+                <Button
+                  variant={isLaunched ? 'secondary' : 'active'}
+                  disabled={isLaunched}
+                  onClick={() => onLaunchWorkspace(item.organization?.id || '')}
+                >
+                  {isLaunched ? 'Launched' : 'Launch'}
+                </Button>
+              </div>
+            );
+          })}
         </div>
       </ScrollArea>
     </div>

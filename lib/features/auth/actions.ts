@@ -16,7 +16,7 @@ export const launchWorkspaceUser = createAsyncThunk(
   async (wsId: string, { rejectWithValue }) => {
     try {
       const res = await launchWorkspace(wsId);
-      return res;
+      return res.data;
     } catch (error) {
       rejectWithValue(error);
     }

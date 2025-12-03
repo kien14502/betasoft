@@ -1,8 +1,7 @@
-import { usePostChatRoomId } from '@/app/api/messages/messages';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Message, messageSchema } from '@/constants/schemas/task-comment-schema';
-import { commingSoonToast, encodeBase64 } from '@/utils/common';
+import { commingSoonToast } from '@/utils/common';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mic, Smile } from 'lucide-react';
 import Image from 'next/image';
@@ -10,26 +9,19 @@ import { memo } from 'react';
 import { useForm } from 'react-hook-form';
 import MessageUpload from './MessageUpload';
 import InputMessage from './InputMessage';
+import { useConversation } from '../providers/ConverstationProvider';
 
 const ConversationController = () => {
   const form = useForm<Message>({
     defaultValues: { content: '', images: [], file: '' },
     resolver: zodResolver(messageSchema),
   });
-  const { mutate: createMeessage } = usePostChatRoomId();
+  const { sendMessage } = useConversation();
 
   const onSend = (values: Message) => {
-    createMeessage(
-      {
-        roomId: '69242a25e4c7b711b675fb72',
-        data: { content: encodeBase64(values.content), type_content: 2 },
-      },
-      {
-        onSuccess: () => {
-          form.reset();
-        },
-      },
-    );
+    sendMessage(values, () => {
+      form.reset();
+    });
   };
 
   return (
