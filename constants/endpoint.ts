@@ -14,5 +14,6 @@ export const API_ENDPOINT = {
   },
   PROJECT: {
     '': '/auth/projects',
+    MY_PROJ: '/auth/projects/my-projects',
   },
 };
