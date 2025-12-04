@@ -73,7 +73,7 @@ jobs:
             echo "🎉 Deployment completed successfully!"
           EOF
 
-      # - name: Cleanup local .env file
-      #   if: always()
-      #   run: |
-      #     rm -f .env.staging
+      - name: Cleanup local .env file
+        if: always()
+        run: |
+          rm -f .env.staging
