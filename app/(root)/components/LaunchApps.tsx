@@ -32,7 +32,7 @@ const LaunchApp = () => {
       <ScrollArea className="w-full h-[200px]">
         <div className="flex flex-col gap-2">
           {workspaces?.organizations?.map((item, i) => {
-            const isLaunched = user?.meta_data.organization.id === item.organization?.id;
+            const isLaunched = user?.meta_data.organization?.id === item.organization?.id;
             return (
               <div key={i} className="w-full flex items-center gap-2 justify-between">
                 {item.organization?.name}

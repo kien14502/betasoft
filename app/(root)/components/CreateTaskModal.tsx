@@ -19,7 +19,7 @@ type Props = {
 
 const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
   const { user } = useAppSelector(getSelector('auth'));
-  const { data } = useGetListTasks(user?.meta_data.organization.id || '');
+  const { data } = useGetListTasks(user?.meta_data.organization?.id || '');
   console.log('data', data);
 
   const form = useForm();

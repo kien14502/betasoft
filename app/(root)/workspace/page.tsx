@@ -64,7 +64,7 @@ const WorkspacePage = () => (
             </div>
           </>
         }
-        href="/channels/global"
+        href="/channels"
       />
     </div>
     <LaunchApp />
