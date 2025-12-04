@@ -4,8 +4,7 @@ import { usePostChatRoomId } from '@/app/api/messages/messages';
 import { ESocketAction } from '@/constants';
 import { Message } from '@/constants/schemas/task-comment-schema';
 import { useWS } from '@/hooks/socket-provider';
-import { MessageData } from '@/interface/web-socket';
-import { useGetRoom } from '@/services/conversation-service';
+import { ChatMessage } from '@/interface/conversation';
 import { encodeBase64 } from '@/utils/common';
 import { GroupedMessage, groupMessagesByUserWithTime } from '@/utils/message';
 import React, {
@@ -19,10 +18,11 @@ import React, {
 
 interface ConversationContextType {
   messages: GroupedMessage[];
-  addMessage: (message: MessageData) => void;
+  addMessage: (message: ChatMessage) => void;
   clearMessages: () => void;
   removeMessage: (id: string) => void;
   sendMessage: (payload: Message, callback: () => void) => void;
+  setMessagesBefore: (payload: ChatMessage[]) => void;
 }
 
 const ConversationContext = createContext<ConversationContextType | undefined>(undefined);
@@ -33,9 +33,9 @@ type Props = {
 };
 
 export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
-  const [messages, setMessages] = useState<MessageData[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const { isConnected, ws } = useWS();
-  const { mutate: createMeessage } = usePostChatRoomId();
+  const { mutate: createMessage } = usePostChatRoomId();
 
   useEffect(() => {
     if (!isConnected) return;
@@ -60,7 +60,7 @@ export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
     const handleMessage = (event: MessageEvent) => {
       const receivedData = JSON.parse(event.data);
       if (receivedData.action === ESocketAction.NEW_MESSAGE) {
-        const message: MessageData = receivedData.data;
+        const message: ChatMessage = receivedData.data;
         setMessages((prev) => [...prev, message]);
       }
     };
@@ -70,7 +70,7 @@ export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
     };
   }, [ws]);
 
-  const addMessage = useCallback((message: MessageData) => {
+  const addMessage = useCallback((message: ChatMessage) => {
     setMessages((prev) => [...prev, message]);
   }, []);
 
@@ -83,7 +83,7 @@ export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
   }, []);
 
   const sendMessage = (values: Message, callback: () => void) => {
-    createMeessage(
+    createMessage(
       {
         roomId: roomId,
         data: { content: encodeBase64(values.content), type_content: 1 },
@@ -96,6 +96,10 @@ export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
     );
   };
 
+  const setMessagesBefore = (payload: ChatMessage[]) => {
+    setMessages((prev) => [...payload, ...prev]);
+  };
+
   return (
     <ConversationContext.Provider
       value={{
@@ -104,6 +108,7 @@ export const ConversationProvider: React.FC<Props> = ({ children, roomId }) => {
         clearMessages,
         removeMessage,
         sendMessage,
+        setMessagesBefore,
       }}
     >
       {children}

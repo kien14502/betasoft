@@ -9,7 +9,7 @@ import { memo } from 'react';
 import { useForm } from 'react-hook-form';
 import MessageUpload from './MessageUpload';
 import InputMessage from './InputMessage';
-import { useConversation } from '../providers/ConverstationProvider';
+import { useConversation } from '../providers/ConversationProvider';
 
 const ConversationController = () => {
   const form = useForm<Message>({
