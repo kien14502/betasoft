@@ -23,7 +23,7 @@ jobs:
 
       - name: Create .env file from individual secrets
         run: |
-          cat << EOF > .env.staging
+          cat << EOF > .env
           PORT=${{ secrets.PORT }}
           NEXT_PUBLIC_BE_BASE_URL=${{ secrets.NEXT_PUBLIC_BE_BASE_URL }}
           EOF
@@ -42,7 +42,7 @@ jobs:
       - name: Copy .env file to server
         run: |
           scp -o StrictHostKeyChecking=no \
-            .env.staging \
+            .env \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.PROJECT_PATH }}/.env
 
       - name: Deploy using Docker Compose
@@ -76,4 +76,4 @@ jobs:
       - name: Cleanup local .env file
         if: always()
         run: |
-          rm -f .env.staging
+          rm -f .env
