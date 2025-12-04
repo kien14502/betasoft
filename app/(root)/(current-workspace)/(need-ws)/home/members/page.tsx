@@ -1,4 +1,10 @@
+import InviteMember from './components/InviteMember';
+
 const MembersPage = () => {
-  return <div>MembersPage</div>;
+  return (
+    <div>
+      <InviteMember />
+    </div>
+  );
 };
 export default MembersPage;
