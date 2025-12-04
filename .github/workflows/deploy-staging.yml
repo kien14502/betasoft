@@ -58,17 +58,8 @@ jobs:
               exit 1
             fi
 
-            echo "🐳 Pulling latest images (if using remote registries)..."
-            docker compose pull || true
-
-            echo "🔨 Building and starting services..."
-            docker compose -f docker-compose.staging.yml up -d --build
-
-            echo "🧹 Cleaning up unused resources..."
-            docker system prune -af || true
-
-            echo "📊 Container status..."
-            docker compose -f docker-compose.staging.yml ps
+            docker compose -f ${{ env.COMPOSE_FILE }} down --remove-orphans || true
+            docker compose -f ${{ env.COMPOSE_FILE }} up -d --build --force-recreate
 
             echo "🎉 Deployment completed successfully!"
           EOF
