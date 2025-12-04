@@ -21,19 +21,42 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
+      - name: Create .env file from individual secrets
+        run: |
+          cat << EOF > .env.staging
+          PORT=${{ secrets.PORT }}
+          NEXT_PUBLIC_BE_BASE_URL=${{ secrets.NEXT_PUBLIC_BE_BASE_URL }}
+          EOF
+
       - name: Copy project files to server (rsync)
         run: |
           rsync -avz --delete \
             -e "ssh -o StrictHostKeyChecking=no" \
             --exclude 'node_modules' \
             --exclude '.git' \
+            --exclude '.env' \
+            --exclude '.env.local' \
             ./ \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.PROJECT_PATH }}
+
+      - name: Copy .env file to server
+        run: |
+          scp -o StrictHostKeyChecking=no \
+            .env.staging \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.PROJECT_PATH }}/.env
 
       - name: Deploy using Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ${{ secrets.PROJECT_PATH }}
+
+            echo "🔍 Verifying .env file..."
+            if [ -f .env ]; then
+              echo "✅ .env file exists"
+            else
+              echo "❌ .env file not found!"
+              exit 1
+            fi
 
             echo "🐳 Pulling latest images (if using remote registries)..."
             docker compose pull || true
@@ -44,5 +67,13 @@ jobs:
             echo "🧹 Cleaning up unused resources..."
             docker system prune -af || true
 
+            echo "📊 Container status..."
+            docker compose -f docker-compose.staging.yml ps
+
             echo "🎉 Deployment completed successfully!"
           EOF
+
+      - name: Cleanup local .env file
+        if: always()
+        run: |
+          rm -f .env.staging

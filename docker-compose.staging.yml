@@ -9,9 +9,10 @@ services:
     ports:
       - '3000:3000'      # HTTP - port chuẩn
     environment:
-      - NODE_ENV=production
       - PORT=3000
     restart: unless-stopped
+    env_file:
+      - .env.staging
     networks:
       - app-network
 
