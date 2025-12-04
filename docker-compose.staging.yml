@@ -1,16 +1,20 @@
+version: '3.8'
+
 services:
-  nextjs:
+  nextjs-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nextjs-app
-    restart: unless-stopped
+    container_name: landing-page-app
+    ports:
+      - '3000:3000'      # HTTP - port chuẩn
     environment:
       - NODE_ENV=production
       - PORT=3000
-    # Only expose internally, not to host
-    expose:
-      - '3000:3000'
+    restart: unless-stopped
     networks:
       - app-network
 
+networks:
+  app-network:
+    driver: bridge
