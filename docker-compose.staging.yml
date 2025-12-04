@@ -1,0 +1,16 @@
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextjs-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    # Only expose internally, not to host
+    expose:
+      - '3000:3000'
+    networks:
+      - app-network
+

@@ -1,0 +1,48 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: ['staging']
+
+env:
+  COMPOSE_FILE: docker-compose.staging.yml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Copy project files to server (rsync)
+        run: |
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude 'node_modules' \
+            --exclude '.git' \
+            ./ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.PROJECT_PATH }}
+
+      - name: Deploy using Docker Compose
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.PROJECT_PATH }}
+
+            echo "🐳 Pulling latest images (if using remote registries)..."
+            docker compose pull || true
+
+            echo "🔨 Building and starting services..."
+            docker compose -f docker-compose.staging.yml up -d --build
+
+            echo "🧹 Cleaning up unused resources..."
+            docker system prune -af || true
+
+            echo "🎉 Deployment completed successfully!"
+          EOF
