@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: landing-page-app
+    container_name: betasoft-web
     ports:
       - '3000:3000'      # HTTP - port chuẩn
     environment:

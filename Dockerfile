@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:22-alpine AS builder
+FROM node:22-alpine AS builder
 
 # Install pnpm
 RUN npm i -g pnpm@10.20
@@ -24,7 +24,7 @@ RUN pnpm run build
 # --------------------------
 # PRODUCTION IMAGE
 # --------------------------
-FROM --platform=linux/amd64 node:22-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 

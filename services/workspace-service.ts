@@ -1,6 +1,6 @@
 import { axios } from '@/config/axios';
 import { API_ENDPOINT } from '@/constants/endpoint';
-import { JoinWorkspaceSchema } from '@/constants/schemas/workspace-schema';
+import { InviteMemberSchemaType, JoinWorkspaceSchema } from '@/constants/schemas/workspace-schema';
 import { User } from '@/interface/auth';
 import { ResponseSuccess } from '@/interface/common';
 import { DetailWorkspace, Organization } from '@/interface/workspace';
@@ -43,6 +43,11 @@ export const getWorkspace = async (
   return res.data;
 };
 
+export const addMember = async (payload: InviteMemberSchemaType) => {
+  const res = await axios.post(API_ENDPOINT.WORKSPACE.INVITE_MEMBER, payload);
+  return res.data;
+};
+
 export const getMembersWorkspace = async (
   id: string,
   signal?: GenericAbortSignal,
@@ -58,4 +63,9 @@ export const getMembersWorkspace = async (
 export const useJoinWorkspace = () =>
   useMutation({
     mutationFn: joinWorkspace,
+  });
+
+export const useInviteMember = () =>
+  useMutation({
+    mutationFn: addMember,
   });
