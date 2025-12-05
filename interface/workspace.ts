@@ -18,3 +18,10 @@ export interface DetailWorkspace {
   sub_admin_count: number;
   updated_at: string;
 }
+
+export type ProjectParam = {
+  pageParam: number;
+  org_id: string;
+  page_size: number;
+  name?: string;
+};

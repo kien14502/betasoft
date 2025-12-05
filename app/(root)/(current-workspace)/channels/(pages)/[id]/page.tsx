@@ -1,4 +1,4 @@
-import ConversationContainer from '../../components/converstation';
+import ConversationContainer from '../../components/conversation';
 
 type Props = {
   params: Promise<{ id: string }>;

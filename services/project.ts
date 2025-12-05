@@ -12,7 +12,6 @@ export const getProject = async (
       Authorization: 'Bearer' + accessToken,
     },
   });
-  console.log('Res', res);
 
   return res.data;
 };

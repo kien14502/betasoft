@@ -1,13 +1,13 @@
-import { ResponseProjectsWithProjectMemberRole } from '@/app/api/generated.schemas';
 import { timeAgo } from '@/utils/dayjs';
 import TaskStatus from './TaskStatus';
 import Image from 'next/image';
 import MessageTag from './MessageTag';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { ProjectData } from '@/interface/task';
 
 type Props = {
-  data: ResponseProjectsWithProjectMemberRole;
+  data: ProjectData;
 };
 
 const ProjectCard: React.FC<Props> = ({ data }) => {

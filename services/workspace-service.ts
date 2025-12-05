@@ -1,10 +1,13 @@
 import { axios } from '@/config/axios';
+import { PAGE_SIZE } from '@/constants/common';
 import { API_ENDPOINT } from '@/constants/endpoint';
+import { QUERY_KEY } from '@/constants/query-key';
 import { InviteMemberSchemaType, JoinWorkspaceSchema } from '@/constants/schemas/workspace-schema';
 import { User } from '@/interface/auth';
 import { ResponseSuccess } from '@/interface/common';
-import { DetailWorkspace, Organization } from '@/interface/workspace';
-import { useMutation } from '@tanstack/react-query';
+import { ProjectData } from '@/interface/task';
+import { DetailWorkspace, Organization, ProjectParam } from '@/interface/workspace';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { GenericAbortSignal } from 'axios';
 
 export const getListWorkspace = async (): Promise<
@@ -58,6 +61,40 @@ export const getMembersWorkspace = async (
   return res.data;
 };
 
+// export const getListProjects = async (
+//   org_id: string,
+//   pagination: Pagination,
+// ): Promise<
+//   ResponseSuccess<{
+//     projects: ProjectDetails[];
+//     total: number;
+//   }>
+// > => {
+//   const res = await axios.get(API_ENDPOINT.PROJECT.MY_PROJ + `/${org_id}`, {
+//     params: {
+//       ...pagination,
+//     },
+//   });
+//   return res.data;
+// };
+
+const fetchProjects = async ({ pageParam = 1, org_id, page_size, name }: ProjectParam) => {
+  const res = await axios.get<
+    ResponseSuccess<{
+      projects: ProjectData[];
+      total: number;
+    }>
+  >(API_ENDPOINT.PROJECT.MY_PROJ + `/${org_id}`, {
+    params: {
+      page: pageParam,
+      page_size,
+      name,
+    },
+  });
+
+  return { ...res.data.data, page: pageParam };
+};
+
 // hooks
 
 export const useJoinWorkspace = () =>
@@ -68,4 +105,23 @@ export const useJoinWorkspace = () =>
 export const useInviteMember = () =>
   useMutation({
     mutationFn: addMember,
+  });
+
+export const useInfiniteProjects = (org_id: string | undefined, name?: string) =>
+  useInfiniteQuery({
+    queryKey: [org_id, QUERY_KEY.GET_PRJS],
+    queryFn: ({ pageParam = 1 }) =>
+      fetchProjects({ pageParam, org_id: org_id!, page_size: PAGE_SIZE, name }),
+    enabled: Boolean(org_id),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const loaded = lastPage.page * PAGE_SIZE;
+      const total = lastPage.total;
+      if (loaded >= total) return undefined;
+      return lastPage.page + 1;
+    },
+    select: (data) => {
+      const projects = data?.pages.flatMap((page) => page.projects) ?? [];
+      return projects.filter((item) => Boolean(item));
+    },
   });

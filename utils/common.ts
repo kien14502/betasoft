@@ -4,12 +4,12 @@ import {
   RequestCreateSprintRequest,
   ResponseMembersWithProjectMemberRole,
   ResponseOrgMember,
-  ResponseProjectsWithProjectMemberRole,
 } from '@/app/api/generated.schemas';
 import { clsx, type ClassValue } from 'clsx';
 import { UseFormReturn } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { showToast } from './toast';
+import { ProjectData } from '@/interface/task';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -49,11 +49,11 @@ export function detectStartCharMembers(members: ResponseOrgMember[]): GroupMembe
 }
 
 type GroupedProjects = {
-  adminProjects: ResponseProjectsWithProjectMemberRole[];
-  otherProjects: ResponseProjectsWithProjectMemberRole[];
+  adminProjects: ProjectData[];
+  otherProjects: ProjectData[];
 };
 
-export function groupRoleProjects(projects: ResponseProjectsWithProjectMemberRole[]) {
+export function groupRoleProjects(projects: ProjectData[]) {
   const group = projects.reduce<GroupedProjects>(
     (acc, proj) => {
       if (proj.role === 'admin') {

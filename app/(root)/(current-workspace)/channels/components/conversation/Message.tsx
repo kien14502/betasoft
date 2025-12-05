@@ -14,7 +14,7 @@ type Props = {
 const Message = ({ messageGroup }: Props) => {
   const { user: profile } = useAppSelector(getSelector('auth'));
 
-  const isMe = messageGroup.user.id === profile?.id;
+  const isMe = messageGroup.user.email === profile?.email;
 
   return (
     <>
@@ -34,9 +34,9 @@ const Message = ({ messageGroup }: Props) => {
           </Tooltip>
         )}
         <div className="flex flex-col gap-1">
-          {messageGroup.messages.map((message) => (
-            <Tooltip key={message.id}>
-              <TooltipTrigger>
+          {messageGroup.messages.map((message, i) => (
+            <Tooltip key={i}>
+              <TooltipTrigger asChild>
                 <div
                   className={cn(
                     'flex rounded-2xl flex-col gap-1 w-fit max-w-(--message-width) p-3',

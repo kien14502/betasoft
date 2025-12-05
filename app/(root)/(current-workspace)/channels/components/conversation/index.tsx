@@ -5,21 +5,29 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useConversation } from '../providers/ConversationProvider';
 import ConversationController from './ConversationController';
 import Message from './Message';
-import { useGetRoom } from '@/services/conversation-service';
+import { useGetRoom, useInfiniteGetRooms } from '@/services/conversation-service';
 import HeaderConversation from './HeaderConversation';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { useConversationLoadMore } from '@/hooks/useConversationLoadMore';
+import { Loader2 } from 'lucide-react';
 
 type Props = { id: string };
 
 const ConversationContainer = ({ id }: Props) => {
   const { messages, setMessagesBefore } = useConversation();
-  const [page, setPage] = useState(1);
-  const { data, isFetching } = useGetRoom(id, { page, page_size: 10 });
+
+  const {
+    data: conversation,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteGetRooms(id);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { targetRef } = useInfiniteScroll({
-    hasMore: (data?.message?.length ?? 0) === 10,
-    loading: isFetching,
-    onLoadMore: () => setPage((p) => p + 1),
+
+  const { containerRef, isLoading, isNearTop } = useConversationLoadMore({
+    onLoadMore: fetchNextPage,
+    hasMore: hasNextPage,
+    threshold: 1000,
   });
 
   const scrollToBottom = () => {
@@ -29,9 +37,9 @@ const ConversationContainer = ({ id }: Props) => {
   };
 
   useEffect(() => {
-    setMessagesBefore(data?.message || []);
+    setMessagesBefore(conversation?.message || []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [conversation]);
 
   useEffect(() => {
     scrollToBottom();
@@ -39,16 +47,23 @@ const ConversationContainer = ({ id }: Props) => {
 
   return (
     <div className="min-h-0 flex flex-col w-full">
-      <HeaderConversation avatar={''} name={data?.room.name || ''} />
-      <ScrollArea className="overflow-x-hidden py-4 px-6 min-h-0 flex-1">
-        <div ref={targetRef} />
-        <div className="flex flex-col gap-2">
+      <HeaderConversation avatar={''} name={conversation?.room.name || ''} />
+      <div ref={containerRef} className="overflow-x-hidden py-4 px-6 min-h-0 flex-1 scroll-smooth">
+        {/* <div ref={targetRef} /> */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-sm text-muted-foreground">Loading older messages...</span>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-2 mt-auto h-full items-end">
           {messages.map((message, i) => (
             <Message key={i} messageGroup={message} />
           ))}
         </div>
         <div ref={messagesEndRef} />
-      </ScrollArea>
+      </div>
       <ConversationController />
     </div>
   );
