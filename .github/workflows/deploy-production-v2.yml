@@ -58,8 +58,8 @@ jobs:
               exit 1
             fi
 
-            docker compose -f ${{ env.COMPOSE_FILE }} down --remove-orphans || true
-            docker compose -f ${{ env.COMPOSE_FILE }} up -d --build --force-recreate
+            docker-compose -f ${{ env.COMPOSE_FILE }} down --remove-orphans || true
+            docker-compose -f ${{ env.COMPOSE_FILE }} up -d --build --force-recreate
 
             echo "🎉 Deployment completed successfully!"
           EOF
