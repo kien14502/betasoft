@@ -1,10 +1,6 @@
 import InviteMember from './components/InviteMember';
 
 const MembersPage = () => {
-  return (
-    <div>
-      <InviteMember />
-    </div>
-  );
+  return <InviteMember />;
 };
 export default MembersPage;

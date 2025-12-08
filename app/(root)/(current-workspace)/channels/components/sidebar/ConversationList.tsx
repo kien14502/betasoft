@@ -11,8 +11,6 @@ type Props = {
 const ConversationList = ({}: Props) => {
   const { data: groups, isPending } = useGetRooms({ page: 1, page_size: 10 });
 
-  console.log(groups);
-
   if (isPending) return <ConversationListLoading />;
 
   return (

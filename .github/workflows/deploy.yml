@@ -2,8 +2,7 @@ name: CD — Docker Build & Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: ['local']
   workflow_dispatch:
 
 env:

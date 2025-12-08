@@ -114,3 +114,4 @@ export const WORKSPACE_SIZE_OPTIONS = [
 ];
 
 export const USER_AVATAR_URL = '/icons/user-circle.svg';
+export const PAGE_SIZE = 10;

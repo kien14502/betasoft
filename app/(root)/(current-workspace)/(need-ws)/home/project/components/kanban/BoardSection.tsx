@@ -2,25 +2,27 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import SortableTaskItem from './SortableTaskItem';
 import TaskItem from './TaskItem';
 import { useDroppable } from '@dnd-kit/core';
-import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/generated.schemas';
 import { Button } from '@/components/ui/button';
 import { Ellipsis, Plus } from 'lucide-react';
 import NewTask from './NewTask';
 import { memo } from 'react';
 import { hexToRGB } from '@/utils/common';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Task, TaskSection } from '@/interface/task';
+import { useScrollBottom } from '@/hooks/useScrollBottom';
 
 type BoardSectionProps = {
   id: string;
-  section?: ResponseTaskListResponse;
-  tasks: ResponseTaskResponse[];
+  section?: TaskSection;
+  tasks: Task[];
+  isPending: boolean;
 };
 
 const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
   const { setNodeRef } = useDroppable({
     id,
   });
-
+  const { currentRef, scrollToBottom } = useScrollBottom();
   if (!section) return null;
 
   const { b, g, r } = hexToRGB(section.color || '');
@@ -57,17 +59,27 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
         items={tasks.map((item) => ({ ...item, id: item.id ?? '' }))}
         strategy={verticalListSortingStrategy}
       >
-        <ScrollArea ref={setNodeRef} className="overflow-x-hidden">
-          <div className="p-4 pb-0 flex flex-col gap-4  pb-2">
+        <ScrollArea
+          style={{
+            scrollbarColor: section.color,
+          }}
+          ref={(ref) => {
+            setNodeRef(ref);
+            currentRef.current = ref;
+          }}
+          className="overflow-x-hidden"
+        >
+          <div className="p-4 pb-0 flex flex-col gap-4">
             {tasks.map((task) => (
               <SortableTaskItem key={task.id} id={task.id ?? ''}>
                 <TaskItem task={task} />
               </SortableTaskItem>
             ))}
+            <NewTask section={section} onBottom={scrollToBottom} />
+            <div ref={currentRef} />
           </div>
         </ScrollArea>
       </SortableContext>
-      <NewTask section={section} />
     </div>
   );
 };

@@ -1,11 +1,11 @@
-import { ResponseTaskResponse } from '@/app/api/generated.schemas';
+import { Task } from '@/interface/task';
 import { createContext, ReactNode, useState } from 'react';
 
 type ModalTaskTableContext = {
   isShowModal: boolean;
-  content: ResponseTaskResponse | null;
+  content: Task | null;
   setShowModal: (value: boolean) => void;
-  setContent: (value: ResponseTaskResponse | null) => void;
+  setContent: (value: Task | null) => void;
 };
 
 const defaultValue: ModalTaskTableContext = {
@@ -23,7 +23,7 @@ type Props = {
 
 const ModalTaskTableProvider = ({ children }: Props) => {
   const [isShowModal, setShowModal] = useState<boolean>(false);
-  const [content, setContent] = useState<ResponseTaskResponse | null>(null);
+  const [content, setContent] = useState<Task | null>(null);
 
   return (
     <ModalTaskTableContext.Provider

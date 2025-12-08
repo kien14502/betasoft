@@ -8,7 +8,7 @@ type Props = {
   avatar: string | string[];
 };
 
-const HeaderConverstation = ({ avatar, name }: Props) => {
+const HeaderConversation = ({ avatar, name }: Props) => {
   return (
     <div className="py-4 px-6 border-b-4 flex items-center gap-2">
       {typeof avatar === 'string' ? (
@@ -26,4 +26,4 @@ const HeaderConverstation = ({ avatar, name }: Props) => {
     </div>
   );
 };
-export default memo(HeaderConverstation);
+export default memo(HeaderConversation);

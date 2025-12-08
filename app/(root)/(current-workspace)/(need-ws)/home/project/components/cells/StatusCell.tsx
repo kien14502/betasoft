@@ -1,39 +1,28 @@
-import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronDown } from 'lucide-react';
 import { useContext } from 'react';
 import StatusBadge from '../StatusBadge';
-import { usePatchAuthTasks } from '@/app/api/task/task';
 import { useMemo } from 'react';
-import { TasksContext } from '@/components/providers/TasksProvider';
+import { Task } from '@/interface/task';
+import { useUpdateTask } from '@/services/task-service';
 
 type Props = {
-  task: ResponseTaskResponse;
+  task: Task;
 };
 
 const StatusCell = ({ task }: Props) => {
   const { project } = useContext(ProjectContext);
-  const { dispatch } = useContext(TasksContext);
   const cols = project?.columns || [];
-  const { mutate: udpateTask } = usePatchAuthTasks();
+  const { mutate: updateTask } = useUpdateTask();
 
-  const handleUpadteTask = (value: string) => {
-    udpateTask(
-      {
-        data: {
-          project_id: task.project_id || '',
-          sprint_id: project?.sprint_active?.id || '',
-          task_id: task.id || '',
-          list_id: value,
-        },
-      },
-      {
-        onSuccess: (data) => {
-          dispatch({ type: 'UPDATE_TASK', payload: data.data as ResponseTaskResponse });
-        },
-      },
-    );
+  const handleUpdateTask = (value: string) => {
+    updateTask({
+      project_id: task.project_id || '',
+      sprint_id: project?.sprint_active?.id || '',
+      list_id: value,
+      task_id: task.id,
+    });
   };
 
   const status = useMemo(() => {
@@ -51,7 +40,7 @@ const StatusCell = ({ task }: Props) => {
       <PopoverContent className="p-0 rounded-none py-2">
         {cols.map((item) => (
           <div
-            onClick={() => handleUpadteTask(item.id || '')}
+            onClick={() => handleUpdateTask(item.id || '')}
             className="py-2 px-3 group relative hover:bg-gray-1"
             key={item.id}
           >

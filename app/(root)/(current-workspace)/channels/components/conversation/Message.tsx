@@ -14,24 +14,29 @@ type Props = {
 const Message = ({ messageGroup }: Props) => {
   const { user: profile } = useAppSelector(getSelector('auth'));
 
-  const isMe = messageGroup.user.id === profile?.id;
+  const isMe = messageGroup.user.email === profile?.email;
 
   return (
     <>
       <div className={cn('flex items-end gap-3', isMe ? 'flex-row-reverse' : 'flex-row')}>
         {!isMe && (
-          <Image
-            className="rounded-[8px] object-cover"
-            width={24}
-            height={24}
-            src={messageGroup.user.profile_image || USER_AVATAR_URL}
-            alt=""
-          />
+          <Tooltip>
+            <TooltipTrigger>
+              <Image
+                className="rounded-[8px] object-cover"
+                width={24}
+                height={24}
+                src={messageGroup.user.profile_image || USER_AVATAR_URL}
+                alt=""
+              />
+            </TooltipTrigger>
+            <TooltipContent>{messageGroup.user.full_name}</TooltipContent>
+          </Tooltip>
         )}
         <div className="flex flex-col gap-1">
-          {messageGroup.messages.map((message) => (
-            <Tooltip key={message.id}>
-              <TooltipTrigger>
+          {messageGroup.messages.map((message, i) => (
+            <Tooltip key={i}>
+              <TooltipTrigger asChild>
                 <div
                   className={cn(
                     'flex rounded-2xl flex-col gap-1 w-fit max-w-(--message-width) p-3',

@@ -1,4 +1,3 @@
-import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import UrgencyBadge from '@/components/common/UrgencyBadge';
 import useGrabbing from '@/hooks/useGrabbing';
 import { cn } from '@/utils/common';
@@ -6,9 +5,10 @@ import Image from 'next/image';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Checkbox } from '@/components/ui/checkbox';
 import { memo, useCallback, useState } from 'react';
+import { Task } from '@/interface/task';
 
 type TaskItemProps = {
-  task: ResponseTaskResponse;
+  task: Task;
 };
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
@@ -56,7 +56,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center text-gray-100 gap-2">
           <Image width={16} height={16} src={'/icons/calendar.svg'} alt="" />
-          <span className="text-sm font-medium">{task.due_date}</span>
+          {/* <span className="text-sm font-medium">{task.due_reminder}</span> */}
         </div>
         <UrgencyBadge value={task.priority ?? ''} />
       </div>

@@ -1,9 +1,9 @@
-import { MessageData } from '@/interface/web-socket';
+import { ChatMessage, Member } from '@/interface/conversation';
 import dayjs from 'dayjs';
 
 export interface GroupedMessage {
   userId: string;
-  user: MessageData['user'];
+  user: Member;
   messages: Array<{
     id: string;
     content: string;
@@ -13,13 +13,16 @@ export interface GroupedMessage {
 }
 
 export const groupMessagesByUserWithTime = (
-  messages: MessageData[],
+  messages: ChatMessage[],
   timeThresholdMinutes: number = 5,
 ): GroupedMessage[] => {
   const grouped: GroupedMessage[] = [];
   let currentGroup: GroupedMessage | null = null;
 
+  if (!messages || messages.length === 0) return [];
+
   messages.forEach((msg) => {
+    if (!msg) return;
     const shouldCreateNewGroup =
       !currentGroup ||
       currentGroup.userId !== msg.user.id ||

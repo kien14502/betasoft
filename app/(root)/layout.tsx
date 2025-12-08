@@ -6,17 +6,6 @@ type Props = {
 };
 
 const Layout = ({ children }: Props) => {
-  return (
-    <AuthProvider>
-      <div
-        style={{
-          backgroundImage: `url(/images/bg-ws.png)`,
-        }}
-        className="w-screen h-screen overflow-hidden bg-no-repeat bg-cover flex items-center justify-center"
-      >
-        {children}
-      </div>
-    </AuthProvider>
-  );
+  return <AuthProvider>{children}</AuthProvider>;
 };
 export default Layout;

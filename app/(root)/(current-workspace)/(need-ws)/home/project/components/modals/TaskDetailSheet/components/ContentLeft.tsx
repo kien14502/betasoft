@@ -1,12 +1,12 @@
-import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import TabsContent from '@/components/common/TabsContent';
 import { Button } from '@/components/ui/button';
 import { Clock, CornerDownRight, MessageSquare } from 'lucide-react';
 import CommentTask from './CommentTask';
 import TaskActivity from './TaskActivity';
+import { Task } from '@/interface/task';
 
 type Props = {
-  task: ResponseTaskResponse;
+  task: Task;
 };
 
 const ContentLeft = ({ task }: Props) => {

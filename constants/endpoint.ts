@@ -17,4 +17,13 @@ export const API_ENDPOINT = {
     '': '/auth/projects',
     MY_PROJ: '/auth/projects/my-projects',
   },
+  TASK: {
+    '': '/auth/tasks',
+    TASK: (org_id: string) => `/auth/projects/${org_id}/tasks`,
+    KANBAN: (org_id: string) => `/auth/projects/${org_id}/kanban`,
+    MOVE_TASK: 'auth/tasks/move',
+    SECTION: {
+      '': '/auth/task-lists',
+    },
+  },
 };

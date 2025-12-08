@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { ConversationProvider } from '../../components/providers/ConverstationProvider';
+import { ConversationProvider } from '../../components/providers/ConversationProvider';
 
 type Props = {
   params: Promise<{ id: string }>;

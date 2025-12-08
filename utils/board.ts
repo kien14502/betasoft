@@ -1,7 +1,8 @@
-import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/generated.schemas';
+import { ResponseTaskListResponse } from '@/app/api/generated.schemas';
+import { Task } from '@/interface/task';
 
 export type BoardSections = {
-  [id: string]: ResponseTaskResponse[];
+  [id: string]: Task[];
 };
 
 export const getBoardSections = (sections: ResponseTaskListResponse[]) => {
@@ -13,18 +14,15 @@ export const getBoardSections = (sections: ResponseTaskListResponse[]) => {
   return sectionObj;
 };
 
-export const getTasksByStatus = (tasks: ResponseTaskResponse[], list_id: string) => {
+export const getTasksByStatus = (tasks: Task[], list_id: string) => {
   return tasks.filter((task) => task.list_id === list_id);
 };
 
-export const getTaskById = (tasks: ResponseTaskResponse[], id: string) => {
+export const getTaskById = (tasks: Task[], id: string) => {
   return tasks.find((task) => task.id === id);
 };
 
-export const initializeBoard = (
-  tasks: ResponseTaskResponse[],
-  sections: ResponseTaskListResponse[],
-) => {
+export const initializeBoard = (tasks: Task[], sections: ResponseTaskListResponse[]) => {
   const boardSections: BoardSections = {};
   const sectionObjs = getBoardSections(sections);
 

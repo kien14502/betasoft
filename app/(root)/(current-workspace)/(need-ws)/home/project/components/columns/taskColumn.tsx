@@ -1,4 +1,3 @@
-import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   AlarmClock,
@@ -12,16 +11,16 @@ import {
 import TaskCellAction from '../cells/TaskCellAction';
 import { USER_AVATAR_URL } from '@/constants/common';
 import Image from 'next/image';
-import { fDate } from '@/utils/dayjs';
 import { Checkbox } from '@/components/ui/checkbox';
 import StatusCell from '../cells/StatusCell';
 import PriorityCell from '../cells/PriorityCell';
 
 import { Button } from '@/components/ui/button';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext } from 'react';
 import { ModalTaskTableContext } from '../../providers/ModalTaskTableProvider';
+import { Task } from '@/interface/task';
 
-const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
+const taskColumn = (): ColumnDef<Task>[] => {
   return [
     {
       accessorKey: 'title',
@@ -60,7 +59,11 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
           Status
         </div>
       ),
-      cell: ({ row }) => <StatusCell task={row.original} />,
+      cell: ({ row }) => (
+        <div className="flex items-center justify-end w-full">
+          <StatusCell task={row.original} />
+        </div>
+      ),
       size: 100,
       maxSize: 100,
       minSize: 100,
@@ -113,14 +116,14 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
     {
       accessorKey: 'due_date',
       header: () => (
-        <div className="flex items-centerr gap-1.5 text-white text-xs font-medium">
+        <div className="flex items-center gap-1.5 text-white text-xs font-medium">
           <AlarmClock size={20} />
           Due date
         </div>
       ),
       cell: ({ row }) => {
-        const date = fDate(row.original.due_date);
-        return <div>{date?.getDate()}</div>;
+        // const date = fDate(row.original.);
+        return <div></div>;
       },
       size: 100,
       maxSize: 100,
@@ -161,19 +164,14 @@ const taskColumn = (): ColumnDef<ResponseTaskResponse>[] => {
 };
 export default taskColumn;
 
-const ButtonModal = ({ task }: { task: ResponseTaskResponse }) => {
+const ButtonModal = ({ task }: { task: Task }) => {
   const { isShowModal, setShowModal, setContent } = useContext(ModalTaskTableContext);
 
   const toggle = useCallback(() => {
     setShowModal(!isShowModal);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShowModal]);
-
-  useEffect(() => {
-    if (!isShowModal) return;
     setContent(task);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [task, isShowModal]);
+  }, [isShowModal]);
 
   return (
     <Button

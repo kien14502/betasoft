@@ -1,3 +1,4 @@
+import SearchProject from '@/components/common/SearchProject';
 import {
   Dialog,
   DialogContent,
@@ -6,8 +7,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
+import {
+  createProjectTaskSchema,
+  CreateProjectTaskSchemaType,
+} from '@/constants/schemas/workspace-schema';
 import { getSelector, useAppSelector } from '@/hooks/useRedux';
 import { useGetListTasks } from '@/services/project-service';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { memo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -20,11 +26,16 @@ type Props = {
 const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
   const { user } = useAppSelector(getSelector('auth'));
   const { data } = useGetListTasks(user?.meta_data.organization?.id || '');
-  console.log('data', data);
-
-  const form = useForm();
-
-  const onSubmit = () => {};
+  const form = useForm<CreateProjectTaskSchemaType>({
+    resolver: zodResolver(createProjectTaskSchema),
+    defaultValues: {
+      title: '',
+      list_id: '',
+      sprint_id: '',
+      project_id: '',
+      priority: 'medium',
+    },
+  });
 
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
@@ -37,7 +48,9 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form></form>
+          <form>
+            <SearchProject />
+          </form>
         </Form>
       </DialogContent>
     </Dialog>

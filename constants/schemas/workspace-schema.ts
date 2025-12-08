@@ -108,6 +108,12 @@ export const createProjectTaskSchema = z.object({
 
 export type CreateProjectTaskSchemaType = z.infer<typeof createProjectTaskSchema>;
 
+export const updateTaskSchema = createProjectTaskSchema.partial().extend({
+  task_id: z.string().nonempty(),
+});
+
+export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>;
+
 export const taskFilterSchema = z.object({
   list_id: z.array(z.string()).optional(),
   // label: z.array(z.string()).optional(),
@@ -122,3 +128,13 @@ export const taskFilterSchema = z.object({
 });
 
 export type TaskFilterSchema = z.infer<typeof taskFilterSchema>;
+
+export const taskSectionSchema = z.object({
+  color: z.string(),
+  description: z.string().optional(),
+  name: z.string().min(4),
+  position: z.number(),
+  project_id: z.string(),
+});
+
+export type TaskSectionSchema = z.infer<typeof taskSectionSchema>;
