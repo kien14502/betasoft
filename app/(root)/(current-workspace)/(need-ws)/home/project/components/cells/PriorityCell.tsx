@@ -7,12 +7,13 @@ import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { TasksContext } from '@/components/providers/TasksProvider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getUrgencyOptions, urgencyOptions } from '@/constants/common';
+import { Task } from '@/interface/task';
 import { cn } from '@/lib/utils';
 import { ChevronDown } from 'lucide-react';
 import { useContext } from 'react';
 
 type Props = {
-  task: ResponseTaskResponse;
+  task: Task;
   variant?: 'sm' | 'default';
 };
 

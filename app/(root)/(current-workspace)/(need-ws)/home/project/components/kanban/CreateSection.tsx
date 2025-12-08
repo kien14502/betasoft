@@ -14,9 +14,10 @@ import { COLORS } from '@/utils/common';
 
 type Props = {
   taskPosition: number;
+  onScrollRight: () => void;
 };
 
-const CreateSection = ({ taskPosition }: Props) => {
+const CreateSection = ({ taskPosition, onScrollRight }: Props) => {
   const pathName = usePathname().split('/').filter(Boolean);
   const { mutate: createTaskSection } = useCreateTaskSection();
   const form = useForm<TaskSectionSchema>({
@@ -38,6 +39,7 @@ const CreateSection = ({ taskPosition }: Props) => {
   const onSubmit = (values: TaskSectionSchema) => {
     createTaskSection(values, {
       onSuccess: () => {
+        onScrollRight();
         form.reset();
       },
     });

@@ -1,4 +1,4 @@
-import { ResponseTaskListResponse, ResponseTaskResponse } from '@/app/api/generated.schemas';
+import { Task, TaskSection } from '@/interface/task';
 import {
   BoardSections,
   findBoardSectionContainer,
@@ -21,8 +21,8 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 
 const useDndKanban = (
-  init_tasks: ResponseTaskResponse[],
-  sections: ResponseTaskListResponse[],
+  init_tasks: Task[],
+  sections: TaskSection[],
   onChange: (payload: DragEndEvent) => void,
 ) => {
   const [boardSections, setBoardSections] = useState<BoardSections>({});

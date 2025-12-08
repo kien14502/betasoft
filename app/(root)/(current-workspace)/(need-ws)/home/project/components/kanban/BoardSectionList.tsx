@@ -1,23 +1,20 @@
 import { closestCorners, DndContext, DragOverlay } from '@dnd-kit/core';
 import BoardSection from './BoardSection';
 import TaskItem from './TaskItem';
-import { ResponseTaskResponse } from '@/app/api/generated.schemas';
 import useDndKanban from '@/hooks/useDndKanban';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 import CreateSection from './CreateSection';
 import { usePathname } from 'next/navigation';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
-import { useGetTaskSections, useMoveTaskKanban } from '@/services/task-service';
+import { useGetTask, useGetTaskSections, useMoveTaskKanban } from '@/services/task-service';
 
-type Props = {
-  init_tasks: ResponseTaskResponse[];
-};
-
-const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
+const BoardSectionList: React.FC = () => {
   const id = usePathname().split('/')[3];
+  const { data: init_tasks } = useGetTask(id);
   const { project } = useContext(ProjectContext);
-  const { mutate: onMoveTask } = useMoveTaskKanban();
+  const { mutate: onMoveTask, isPending } = useMoveTaskKanban();
   const { data: sections } = useGetTaskSections(id);
+  const ref = useRef<HTMLDivElement>(null);
 
   const getSection = useMemo(
     () => (key: string) => {
@@ -25,6 +22,13 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
     },
     [sections],
   );
+
+  const scrollRight = () => {
+    ref.current?.scrollTo({
+      left: ref.current.scrollWidth,
+      behavior: 'smooth',
+    });
+  };
 
   const {
     currentTask,
@@ -34,7 +38,7 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
     handleDragOver,
     handleDragStart,
     sensors,
-  } = useDndKanban(init_tasks, sections || [], async ({ active }) => {
+  } = useDndKanban(init_tasks?.tasks || [], sections || [], async ({ active }) => {
     const { containerId, index } = active.data.current?.sortable || {};
     const payload = {
       project_id: id,
@@ -47,7 +51,11 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
   });
 
   return (
-    <div style={{ overflow: 'auto hidden' }} className="min-h-0 px-2 pt-4 flex flex-col">
+    <div
+      ref={ref}
+      style={{ overflow: 'auto hidden' }}
+      className="min-h-0 px-2 pt-4 flex flex-col pb-6"
+    >
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -62,13 +70,16 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
                 id={boardSectionKey}
                 tasks={boardSections[boardSectionKey]}
                 section={getSection(boardSectionKey)}
+                isPending={isPending}
               />
             </li>
           ))}
           <DragOverlay dropAnimation={dropAnimation}>
             {currentTask ? <TaskItem task={currentTask} /> : null}
           </DragOverlay>
-          <CreateSection taskPosition={sections?.length || 0} />
+          <li className="w-[400px] flex-1 min-h-0 flex flex-col">
+            <CreateSection onScrollRight={scrollRight} taskPosition={sections?.length || 0} />
+          </li>
         </ul>
       </DndContext>
     </div>

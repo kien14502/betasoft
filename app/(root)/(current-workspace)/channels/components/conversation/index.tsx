@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import React, { useEffect, useRef } from 'react';
 import { useConversation } from '../providers/ConversationProvider';
 import ConversationController from './ConversationController';
 import Message from './Message';
-import { useGetRoom, useInfiniteGetRooms } from '@/services/conversation-service';
+import { useInfiniteGetRooms } from '@/services/conversation-service';
 import HeaderConversation from './HeaderConversation';
-import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useConversationLoadMore } from '@/hooks/useConversationLoadMore';
 import { Loader2 } from 'lucide-react';
 

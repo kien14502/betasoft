@@ -1,0 +1,70 @@
+name: Deploy to Server staging
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  COMPOSE_FILE: docker-compose.staging.yml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production-v2
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Create .env file from individual secrets
+        run: |
+          cat << EOF > .env
+          PORT=${{ secrets.PORT }}
+          NEXT_PUBLIC_BE_BASE_URL=${{ secrets.NEXT_PUBLIC_BE_BASE_URL }}
+          EOF
+
+      - name: Copy project files to server (rsync)
+        run: |
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude 'node_modules' \
+            --exclude '.git' \
+            --exclude '.env' \
+            --exclude '.env.local' \
+            ./ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.PROJECT_PATH }}
+
+      - name: Copy .env file to server
+        run: |
+          scp -o StrictHostKeyChecking=no \
+            .env \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.PROJECT_PATH }}/.env
+
+      - name: Deploy using Docker Compose
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.PROJECT_PATH }}
+
+            echo "🔍 Verifying .env file..."
+            if [ -f .env ]; then
+              echo "✅ .env file exists"
+            else
+              echo "❌ .env file not found!"
+              exit 1
+            fi
+
+            docker compose -f ${{ env.COMPOSE_FILE }} down --remove-orphans || true
+            docker compose -f ${{ env.COMPOSE_FILE }} up -d --build --force-recreate
+
+            echo "🎉 Deployment completed successfully!"
+          EOF
+
+      - name: Cleanup local .env file
+        if: always()
+        run: |
+          rm -f .env

@@ -55,12 +55,12 @@ const InviteMemberModal = ({ isCollapse }: Props) => {
       <DialogTrigger>
         <div className="flex items-center gap-2 text-xs cursor-pointer">
           <Image src={'/icons/invite-member.svg'} width={20} height={20} alt="" />
-          {!isCollapse && 'Invite member'}
+          {!isCollapse && 'Invite'}
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] py-8 px-16 rounded-xl gap-8">
         <DialogHeader>
-          <DialogTitle className="text-center text-blue-5">Invite member</DialogTitle>
+          <DialogTitle className="text-center text-blue-5">Invite</DialogTitle>
           <DialogDescription />
         </DialogHeader>
 

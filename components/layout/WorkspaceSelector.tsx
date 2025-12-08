@@ -8,6 +8,7 @@ import { getSelector, useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { Button } from '../ui/button';
 import { launchWorkspaceUser } from '@/lib/features/auth/actions';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const WorkspaceSelector = () => {
   const router = useRouter();
@@ -61,6 +62,22 @@ const WorkspaceSelector = () => {
             <div className="absolute top-0 left-0 w-0.5 h-full bg-blue-4 hidden group-hover:block" />
           </Button>
         ))}
+        <Link href={'/workspace/join-workspace'}>
+          <Button
+            className="flex items-center w-full justify-start py-2 relative px-3 group cursor-pointer gap-2 text-sm"
+            variant={'ghost'}
+          >
+            Join workspace
+          </Button>
+        </Link>
+        <Link href={'/workspace/create-workspace'}>
+          <Button
+            className="flex items-center w-full justify-start py-2 relative px-3 group cursor-pointer gap-2 text-sm"
+            variant={'ghost'}
+          >
+            Create workspace
+          </Button>
+        </Link>
       </PopoverContent>
     </Popover>
   );

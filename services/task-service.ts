@@ -1,7 +1,11 @@
 import { axios } from '@/config/axios';
 import { API_ENDPOINT } from '@/constants/endpoint';
 import { QUERY_KEY } from '@/constants/query-key';
-import { TaskSectionSchema, UpdateTaskSchema } from '@/constants/schemas/workspace-schema';
+import {
+  CreateProjectTaskSchemaType,
+  TaskSectionSchema,
+  UpdateTaskSchema,
+} from '@/constants/schemas/workspace-schema';
 import { ResponseSuccess } from '@/interface/common';
 import { Task, TaskMove, TaskSection } from '@/interface/task';
 import { showToast } from '@/utils/toast';
@@ -41,19 +45,18 @@ export const moveTaskKanban = async (payload: TaskMove) => {
   return res.data;
 };
 
-export const updateTask = async ({
-  task_id,
-  payload,
-}: {
-  task_id: string;
-  payload: UpdateTaskSchema;
-}): Promise<ResponseSuccess<Task>> => {
-  const res = await axios.patch(API_ENDPOINT.TASK[''] + `/${task_id}`, payload);
+export const updateTask = async (payload: UpdateTaskSchema): Promise<ResponseSuccess<Task>> => {
+  const res = await axios.patch(API_ENDPOINT.TASK[''], payload);
   return res.data;
 };
 
 export const deleteTask = async (task_id: string) => {
   const res = await axios.delete(API_ENDPOINT.TASK[''] + `${task_id}`);
+  return res.data;
+};
+
+export const createTask = async (payload: CreateProjectTaskSchemaType) => {
+  const res = await axios.post(API_ENDPOINT.TASK[''], payload);
   return res.data;
 };
 // hooks
@@ -62,11 +65,26 @@ export const useGetTask = (org_id: string) =>
   useQuery({
     queryKey: [QUERY_KEY.GET_TASKS, org_id],
     queryFn: () => getTask(org_id),
-    select: ({ data, message }) => {
+    select: ({ data }) => data,
+    enabled: !!org_id,
+  });
+
+export const useCreateTask = (callback?: (data: Task) => void) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createTask,
+
+    onSuccess: ({ data, message }) => {
       showToast(message, 'success');
-      return data;
+      callback?.(data);
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.GET_TASKS, data.project_id],
+      });
     },
   });
+};
 
 export const useGetTaskKanban = (org_id: string) =>
   useQuery({
@@ -76,26 +94,65 @@ export const useGetTaskKanban = (org_id: string) =>
       showToast(message, 'success');
       return data;
     },
+    enabled: !!org_id,
   });
 
-export const useUpdateTask = (callback?: (task: Task) => void) =>
-  useMutation({
+export const useUpdateTask = (callback?: (task: Task) => void) => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: updateTask,
-    onSuccess: ({ data, message }) => {
-      showToast(message, 'success');
-      callback!(data);
+    onSuccess: ({ data }) => {
+      callback?.(data);
+      const key = [QUERY_KEY.GET_TASKS, data.project_id];
+      queryClient.invalidateQueries({ queryKey: key });
     },
+    // // onMutate: async (variables) => {
+    // //   const key = [QUERY_KEY.GET_TASKS, variables.project_id];
+    // //   await queryClient.cancelQueries({ queryKey: key });
+    // //   const prev = queryClient.getQueryData(key);
+    // //   queryClient.setQueryData(key, (old: ResponseSuccess<Task[]> | undefined) => {
+    // //     if (!old) return old;
+
+    // //     const { data: oldTasks, ...rest } = old;
+    // //     const updatedTasks = oldTasks.map((item) =>
+    // //       item.id === variables.task_id ? { ...item, ...variables } : item,
+    // //     );
+
+    // //     return { ...rest, data: updatedTasks };
+    // //   });
+
+    // //   return { prev };
+    // // },
+    // // onError: (err, variables, context) => {
+    // //   if (context?.prev) {
+    // //     const key = [QUERY_KEY.GET_TASKS, variables.project_id];
+    // //     queryClient.setQueryData(key, context.prev);
+    // //   }
+    // // },
+    // onSettled: (data, error, variables) => {
+    //   queryClient.invalidateQueries({
+    //     queryKey: [QUERY_KEY.GET_TASKS, variables.project_id],
+    //   });
+    // },
   });
+};
 
 export const useDeleteTask = () =>
   useMutation({
     mutationFn: deleteTask,
   });
 
-export const useMoveTaskKanban = () =>
-  useMutation({
+export const useMoveTaskKanban = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: moveTaskKanban,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.GET_TASKS],
+      });
+    },
   });
+};
 
 export const useCreateTaskSection = () => {
   const queryClient = useQueryClient();
@@ -131,11 +188,11 @@ export const useCreateTaskSection = () => {
         queryClient.setQueryData([QUERY_KEY.GET_SECTIONS, variables.project_id], context.prev);
       }
     },
-    onSettled: (_, __, variables: TaskSectionSchema) => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.GET_SECTIONS, variables.project_id],
-      });
-    },
+    // onSettled: (_, __, variables: TaskSectionSchema) => {
+    //   queryClient.invalidateQueries({
+    //     queryKey: [QUERY_KEY.GET_SECTIONS, variables.project_id],
+    //   });
+    // },
   });
 };
 

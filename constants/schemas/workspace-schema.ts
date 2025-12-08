@@ -108,7 +108,9 @@ export const createProjectTaskSchema = z.object({
 
 export type CreateProjectTaskSchemaType = z.infer<typeof createProjectTaskSchema>;
 
-export const updateTaskSchema = createProjectSchema.partial();
+export const updateTaskSchema = createProjectTaskSchema.partial().extend({
+  task_id: z.string().nonempty(),
+});
 
 export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>;
 

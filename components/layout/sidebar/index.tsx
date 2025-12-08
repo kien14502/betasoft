@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import InviteMemberModal from '../InviteMemberModal';
 
 const CreateTaskModal = dynamic(() => import('@/app/(root)/components/CreateTaskModal'));
 
@@ -71,6 +72,7 @@ const Sidebar = () => {
           </button>
         </div>
         <div className="flex flex-col gap-4 items-center justify-center">
+          <InviteMemberModal isCollapse={isCollapse} />
           <Image
             width={40}
             height={40}

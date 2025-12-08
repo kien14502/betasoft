@@ -1,3 +1,5 @@
+import { Member } from './conversation';
+
 export interface ProjectLead {
   colour: string;
   email: string;
@@ -51,15 +53,9 @@ export interface Task {
   }[];
   created_at: string;
   updated_at: string;
-  assignee: UserInfo;
-  reporter: UserInfo;
-  created_by: UserInfo;
-}
-
-export interface UserInfo {
-  id: string;
-  full_name: string;
-  email: string;
+  assignee: Member;
+  reporter: Member;
+  created_by: Member;
 }
 
 export interface TaskMove {
