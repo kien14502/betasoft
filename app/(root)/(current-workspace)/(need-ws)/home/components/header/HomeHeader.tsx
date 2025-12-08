@@ -11,7 +11,7 @@ const HomeHeader = () => {
   return (
     <div className="bg-white shadow-secondary p-1 w-fit fixed top-(--header-top) shadow-sidebar border border-[#AED2FF] flex flex-row items-center shadow-btn rounded-2xl">
       {homeRoutes.map((item) => (
-        <Link key={item.path} href={item.path}>
+        <Link key={item.path} href={'/home/' + item.path}>
           <div
             className={cn(
               'rounded-xl h-[33px] text-sm flex items-center px-10',

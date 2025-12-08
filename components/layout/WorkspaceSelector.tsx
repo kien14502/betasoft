@@ -19,7 +19,7 @@ const WorkspaceSelector = () => {
   if (items.length === 0) return null;
 
   const onLaunch = (id: string) => {
-    if (id === user?.meta_data.organization.id) return;
+    if (id === user?.meta_data.organization?.id) return;
     dispatch(launchWorkspaceUser(id))
       .unwrap()
       .then(() => {

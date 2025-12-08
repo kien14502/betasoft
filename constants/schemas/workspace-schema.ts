@@ -20,6 +20,7 @@ export type NewWorkSpaceSchemaType = z.infer<typeof newWorkSpaceSchema>;
 
 export const inviteMemberSchema = z.object({
   email: z.string().regex(emailRegex, 'Invalid email address'),
+  org_id: z.string(),
 });
 export type InviteMemberSchemaType = z.infer<typeof inviteMemberSchema>;
 

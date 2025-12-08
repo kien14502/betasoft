@@ -24,8 +24,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const wsId = user?.meta_data.organization?.id;
     if (wsId) {
-      console.log('Change');
-
       dispatch(getInforWorkspace({ id: wsId }));
       dispatch(getMembers({ id: wsId }));
     }
