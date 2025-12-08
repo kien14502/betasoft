@@ -6,38 +6,18 @@ import useDndKanban from '@/hooks/useDndKanban';
 import { useContext, useMemo } from 'react';
 import CreateSection from './CreateSection';
 import { usePathname } from 'next/navigation';
-import { useGetAuthTaskListsProjectId } from '@/app/api/task-list/task-list';
-import { axios } from '@/config/axios';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
-import { useMutation } from '@tanstack/react-query';
+import { useGetTaskSections, useMoveTaskKanban } from '@/services/task-service';
 
 type Props = {
   init_tasks: ResponseTaskResponse[];
 };
 
-interface TaskDetails {
-  project_id: string;
-  task_id: string;
-  sprint_id: string;
-  target_list_id: string;
-  target_position: number;
-}
-
-const handleMonveTask = async (payload: TaskDetails) => {
-  const res = await axios.put('auth/tasks/move', payload);
-  return res.data;
-};
-
 const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
   const id = usePathname().split('/')[3];
   const { project } = useContext(ProjectContext);
-  const { mutate: onMoveTask } = useMutation({
-    mutationFn: handleMonveTask,
-  });
-
-  const { data: sections } = useGetAuthTaskListsProjectId(id, {
-    query: { select: (data) => data.data || [] },
-  });
+  const { mutate: onMoveTask } = useMoveTaskKanban();
+  const { data: sections } = useGetTaskSections(id);
 
   const getSection = useMemo(
     () => (key: string) => {
@@ -88,7 +68,7 @@ const BoardSectionList: React.FC<Props> = ({ init_tasks }) => {
           <DragOverlay dropAnimation={dropAnimation}>
             {currentTask ? <TaskItem task={currentTask} /> : null}
           </DragOverlay>
-          <CreateSection />
+          <CreateSection taskPosition={sections?.length || 0} />
         </ul>
       </DndContext>
     </div>

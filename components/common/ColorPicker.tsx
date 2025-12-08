@@ -3,23 +3,7 @@ import { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '../ui/button';
 import { Pipette } from 'lucide-react';
-
-const COLORS = [
-  '#7DD3FC',
-  '#38BDF8',
-  '#0EA5E9',
-  '#14B8A6',
-  '#22C55E',
-  '#16A34A',
-  '#EF4444',
-  '#F472B6',
-  '#E879F9',
-  '#A855F7',
-  '#C4B5FD',
-  '#E9D5FF',
-  '#FB923C',
-  '#FBBF24',
-];
+import { COLORS } from '@/utils/common';
 
 type Props = {
   currentColor?: string;
