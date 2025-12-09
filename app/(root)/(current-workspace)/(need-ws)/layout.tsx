@@ -9,10 +9,11 @@ type Props = {
 };
 
 const Layout = ({ children }: Props) => {
+  const { info } = useAppSelector(getSelector('workspace'));
   const { user } = useAppSelector(getSelector('auth'));
   const isLaunchedWs = user?.meta_data?.organization;
 
-  if (!isLaunchedWs) return <EmptyLaunchedWorkspace />;
+  if (!info && !isLaunchedWs) return <EmptyLaunchedWorkspace />;
 
   return <>{children}</>;
 };

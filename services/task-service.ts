@@ -188,11 +188,11 @@ export const useCreateTaskSection = () => {
         queryClient.setQueryData([QUERY_KEY.GET_SECTIONS, variables.project_id], context.prev);
       }
     },
-    // onSettled: (_, __, variables: TaskSectionSchema) => {
-    //   queryClient.invalidateQueries({
-    //     queryKey: [QUERY_KEY.GET_SECTIONS, variables.project_id],
-    //   });
-    // },
+    onSettled: (_, __, variables: TaskSectionSchema) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.GET_SECTIONS, variables.project_id],
+      });
+    },
   });
 };
 

@@ -5,11 +5,10 @@ import { useDroppable } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { Ellipsis, Plus } from 'lucide-react';
 import NewTask from './NewTask';
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import { hexToRGB } from '@/utils/common';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task, TaskSection } from '@/interface/task';
-import { useScrollBottom } from '@/hooks/useScrollBottom';
 
 type BoardSectionProps = {
   id: string;
@@ -22,7 +21,12 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
   const { setNodeRef } = useDroppable({
     id,
   });
-  const { currentRef, scrollToBottom } = useScrollBottom();
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
+
   if (!section) return null;
 
   const { b, g, r } = hexToRGB(section.color || '');
@@ -46,7 +50,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Button size={'icon-sm'} variant={'ghost'} className="ml-auto">
+          <Button onClick={scrollToBottom} size={'icon-sm'} variant={'ghost'} className="ml-auto">
             <Plus color={section.color} />
           </Button>
           <Button size={'icon-sm'} variant={'ghost'} className="ml-auto">
@@ -65,7 +69,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
           }}
           ref={(ref) => {
             setNodeRef(ref);
-            currentRef.current = ref;
+            scrollAreaRef.current = ref;
           }}
           className="overflow-x-hidden"
         >
@@ -76,7 +80,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
               </SortableTaskItem>
             ))}
             <NewTask section={section} onBottom={scrollToBottom} />
-            <div ref={currentRef} />
+            <div ref={bottomRef} />
           </div>
         </ScrollArea>
       </SortableContext>

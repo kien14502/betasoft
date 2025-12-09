@@ -11,8 +11,6 @@ import {
   createProjectTaskSchema,
   CreateProjectTaskSchemaType,
 } from '@/constants/schemas/workspace-schema';
-import { getSelector, useAppSelector } from '@/hooks/useRedux';
-import { useGetListTasks } from '@/services/project-service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { memo } from 'react';
@@ -24,8 +22,6 @@ type Props = {
 };
 
 const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
-  const { user } = useAppSelector(getSelector('auth'));
-  const { data } = useGetListTasks(user?.meta_data.organization?.id || '');
   const form = useForm<CreateProjectTaskSchemaType>({
     resolver: zodResolver(createProjectTaskSchema),
     defaultValues: {
@@ -36,6 +32,8 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
       priority: 'medium',
     },
   });
+
+  console.log('123');
 
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
@@ -49,7 +47,9 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
         </DialogHeader>
         <Form {...form}>
           <form>
-            <SearchProject />
+            <div className="grid grid-cols-2">
+              <SearchProject onChange={(prj) => form.setValue('project_id', prj.project.id)} />
+            </div>
           </form>
         </Form>
       </DialogContent>

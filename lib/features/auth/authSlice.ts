@@ -46,9 +46,22 @@ const authSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(getMe.fulfilled, (state, { payload }) => {
-      state.user = payload;
-    });
+    builder
+      .addCase(getMe.pending, (state) => {
+        state.user = null;
+        state.isLoading = true;
+        state.isAuthenticated = false;
+      })
+      .addCase(getMe.fulfilled, (state, { payload }) => {
+        state.user = payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+      })
+      .addCase(getMe.rejected, (state) => {
+        state.user = null;
+        state.isLoading = false;
+        state.isAuthenticated = false;
+      });
     builder
       .addCase(launchWorkspaceUser.pending, (state) => {
         state.isLoading = true;

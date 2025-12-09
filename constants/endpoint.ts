@@ -12,6 +12,7 @@ export const API_ENDPOINT = {
     LAUNCH: '/auth/organizations/launch',
     JOIN: '/auth/organizations/join',
     INVITE_MEMBER: '/auth/organizations/invite',
+    MEMBER: '',
   },
   PROJECT: {
     '': '/auth/projects',

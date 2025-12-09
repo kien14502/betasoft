@@ -55,7 +55,11 @@ export const getMembersWorkspace = async (
   id: string,
   signal?: GenericAbortSignal,
 ): Promise<ResponseSuccess<User[]>> => {
-  const res = await axios.get(API_ENDPOINT.WORKSPACE[''] + `/${id}`, {
+  const res = await axios.get(API_ENDPOINT.WORKSPACE[''] + `/${id}/members`, {
+    params: {
+      page: 1,
+      page_size: 10,
+    },
     signal,
   });
   return res.data;
