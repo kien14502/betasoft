@@ -10,6 +10,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { Button } from '../ui/button';
 import { ProjectData } from '@/interface/task';
 import { cn } from '@/lib/utils';
+import { Label } from '../ui/label';
 
 type Props = { onChange: (prj: ProjectData) => void };
 
@@ -39,56 +40,59 @@ const SearchProject = memo(({ onChange }: Props) => {
   }, [prjSelected]);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        className={cn(
-          'flex border p-3 gap-2 h-12 w-full shadow-secondary',
-          open && 'border-blue-4 border-2',
-        )}
-      >
-        <Image
-          src={prjSelected ? prjSelected.project.avatar : '/icons/project.svg'}
-          width={24}
-          height={24}
-          alt=""
-        />
-        <div className="flex-1 flex items-start">
-          {prjSelected ? prjSelected.project.name : 'Select Project'}
-        </div>
-        <ChevronDown size={24} />
-      </PopoverTrigger>
-      <PopoverContent
-        className="w-(--radix-popper-anchor-width) p-0 rounded-none min-h-96 border-0"
-        align="start"
-      >
-        <div className="w-full p-2 gap-1 flex items-center shadow-secondary">
-          {isLoading ? <Loader className="animate-spin" size={20} /> : <Search size={20} />}
-          <input
-            className="outline-none text-sm"
-            value={searchValue}
-            placeholder="Search project ..."
-            onChange={(e) => setSearchValue(e.currentTarget.value)}
+    <div className="flex flex-col gap-1">
+      <Label className="font-semibold leading-5">Project</Label>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger
+          className={cn(
+            'flex border border-gray-5 p-3 gap-2 h-12 w-full shadow-secondary',
+            open && 'border-blue-4 border-2',
+          )}
+        >
+          <Image
+            src={prjSelected ? prjSelected.project.avatar : '/icons/project.svg'}
+            width={24}
+            height={24}
+            alt=""
           />
-        </div>
-        <ScrollArea className="">
-          <div className="flex flex-col py-2">
-            {data?.map((item) => (
-              <Button
-                variant={'ghost'}
-                className="p-2 rounded-none relative group justify-start font-medium"
-                key={item.project.id}
-                onClick={() => setPrjSelected(item)}
-              >
-                <Image src={item.project.avatar} width={24} height={24} alt="" />
-                {item.project.name}
-                <div className="absolute w-0.5 group-hover:block hidden h-full bg-blue-4 top-0 left-0" />
-              </Button>
-            ))}
-            <div ref={targetRef} />
+          <div className="flex-1 flex items-start">
+            {prjSelected ? prjSelected.project.name : 'Select Project'}
           </div>
-        </ScrollArea>
-      </PopoverContent>
-    </Popover>
+          <ChevronDown size={24} />
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-(--radix-popper-anchor-width) p-0 rounded-none min-h-96 border-0"
+          align="start"
+        >
+          <div className="w-full p-2 gap-1 flex items-center shadow-secondary">
+            {isLoading ? <Loader className="animate-spin" size={20} /> : <Search size={20} />}
+            <input
+              className="outline-none text-sm"
+              value={searchValue}
+              placeholder="Search project ..."
+              onChange={(e) => setSearchValue(e.currentTarget.value)}
+            />
+          </div>
+          <ScrollArea className="">
+            <div className="flex flex-col py-2">
+              {data?.map((item) => (
+                <Button
+                  variant={'ghost'}
+                  className="p-2 rounded-none relative group justify-start font-medium"
+                  key={item.project.id}
+                  onClick={() => setPrjSelected(item)}
+                >
+                  <Image src={item.project.avatar} width={24} height={24} alt="" />
+                  {item.project.name}
+                  <div className="absolute w-0.5 group-hover:block hidden h-full bg-blue-4 top-0 left-0" />
+                </Button>
+              ))}
+              <div ref={targetRef} />
+            </div>
+          </ScrollArea>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 });
 

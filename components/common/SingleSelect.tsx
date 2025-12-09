@@ -36,7 +36,7 @@ const SingleSelect = <T extends Option>({
   label,
 }: Props<T>) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [itemSelected, setItemSeleted] = useState<T | undefined>(
+  const [itemSelected, setItemSelected] = useState<T | undefined>(
     options.find((item) => item.value === value),
   );
 
@@ -89,7 +89,7 @@ const SingleSelect = <T extends Option>({
         {options.map((option) => (
           <div
             className="py-2 px-3 flex items-center gap-2 cursor-pointer relative group hover:bg-gray-1"
-            onClick={() => setItemSeleted(option)}
+            onClick={() => setItemSelected(option)}
             key={option.value}
           >
             {renderItem ? renderItem(option) : <>{option.label}</>}

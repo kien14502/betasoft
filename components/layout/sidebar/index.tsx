@@ -5,14 +5,12 @@ import { USER_AVATAR_URL } from '@/constants/common';
 import { mainRoutes } from '@/constants/routes';
 import { useAppSelector, getSelector } from '@/hooks/useRedux';
 import { cn } from '@/lib/utils';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import InviteMemberModal from '../InviteMemberModal';
-
-const CreateTaskModal = dynamic(() => import('@/app/(root)/components/CreateTaskModal'));
+import CreateTaskModal from '@/app/(root)/components/CreateTaskModal';
 
 const Sidebar = () => {
   const { user: profile } = useAppSelector(getSelector('auth'));
