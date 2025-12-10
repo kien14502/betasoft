@@ -14,11 +14,11 @@ type Props = {
 const Message = ({ messageGroup }: Props) => {
   const { user: profile } = useAppSelector(getSelector('auth'));
 
-  const isMe = messageGroup.user.email === profile?.email;
+  const isMe = messageGroup.user.id === profile?.id;
 
   return (
     <>
-      <div className={cn('flex items-end gap-3', isMe ? 'flex-row-reverse' : 'flex-row')}>
+      <div className={cn('flex w-full items-end gap-3', isMe ? 'flex-row-reverse' : 'flex-row')}>
         {!isMe && (
           <Tooltip>
             <TooltipTrigger>
@@ -53,7 +53,7 @@ const Message = ({ messageGroup }: Props) => {
               </TooltipTrigger>
               <TooltipContent
                 className="bg-white shadow-secondary h-[27px] [&_svg]:border [&_svg]:border-blue-2 [&_svg]:bg-white [&_svg]:fill-white border border-blue-2"
-                side={isMe ? 'right' : 'left'}
+                side={isMe ? 'right' : 'right'}
               >
                 <span className={cn('text-xs font-medium text-black text-end')}>
                   {fDateAtTime(message.created_at)}

@@ -3,6 +3,7 @@ import { fHmmA } from '@/utils/dayjs';
 import Image from 'next/image';
 import ConversationListLoading from './ConversationListLoading';
 import Link from 'next/link';
+import { decodeBase64 } from '@/utils/common';
 
 type Props = {
   mode: string;
@@ -37,7 +38,7 @@ const ConversationList = ({}: Props) => {
               <p className="text-sm text-gray-5">{fHmmA(group.latest_messages.created_at)}</p>
             </div>
             <span className="text-sm max-w-full text-gray-5 truncate overflow-hidden text-ellipsis">
-              {group.latest_messages.content}
+              {decodeBase64(group.latest_messages.content)}
             </span>
           </div>
         </Link>

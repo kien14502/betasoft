@@ -28,6 +28,7 @@ const ProjectPage = () => {
   });
 
   const { adminProjects, otherProjects } = groupRoleProjects(projects || []);
+
   if (isLoading) {
     return (
       <div className="gap-4 h-full max-h-full flex flex-col">
@@ -45,6 +46,7 @@ const ProjectPage = () => {
       </div>
     );
   }
+
   if (!isLoading && (!projects || projects.length === 0)) {
     return (
       <div className="gap-4 h-full max-h-full flex flex-col">

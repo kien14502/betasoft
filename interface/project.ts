@@ -1,3 +1,5 @@
+import { User } from './auth';
+
 // Định nghĩa cho Project Settings (object lồng trong Project)
 export interface ProjectSettings {
   allow_guests: boolean;
@@ -66,4 +68,9 @@ export interface ProjectDetails {
   lead: Lead;
   project: Project;
   sprint_active: SprintActive;
+}
+
+export interface MemberProject {
+  member: User;
+  role: string;
 }

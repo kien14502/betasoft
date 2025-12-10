@@ -26,7 +26,7 @@ const TextareaForm = <T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <FormItem className={cn('flex flex-col gap-2 space-y-0', className)}>
-          {label && <FormLabel className="mb-2">{label}</FormLabel>}
+          {label && <FormLabel className="mb-2 text-sm font-semibold">{label}</FormLabel>}
           <FormControl>
             <Textarea
               maxLength={maxLength}

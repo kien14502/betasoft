@@ -15,6 +15,47 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const trimBody = (body: object | undefined): object | undefined => {
+  if (body === undefined || body === null || typeof body !== 'object') {
+    return body;
+  }
+
+  // Use a type assertion to iterate over the object keys
+  const trimmed: { [key: string]: unknown } = {};
+
+  for (const [key, value] of Object.entries(body)) {
+    // 1. Skip properties with null or undefined values
+    if (value === null || value === undefined) {
+      continue;
+    }
+
+    // 2. Handle object/array recursion
+    if (typeof value === 'object') {
+      const trimmedValue = trimBody(value);
+
+      // Only include the property if the trimmed object/array is not empty
+      if (Object.keys(trimmedValue as object).length > 0) {
+        trimmed[key] = trimmedValue;
+      }
+      continue;
+    }
+
+    // 3. Handle string cleaning (trim and check for emptiness)
+    if (typeof value === 'string') {
+      const trimmedString = value.trim();
+      if (trimmedString.length > 0) {
+        trimmed[key] = trimmedString;
+      }
+      continue;
+    }
+
+    // 4. Include all other primitive values (numbers, booleans, etc.)
+    trimmed[key] = value;
+  }
+
+  return trimmed;
+};
+
 type GroupMembers = {
   startChar: string;
   members: ResponseOrgMember[];

@@ -9,7 +9,6 @@ import { memo } from 'react';
 import { hexToRGB } from '@/utils/common';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task, TaskSection } from '@/interface/task';
-import { useScrollBottom } from '@/hooks/useScrollBottom';
 
 type BoardSectionProps = {
   id: string;
@@ -22,7 +21,6 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
   const { setNodeRef } = useDroppable({
     id,
   });
-  const { currentRef, scrollToBottom } = useScrollBottom();
   if (!section) return null;
 
   const { b, g, r } = hexToRGB(section.color || '');
@@ -63,10 +61,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
           style={{
             scrollbarColor: section.color,
           }}
-          ref={(ref) => {
-            setNodeRef(ref);
-            currentRef.current = ref;
-          }}
+          ref={setNodeRef}
           className="overflow-x-hidden"
         >
           <div className="p-4 pb-0 flex flex-col gap-4">
@@ -75,8 +70,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
                 <TaskItem task={task} />
               </SortableTaskItem>
             ))}
-            <NewTask section={section} onBottom={scrollToBottom} />
-            <div ref={currentRef} />
+            <NewTask section={section} onBottom={() => {}} />
           </div>
         </ScrollArea>
       </SortableContext>

@@ -36,6 +36,9 @@ const VerifyEmailForm = ({ email }: Props) => {
         onSuccess() {
           setView('confirm');
         },
+        onError(err) {
+          console.log(err);
+        },
       },
     );
   };
