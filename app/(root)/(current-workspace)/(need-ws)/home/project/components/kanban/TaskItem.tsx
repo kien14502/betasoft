@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Checkbox } from '@/components/ui/checkbox';
 import { memo, useCallback, useState } from 'react';
 import { Task } from '@/interface/task';
+import TaskAction from './TaskAction';
 
 type TaskItemProps = {
   task: Task;
@@ -19,7 +20,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 
   return (
     <div
-      onClick={toggleModal}
+      // onClick={toggleModal}
       style={{
         cursor: isGrabbing ? 'grabbing' : 'grab',
         boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',
@@ -29,12 +30,12 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         'border flex flex-col gap-2 py-3 px-4 border-cool-gray-20 rounded-2xl bg-white',
       )}
     >
-      <div className="flex items-center gap-2">
-        <Checkbox className="rounded-full" />
-        <p className="font-semibold text-gray-90 text-sm">{task.title}</p>
-        <button className="ml-auto">
-          <Image width={20} height={20} src={'/icons/dots.svg'} alt={''} />
-        </button>
+      <div className="flex items-center gap-2 justify-between">
+        <div className="flex items-center gap-2">
+          <Checkbox className="rounded-full" />
+          <p className="font-semibold text-gray-90 text-sm">{task.title}</p>
+        </div>
+        <TaskAction />
       </div>
       <div className="flex items-center justify-between">
         <span className="text-xs text-gray-8">Assignee:</span>

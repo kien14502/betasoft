@@ -1,6 +1,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { memo, useEffect, useState } from 'react';
-import { ChevronDown, Loader, Search } from 'lucide-react';
+import { ChevronUp, Loader, Search } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useInfiniteProjects } from '@/services/workspace-service';
 import { getSelector, useAppSelector } from '@/hooks/useRedux';
@@ -45,8 +45,8 @@ const SearchProject = memo(({ onChange }: Props) => {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            'flex border border-gray-5 p-3 gap-2 h-12 w-full shadow-secondary',
-            open && 'border-blue-4 border-2',
+            'flex border items-center relative border-gray-5 p-3 gap-2 h-12 w-full shadow-secondary',
+            open && 'border-blue-4',
           )}
         >
           <Image
@@ -58,7 +58,10 @@ const SearchProject = memo(({ onChange }: Props) => {
           <div className="flex-1 flex items-start">
             {prjSelected ? prjSelected.project.name : 'Select Project'}
           </div>
-          <ChevronDown size={24} />
+          <ChevronUp
+            className={cn('transition-all absolute right-2 duration-300', open && 'rotate-180')}
+            size={16}
+          />
         </PopoverTrigger>
         <PopoverContent
           className="w-(--radix-popper-anchor-width) p-0 rounded-none min-h-96 border-0"

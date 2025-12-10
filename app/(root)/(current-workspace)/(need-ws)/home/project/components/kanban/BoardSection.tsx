@@ -5,7 +5,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { Ellipsis, Plus } from 'lucide-react';
 import NewTask from './NewTask';
-import { memo, useRef } from 'react';
+import { memo } from 'react';
 import { hexToRGB } from '@/utils/common';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task, TaskSection } from '@/interface/task';
@@ -21,12 +21,6 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
   const { setNodeRef } = useDroppable({
     id,
   });
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  };
-
   if (!section) return null;
 
   const { b, g, r } = hexToRGB(section.color || '');
@@ -50,7 +44,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Button onClick={scrollToBottom} size={'icon-sm'} variant={'ghost'} className="ml-auto">
+          <Button size={'icon-sm'} variant={'ghost'} className="ml-auto">
             <Plus color={section.color} />
           </Button>
           <Button size={'icon-sm'} variant={'ghost'} className="ml-auto">
@@ -67,10 +61,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
           style={{
             scrollbarColor: section.color,
           }}
-          ref={(ref) => {
-            setNodeRef(ref);
-            scrollAreaRef.current = ref;
-          }}
+          ref={setNodeRef}
           className="overflow-x-hidden"
         >
           <div className="p-4 pb-0 flex flex-col gap-4">
@@ -79,8 +70,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
                 <TaskItem task={task} />
               </SortableTaskItem>
             ))}
-            <NewTask section={section} onBottom={scrollToBottom} />
-            <div ref={bottomRef} />
+            <NewTask section={section} onBottom={() => {}} />
           </div>
         </ScrollArea>
       </SortableContext>

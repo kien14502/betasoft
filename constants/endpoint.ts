@@ -17,6 +17,7 @@ export const API_ENDPOINT = {
   PROJECT: {
     '': '/auth/projects',
     MY_PROJ: '/auth/projects/my-projects',
+    MEMBER: (prj_id: string) => `/auth/projects/${prj_id}/members`,
   },
   TASK: {
     '': '/auth/tasks',

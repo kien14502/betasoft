@@ -3,6 +3,7 @@ import ENDPOINT from './endpoint';
 import local from '../utils/localStorage';
 import { showToast } from '../utils/toast';
 import { getClientCookie } from '../utils/cookie.client';
+import { trimBody } from '@/utils/common';
 
 const axios = axiosInstance.create({
   baseURL: ENDPOINT.BASE_URL,
@@ -19,6 +20,9 @@ axios.interceptors.request.use(
     if (accessToken) {
       config.headers.set('Authorization', accessToken); // auto attach token
     }
+
+    const bodyTrimed = trimBody(config.data);
+    config.data = bodyTrimed;
     return config;
   },
 

@@ -61,7 +61,7 @@ export const useInfiniteGetRooms = (room_id: string | undefined) =>
   useInfiniteQuery({
     queryKey: [QUERY_KEY.GET_ROOMS, room_id],
     queryFn: ({ pageParam = 1 }) =>
-      getInfiniteRoom({ pageParam, room_id: room_id!, page_size: PAGE_SIZE }),
+      getInfiniteRoom({ pageParam, room_id: room_id!, page_size: PAGE_SIZE + 10 }),
     initialPageParam: 1,
     enabled: Boolean(room_id),
     getNextPageParam: (lastPage) => {
