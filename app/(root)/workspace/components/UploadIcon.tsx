@@ -30,6 +30,11 @@ const UploadIcon = ({ onFileSelect }: Props) => {
               onFileSelect(data?.url);
             }
           },
+          onError: () => {
+            if (inputRef.current) {
+              inputRef.current.value = '';
+            }
+          },
         },
       );
     }

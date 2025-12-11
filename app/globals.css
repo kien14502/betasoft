@@ -149,6 +149,8 @@
   --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
   --animate-wave: wave 2s ease-in-out infinite;
   --header-top: 16px;
+  --witdh-sidebar: 112px;
+  --witdh-sidebar-collapse: 56px;
 }
 
 body {

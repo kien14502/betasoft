@@ -18,7 +18,7 @@ const ProjectPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading,
+    isFetching,
   } = useInfiniteProjects(workspaceId);
 
   const { targetRef } = useInfiniteScroll({
@@ -29,7 +29,7 @@ const ProjectPage = () => {
 
   const { adminProjects, otherProjects } = groupRoleProjects(projects || []);
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <div className="gap-4 h-full max-h-full flex flex-col">
         <ProjectHeader />
@@ -47,7 +47,7 @@ const ProjectPage = () => {
     );
   }
 
-  if (!isLoading && (!projects || projects.length === 0)) {
+  if (!isFetching && (!projects || projects.length === 0)) {
     return (
       <div className="gap-4 h-full max-h-full flex flex-col">
         <EmptyProjectView />
@@ -64,14 +64,14 @@ const ProjectPage = () => {
             {adminProjects.map((item) => (
               <ProjectCard key={item.project?.id} data={item} />
             ))}
-            {isLoading && <Skeleton style={{ height: '360px', width: '100%' }} />}
+            {isFetching && <Skeleton style={{ height: '360px', width: '100%' }} />}
             <div ref={targetRef} />
           </ProjectWrapper>
           <ProjectWrapper type="member" isEmpty={otherProjects.length === 0}>
             {otherProjects.map((item) => (
               <ProjectCard key={item.project?.id} data={item} />
             ))}
-            {isLoading && <Skeleton style={{ height: '360px', width: '100%' }} />}
+            {isFetching && <Skeleton style={{ height: '360px', width: '100%' }} />}
             <div ref={targetRef} />
           </ProjectWrapper>
         </div>

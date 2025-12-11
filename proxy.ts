@@ -25,7 +25,7 @@ function normalizePath(pathname: string) {
   return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const normalizedPath = normalizePath(pathname);
   const token = req.cookies.get('accessToken')?.value;

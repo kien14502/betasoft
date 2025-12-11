@@ -20,3 +20,15 @@ export interface User {
 export interface MetaData {
   organization: DetailWorkspace;
 }
+
+export interface RequestRegisterRequest {
+  email: string;
+  full_name?: string;
+  password?: string;
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  step: number;
+  verify_code?: string;
+}

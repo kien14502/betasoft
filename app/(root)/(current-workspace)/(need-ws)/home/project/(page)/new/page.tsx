@@ -1,8 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
-import { usePostAuthProjects } from '@/app/api/project/project';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import WrapperContent from '../../components/WrapperContent';
@@ -14,16 +12,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { DEFAULT_TASK_LIST } from '@/constants/common';
 import { labels, sprints } from '@/utils/common';
-import { RequestCreateProjectRequest } from '@/app/api/generated.schemas';
 import { showToast } from '@/utils/toast';
 import { useAppSelector, getSelector } from '@/hooks/useRedux';
+import { useCreateProject } from '@/services/project-service';
 
 const TrackWork = dynamic(() => import('../../components/TrackWork'));
 
 const NewProjectPage = () => {
   const { info } = useAppSelector(getSelector('workspace'));
   const router = useRouter();
-  const { mutate: createProject, isPending } = usePostAuthProjects();
+  const { mutate: createProject, isPending } = useCreateProject();
   const [openTrackworkModal, setOpenTrackworkModal] = useState<boolean>(false);
   const { user: profile } = useAppSelector(getSelector('auth'));
   const form = useForm<CreateProjectSchemaType>({
@@ -62,7 +60,7 @@ const NewProjectPage = () => {
 
   const handleCreateProject = () => {
     createProject(
-      { data: form.getValues() as RequestCreateProjectRequest },
+      { ...form.getValues() },
       {
         onSuccess({ data, message }) {
           showToast(message || 'Create project successfully', 'success');

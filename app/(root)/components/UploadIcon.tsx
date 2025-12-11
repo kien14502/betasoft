@@ -20,6 +20,7 @@ const UploadIcon = ({ onFileSelect }: Props) => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
+    console.log('onChange', file);
 
     if (file) {
       upload(

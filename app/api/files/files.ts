@@ -261,8 +261,10 @@ export const postAuthFileUpload = (
   postAuthFileUploadBody: PostAuthFileUploadBody,
   signal?: AbortSignal,
 ) => {
+  console.log('formData', postAuthFileUploadBody.file);
   const formData = new FormData();
   formData.append(`file`, postAuthFileUploadBody.file);
+  console.log('formData', formData);
 
   return postAuthFileUploadMutator<PostAuthFileUpload201>({
     url: `/auth/file/upload`,

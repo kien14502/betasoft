@@ -15,9 +15,12 @@ import { showToast } from '@/utils/toast';
 import { isFormReady } from '@/utils/common';
 import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { launchWorkspaceUser } from '@/lib/features/auth/actions';
 
 const CreateWorkspaceForm = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { mutate: createWorkspace, isPending } = usePostAuthOrganizations();
   const form = useForm<NewWorkSpaceSchemaType>({
     resolver: zodResolver(newWorkSpaceSchema),
@@ -38,8 +41,12 @@ const CreateWorkspaceForm = () => {
         },
       },
       {
-        onSuccess({ message }) {
-          router.replace(`/workspace`);
+        onSuccess({ message, data }) {
+          dispatch(launchWorkspaceUser(data?.id ?? ''))
+            .unwrap()
+            .then(() => {
+              router.replace('/home/overview');
+            });
           showToast(message || 'Create workspace successfully', 'success');
         },
       },

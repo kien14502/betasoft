@@ -2,6 +2,7 @@ export const API_ENDPOINT = {
   ROOT: '',
   AUTH: {
     PROFILE: '/auth/user/profile',
+    REGISTER: '/auth/register',
   },
   ROOM: {
     GET_ROOMS: 'auth/chat/rooms',

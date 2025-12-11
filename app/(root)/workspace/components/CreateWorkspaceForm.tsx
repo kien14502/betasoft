@@ -38,9 +38,10 @@ const CreateWorkspaceForm = () => {
         },
       },
       {
-        onSuccess({ data, message }) {
-          console.log('data', data);
-          router.push(`/${data?.id}`);
+        onSuccess({ message, data }) {
+          // router.push(`/home/overview`);
+          console.log(data);
+
           showToast(message || 'Create workspace successfully', 'success');
         },
       },

@@ -6,9 +6,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader, LockKeyhole, UserCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import PasswordRules from './PasswordRules';
-import { usePostAuthRegister } from '@/app/api/auth/auth';
 import { showToast } from '@/utils/toast';
 import { useRouter } from 'next/navigation';
+import { setClientCookie } from '@/utils/cookie.client';
+import { EToken } from '@/constants';
+import { setAuth } from '@/lib/features/auth/authSlice';
+import { saveAuthStorage } from '@/utils/authStorage';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { useAuthRegister } from '@/services/auth-service';
 
 type Props = {
   email: string;
@@ -16,8 +21,9 @@ type Props = {
 };
 
 const CreatePassword = ({ email, code }: Props) => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  const { mutate: register, isPending: isRegisterLoading } = usePostAuthRegister();
+  const { mutate: register, isPending: isRegisterLoading } = useAuthRegister();
   const form = useForm<CreatePasswordSchema>({
     resolver: zodResolver(createPasswordSchema),
     defaultValues: {
@@ -31,18 +37,20 @@ const CreatePassword = ({ email, code }: Props) => {
   const onSubmit = (values: CreatePasswordSchema) => {
     register(
       {
-        data: {
-          step: values.step,
-          password: values.password,
-          full_name: values.fullname,
-          email: email,
-          verify_code: code,
-        },
+        step: values.step,
+        password: values.password,
+        full_name: values.fullname,
+        email: email,
+        verify_code: code,
       },
       {
-        onSuccess: ({ message }) => {
+        onSuccess: ({ message, data }) => {
+          const token = data?.token || '';
+          setClientCookie(EToken.ACCESS_TOKEN, token);
+          dispatch(setAuth(data.user));
+          saveAuthStorage('ACCESS_TOKEN', token);
+          router.push('/');
           showToast(message || 'Register account successfully', 'success');
-          router.push('/login');
         },
       },
     );

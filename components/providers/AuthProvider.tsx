@@ -8,21 +8,23 @@ import LoadingScreen from '../common/loading/LoadingScreen';
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector(getSelector('auth'));
+  const { isAuthenticated, user } = useAppSelector(getSelector('auth'));
 
   useEffect(() => {
-    dispatch(getMe())
-      .unwrap()
-      .then((data) => {
-        const wsId = data.meta_data.organization?.id ?? null;
-        if (wsId) {
-          dispatch(getListWorkspaces());
-          dispatch(getInforWorkspace({ id: wsId }));
-          dispatch(getMembers({ id: wsId }));
-        }
-      });
+    dispatch(getMe());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const wsId = user?.meta_data.organization?.id ?? null;
+    if (wsId) {
+      console.log('call change');
+      dispatch(getListWorkspaces());
+      dispatch(getInforWorkspace({ id: wsId }));
+      dispatch(getMembers({ id: wsId }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   if (!isAuthenticated) return <LoadingScreen />;
 
