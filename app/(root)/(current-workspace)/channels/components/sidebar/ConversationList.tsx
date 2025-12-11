@@ -16,33 +16,39 @@ const ConversationList = ({}: Props) => {
 
   return (
     <div className="flex flex-col gap-2 w-full flex-1 min-h-0">
-      {groups?.map((group) => (
-        <Link
-          href={'/channels/' + group.id}
-          key={group.id}
-          className="flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3"
-        >
-          <Image
-            width={40}
-            height={40}
-            className="rounded-xl object-cover"
-            src="https://github.com/shadcn.png"
-            alt=""
-          />
+      {groups?.map((group) => {
+        const isExistLastestMessage = group?.latest_messages;
 
-          <div className="flex flex-col gap-1 flex-1 items-start min-w-0">
-            <div className="flex items-center justify-between flex-row gap-2 w-full max-w-full">
-              <p className="font-semibold text-sm truncate overflow-hidden text-ellipsis">
-                {group.name}
-              </p>
-              <p className="text-sm text-gray-5">{fHmmA(group.latest_messages.created_at)}</p>
+        return (
+          <Link
+            href={'/channels/' + group.id}
+            key={group.id}
+            className="flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3"
+          >
+            <Image
+              width={40}
+              height={40}
+              className="rounded-xl object-cover"
+              src="https://github.com/shadcn.png"
+              alt=""
+            />
+
+            <div className="flex flex-col gap-1 flex-1 items-start min-w-0">
+              <div className="flex items-center justify-between flex-row gap-2 w-full max-w-full">
+                <p className="font-semibold text-sm truncate overflow-hidden text-ellipsis">
+                  {group.name}
+                </p>
+                <p className="text-sm text-gray-5">{fHmmA(group.latest_messages.created_at)}</p>
+              </div>
+              {isExistLastestMessage && (
+                <span className="text-sm max-w-full text-gray-5 truncate overflow-hidden text-ellipsis">
+                  {decodeBase64(group?.latest_messages.content ?? '')}
+                </span>
+              )}
             </div>
-            <span className="text-sm max-w-full text-gray-5 truncate overflow-hidden text-ellipsis">
-              {decodeBase64(group.latest_messages.content)}
-            </span>
-          </div>
-        </Link>
-      ))}
+          </Link>
+        );
+      })}
     </div>
   );
 };

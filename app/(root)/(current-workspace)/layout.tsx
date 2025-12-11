@@ -4,9 +4,9 @@ import Sidebar from '@/components/layout/sidebar';
 
 function LayoutConfig({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-screen h-screen bg-secondary overflow-hidden">
+    <div className="w-screen flex h-screen bg-secondary overflow-hidden">
       <Sidebar />
-      <div className="w-screen h-screen flex flex-col pl-14 bg-secondary overflow-hidden">
+      <div className="w-screen h-screen flex flex-col bg-secondary overflow-hidden">
         <MainHeader />
         <div className="flex flex-col min-h-0 h-[calc(100vh-64px)]">
           <div className="overflow-x-hidden min-h-0 h-full flex flex-col p-4 pt-2 gap-4">

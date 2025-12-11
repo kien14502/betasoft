@@ -1,5 +1,5 @@
 'use client';
-import { usePostAuthRegister } from '@/app/api/auth/auth';
+
 import OtpInputForm from '@/components/common/form/OtpInputForm';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
@@ -9,6 +9,8 @@ import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import CreatePassword from './CreatePassword';
 import { useState } from 'react';
+import { useAuthRegister } from '@/services/auth-service';
+import ResendEmail from './ResendEmail';
 
 type Props = {
   email: string;
@@ -16,7 +18,7 @@ type Props = {
 
 const VerifyEmailForm = ({ email }: Props) => {
   const [view, setView] = useState<'otp' | 'confirm'>('otp');
-  const { mutate: register, isPending: isRegisterLoading } = usePostAuthRegister();
+  const { mutate: register, isPending: isRegisterLoading } = useAuthRegister();
 
   const form = useForm<VerifyOtpSchema>({
     resolver: zodResolver(verifyOtpSchema),
@@ -26,24 +28,19 @@ const VerifyEmailForm = ({ email }: Props) => {
   const onVerify = (values: VerifyOtpSchema) => {
     register(
       {
-        data: {
-          email: values.email,
-          step: values.step,
-          verify_code: values.code,
-        },
+        email: values.email,
+        step: values.step,
+        verify_code: values.code,
       },
       {
-        onSuccess() {
-          setView('confirm');
-        },
-        onError(err) {
-          console.log(err);
+        onSuccess({ data }) {
+          if (data) {
+            setView('confirm');
+          }
         },
       },
     );
   };
-
-  const onResendVerify = () => {};
 
   const isActive = !form.formState.isValid || form.formState.isSubmitting;
 
@@ -71,12 +68,7 @@ const VerifyEmailForm = ({ email }: Props) => {
           </Button>
         </form>
       </Form>
-      <div className="flex items-center gap-1 text-sm justify-center">
-        You did not receive the code?
-        <button onClick={onResendVerify} className="text-blue-4">
-          Resend code
-        </button>
-      </div>
+      <ResendEmail email={email} />
     </div>
   );
 };

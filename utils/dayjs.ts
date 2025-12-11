@@ -1,6 +1,10 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
+
 dayjs.extend(relativeTime);
+dayjs.extend(duration);
+
 export const timeAgo = (date?: string) => {
   if (!date) return '';
   return dayjs(date).fromNow();
@@ -23,4 +27,10 @@ export const fDateAtTime = (dateString: string) => {
 
 export const over5MinutesNow = (dateString: string) => {
   return dayjs().diff(dayjs(dateString), 'minute') > 5;
+};
+
+export const fTimeCounter = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 };

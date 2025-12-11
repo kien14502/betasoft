@@ -1,6 +1,7 @@
 import { User } from '@/interface/auth';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getMe, launchWorkspaceUser } from './actions';
+import { DetailWorkspace } from '@/interface/workspace';
 
 interface AuthState {
   user: User | null;
@@ -20,6 +21,11 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    updateMeta: (state, payload: PayloadAction<DetailWorkspace>) => {
+      if (state.user) {
+        state.user.meta_data.organization = payload.payload;
+      }
+    },
     loginStart: (state) => {
       state.isLoading = true;
       state.error = null;
@@ -67,13 +73,20 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(launchWorkspaceUser.fulfilled, (state, { payload }) => {
-        if (state.user?.meta_data?.organization && payload) {
-          state.user.meta_data.organization = payload;
+        if (state.user?.meta_data && payload) {
+          state.user = {
+            ...state.user,
+            meta_data: {
+              ...state.user.meta_data,
+              organization: payload,
+            },
+          };
         }
         state.isLoading = false;
       });
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, setAuth } = authSlice.actions;
+export const { loginStart, updateMeta, loginSuccess, loginFailure, logout, setAuth } =
+  authSlice.actions;
 export default authSlice.reducer;

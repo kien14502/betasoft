@@ -2,7 +2,11 @@ import { axios } from '@/config/axios';
 import { PAGE_SIZE } from '@/constants/common';
 import { API_ENDPOINT } from '@/constants/endpoint';
 import { QUERY_KEY } from '@/constants/query-key';
-import { InviteMemberSchemaType, JoinWorkspaceSchema } from '@/constants/schemas/workspace-schema';
+import {
+  InviteMemberSchemaType,
+  JoinWorkspaceSchema,
+  NewWorkSpaceSchemaType,
+} from '@/constants/schemas/workspace-schema';
 import { User } from '@/interface/auth';
 import { ResponseSuccess } from '@/interface/common';
 import { ProjectData } from '@/interface/task';
@@ -10,16 +14,34 @@ import { DetailWorkspace, Organization, ProjectParam } from '@/interface/workspa
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { GenericAbortSignal } from 'axios';
 
-export const getListWorkspace = async (): Promise<
-  ResponseSuccess<{ organizations: Organization[]; total: number }>
-> => {
-  const res = await axios.get(`/auth/organizations`, {
+export const getListWorkspace = async (
+  pageParam: number = 1,
+): Promise<ResponseSuccess<{ organizations: Organization[]; total: number }>> => {
+  const res = await axios.get(API_ENDPOINT.WORKSPACE[''], {
     params: {
-      page: 1,
+      page: pageParam,
       page_size: 10,
     },
   });
   return res.data;
+};
+
+export const createWorkspace = async (payload: NewWorkSpaceSchemaType) => {
+  const res = await axios.post(API_ENDPOINT.WORKSPACE[''], payload);
+  return res.data;
+};
+
+export const getInfiniteWorkspace = async (pageParam: number = 1) => {
+  const res = await axios.get<ResponseSuccess<{ organizations: Organization[]; total: number }>>(
+    API_ENDPOINT.WORKSPACE[''],
+    {
+      params: {
+        page: pageParam,
+        page_size: 10,
+      },
+    },
+  );
+  return { ...res.data.data, page: pageParam };
 };
 
 export const launchWorkspace = async (
@@ -129,3 +151,21 @@ export const useInfiniteProjects = (org_id: string | undefined, name?: string) =
       return projects.filter((item) => Boolean(item));
     },
   });
+
+export const useGetListWorkspaceInfinite = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEY.GET_WORKSPACES],
+    queryFn: ({ pageParam = 1 }) => getInfiniteWorkspace(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const loaded = lastPage.page * PAGE_SIZE;
+      const total = lastPage.total;
+      if (loaded >= total) return undefined;
+      return lastPage.page + 1;
+    },
+    select: (data) => {
+      const workspaces = data?.pages.flatMap((page) => page.organizations) ?? [];
+      return workspaces.filter((item) => Boolean(item));
+    },
+  });
+};

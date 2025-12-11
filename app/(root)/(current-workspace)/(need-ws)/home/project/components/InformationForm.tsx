@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { CreateProjectSchemaType } from '@/constants/schemas/workspace-schema';
 import InputForm from '@/components/common/form/InputField';
@@ -13,17 +12,6 @@ type Props = {
 };
 
 const InformationForm: React.FC<Props> = ({ form }) => {
-  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
-
-  const handleSelect = (value: boolean) => {
-    // form.setFieldsValue({
-    //   settings: {
-    //     allow_guests: value,
-    //   },
-    // });
-    setOpenDropdown(false);
-  };
-
   return (
     <>
       <div className="flex flex-col gap-2">
