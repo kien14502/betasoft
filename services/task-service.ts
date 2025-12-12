@@ -103,37 +103,9 @@ export const useUpdateTask = (callback?: (task: Task) => void) => {
     mutationFn: updateTask,
     onSuccess: ({ data }) => {
       callback?.(data);
-      const key = [QUERY_KEY.GET_TASKS, data.project_id];
+      const key = [QUERY_KEY.GET_TASKS];
       queryClient.invalidateQueries({ queryKey: key });
     },
-    // // onMutate: async (variables) => {
-    // //   const key = [QUERY_KEY.GET_TASKS, variables.project_id];
-    // //   await queryClient.cancelQueries({ queryKey: key });
-    // //   const prev = queryClient.getQueryData(key);
-    // //   queryClient.setQueryData(key, (old: ResponseSuccess<Task[]> | undefined) => {
-    // //     if (!old) return old;
-
-    // //     const { data: oldTasks, ...rest } = old;
-    // //     const updatedTasks = oldTasks.map((item) =>
-    // //       item.id === variables.task_id ? { ...item, ...variables } : item,
-    // //     );
-
-    // //     return { ...rest, data: updatedTasks };
-    // //   });
-
-    // //   return { prev };
-    // // },
-    // // onError: (err, variables, context) => {
-    // //   if (context?.prev) {
-    // //     const key = [QUERY_KEY.GET_TASKS, variables.project_id];
-    // //     queryClient.setQueryData(key, context.prev);
-    // //   }
-    // // },
-    // onSettled: (data, error, variables) => {
-    //   queryClient.invalidateQueries({
-    //     queryKey: [QUERY_KEY.GET_TASKS, variables.project_id],
-    //   });
-    // },
   });
 };
 

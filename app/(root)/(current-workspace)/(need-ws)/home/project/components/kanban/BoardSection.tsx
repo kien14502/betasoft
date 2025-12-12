@@ -14,7 +14,6 @@ type BoardSectionProps = {
   id: string;
   section?: TaskSection;
   tasks: Task[];
-  isPending: boolean;
 };
 
 const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {

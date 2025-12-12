@@ -46,7 +46,6 @@ const Sidebar = () => {
         <div className="flex flex-col gap-8 flex-1">
           {mainRoutes.map((route) => {
             const isActive = pathname.includes(route.path.split('/')[1]);
-
             return (
               <ItemSidebar
                 key={route.path}

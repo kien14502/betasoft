@@ -1,18 +1,31 @@
-import { closestCorners, DndContext, DragOverlay } from '@dnd-kit/core';
+import {
+  closestCorners,
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragOverlay,
+  DragStartEvent,
+} from '@dnd-kit/core';
 import BoardSection from './BoardSection';
 import TaskItem from './TaskItem';
-import useDndKanban from '@/hooks/useDndKanban';
 import { useContext, useMemo, useRef } from 'react';
 import CreateSection from './CreateSection';
 import { usePathname } from 'next/navigation';
-import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { useGetTask, useGetTaskSections, useMoveTaskKanban } from '@/services/task-service';
+import useKanbanV2 from '@/hooks/useKanbanV2';
+import { findBoardSectionContainer } from '@/utils/board';
+import { arrayMove } from '@dnd-kit/sortable';
+import { ProjectContext } from '@/components/providers/ProjectProvider';
+import { Task } from '@/interface/task';
 
-const BoardSectionList: React.FC = () => {
-  const id = usePathname().split('/')[3];
-  const { data: init_tasks } = useGetTask(id);
+type Props = {
+  id: string;
+  tasks: Task[];
+};
+
+const BoardSectionList: React.FC<Props> = ({ id, tasks }) => {
   const { project } = useContext(ProjectContext);
-  const { mutate: onMoveTask, isPending } = useMoveTaskKanban();
+  const { mutate: onMoveTask } = useMoveTaskKanban();
   const { data: sections } = useGetTaskSections(id);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -30,15 +43,67 @@ const BoardSectionList: React.FC = () => {
     });
   };
 
-  const {
-    currentTask,
-    boardSections,
-    dropAnimation,
-    handleDragEnd,
-    handleDragOver,
-    handleDragStart,
-    sensors,
-  } = useDndKanban(init_tasks?.tasks || [], sections || [], async ({ active }) => {
+  const { boardSections, currentTask, dropAnimation, sensors, setActiveTaskId, setBoardSections } =
+    useKanbanV2(tasks, sections ?? []);
+
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    setActiveTaskId(active.id);
+  };
+  const handleDragOver = ({ active, over }: DragOverEvent) => {
+    if (!over) return;
+    setBoardSections((boardSection) => {
+      const activeContainer = findBoardSectionContainer(boardSection, active.id as string);
+      const overContainer = findBoardSectionContainer(boardSection, over.id as string);
+
+      if (!activeContainer || !overContainer || activeContainer === overContainer) {
+        return boardSection;
+      }
+
+      const activeItems = boardSection[activeContainer];
+      const overItems = boardSection[overContainer];
+      const activeIndex = activeItems.findIndex((item) => item.id === active.id);
+      const overIndex = overItems.findIndex((item) => item.id === over.id);
+      const insertIndex = overIndex === -1 ? overItems.length : overIndex;
+
+      return {
+        ...boardSection,
+        [activeContainer]: activeItems.filter((item) => item.id !== active.id),
+        [overContainer]: [
+          ...overItems.slice(0, insertIndex),
+          activeItems[activeIndex],
+          ...overItems.slice(insertIndex),
+        ],
+      };
+    });
+  };
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over) {
+      setActiveTaskId(null);
+      return;
+    }
+    setBoardSections((boardSection) => {
+      const activeContainer = findBoardSectionContainer(boardSection, active.id as string);
+      const overContainer = findBoardSectionContainer(boardSection, over.id as string);
+
+      if (!activeContainer || !overContainer) {
+        return boardSection;
+      }
+      if (activeContainer !== overContainer) {
+        return boardSection;
+      }
+      const activeIndex = boardSection[activeContainer].findIndex((task) => task.id === active.id);
+      const overIndex = boardSection[overContainer].findIndex((task) => task.id === over.id);
+
+      if (activeIndex !== overIndex) {
+        return {
+          ...boardSection,
+          [overContainer]: arrayMove(boardSection[overContainer], activeIndex, overIndex),
+        };
+      }
+
+      return boardSection;
+    });
+    setActiveTaskId(null);
     const { containerId, index } = active.data.current?.sortable || {};
     const payload = {
       project_id: id,
@@ -48,7 +113,7 @@ const BoardSectionList: React.FC = () => {
       target_position: index + 1,
     };
     onMoveTask(payload);
-  });
+  };
 
   return (
     <div
@@ -70,7 +135,6 @@ const BoardSectionList: React.FC = () => {
                 id={boardSectionKey}
                 tasks={boardSections[boardSectionKey]}
                 section={getSection(boardSectionKey)}
-                isPending={isPending}
               />
             </li>
           ))}

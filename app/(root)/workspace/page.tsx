@@ -64,7 +64,7 @@ const WorkspacePage = () => (
             </div>
           </>
         }
-        href="/channels"
+        href="/workspace/chat-with-friend"
       />
     </div>
     <LaunchApp />

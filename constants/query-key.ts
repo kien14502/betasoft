@@ -7,4 +7,5 @@ export enum QUERY_KEY {
   GET_MEM_PRJ = 'get-mem-prj',
   GET_WORKSPACES = 'get-workspaces',
   AUTH = 'auth',
+  USER = 'user',
 }

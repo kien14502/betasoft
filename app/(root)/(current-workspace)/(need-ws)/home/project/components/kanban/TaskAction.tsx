@@ -8,13 +8,8 @@ const TaskAction = () => {
 
   return (
     <Popover open={open} onOpenChange={toggle}>
-      <PopoverTrigger data-dnd-kit-disabled-draggable="true" asChild>
-        <Button
-          data-dnd-kit-disabled-draggable="true"
-          type="button"
-          variant={'ghost'}
-          size={'icon-sm'}
-        >
+      <PopoverTrigger asChild>
+        <Button type="button" variant={'ghost'} size={'icon-sm'}>
           <Image width={20} height={20} src={'/icons/dots.svg'} alt={''} />
         </Button>
       </PopoverTrigger>

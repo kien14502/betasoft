@@ -1,11 +1,12 @@
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Loader } from 'lucide-react';
 import { useContext } from 'react';
 import StatusBadge from '../StatusBadge';
 import { useMemo } from 'react';
 import { Task } from '@/interface/task';
 import { useUpdateTask } from '@/services/task-service';
+import { useToggle } from '@/hooks/useToggle';
 
 type Props = {
   task: Task;
@@ -14,15 +15,23 @@ type Props = {
 const StatusCell = ({ task }: Props) => {
   const { project } = useContext(ProjectContext);
   const cols = project?.columns || [];
-  const { mutate: updateTask } = useUpdateTask();
+  const { mutate: updateTask, isPending } = useUpdateTask();
+  const [openModal, { toggle }] = useToggle();
 
   const handleUpdateTask = (value: string) => {
-    updateTask({
-      project_id: task.project_id || '',
-      sprint_id: project?.sprint_active?.id || '',
-      list_id: value,
-      task_id: task.id,
-    });
+    updateTask(
+      {
+        project_id: task.project_id || '',
+        sprint_id: project?.sprint_active?.id || '',
+        list_id: value,
+        task_id: task.id,
+      },
+      {
+        onSuccess: () => {
+          toggle();
+        },
+      },
+    );
   };
 
   const status = useMemo(() => {
@@ -30,11 +39,11 @@ const StatusCell = ({ task }: Props) => {
   }, [project?.columns, task.list_id]);
 
   return (
-    <Popover>
+    <Popover open={openModal} onOpenChange={toggle}>
       <PopoverTrigger>
         <div className="flex items-center gap-1">
           <StatusBadge color={status?.color || ''} name={status?.name || ''} />
-          <ChevronDown />
+          {isPending ? <Loader size={20} className="animate-spin" /> : <ChevronDown size={20} />}
         </div>
       </PopoverTrigger>
       <PopoverContent className="p-0 rounded-none py-2">
