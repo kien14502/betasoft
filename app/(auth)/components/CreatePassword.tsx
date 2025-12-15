@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { createPasswordSchema, CreatePasswordSchema } from '@/constants/schemas/register-schem';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader, LockKeyhole, UserCircle } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import PasswordRules from './PasswordRules';
 import { showToast } from '@/utils/toast';
@@ -14,6 +14,7 @@ import { setAuth } from '@/lib/features/auth/authSlice';
 import { saveAuthStorage } from '@/utils/authStorage';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { useAuthRegister } from '@/services/auth-service';
+import Image from 'next/image';
 
 type Props = {
   email: string;
@@ -64,25 +65,28 @@ const CreatePassword = ({ email, code }: Props) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-11">
           <InputForm
-            prefix={<UserCircle size={24} color="#131315" />}
+            prefix={<Image width={24} height={24} src={'/icons/user-round.svg'} alt="" />}
             label="Fullname"
             control={form.control}
             name="fullname"
+            required={true}
           />
           <InputForm
-            prefix={<LockKeyhole size={24} color="#131315" />}
+            prefix={<Image width={24} height={24} src={'/icons/lock.svg'} alt="" />}
             type="password"
             label="Password"
             control={form.control}
             name="password"
+            required={true}
           />
           <PasswordRules password={form.watch('password')} />
           <InputForm
-            prefix={<LockKeyhole size={24} color="#131315" />}
+            prefix={<Image width={24} height={24} src={'/icons/lock.svg'} alt="" />}
             type="password"
             label="Confirm Password"
             control={form.control}
             name="confirmPassword"
+            required={true}
           />
           <Button
             disabled={isActive || isRegisterLoading}

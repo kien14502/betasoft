@@ -38,12 +38,13 @@ export const createPasswordSchema = z
   .object({
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters long')
+      .min(6, 'Password must be at least 8 characters long')
       // Use the password regex for complexity check
       .regex(
         specialCharRegex,
         'Password must include at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.',
-      ),
+      )
+      .max(10),
 
     confirmPassword: z.string().min(6, 'Confirm password must be at least 8 characters long'), // Match min length of password
 

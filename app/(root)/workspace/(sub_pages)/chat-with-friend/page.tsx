@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SearchUserForm from '../../components/SearchUserForm';
+import { CHAT_TYPE } from '@/constants/common';
 
 const Page = () => (
   <>
@@ -13,7 +14,10 @@ const Page = () => (
       </div>
       <SearchUserForm />
     </div>
-    <Link className="text-sm text-white! mt-4 font-semibold hover:underline text-center" href={''}>
+    <Link
+      href={`/channels/${CHAT_TYPE.GLOBAL}`}
+      className="text-sm text-white! mt-4 font-semibold hover:underline text-center"
+    >
       Skip <br /> Do not add friends
     </Link>
   </>

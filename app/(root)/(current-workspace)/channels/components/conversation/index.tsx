@@ -8,11 +8,13 @@ import { useInfiniteGetRooms } from '@/services/conversation-service';
 import HeaderConversation from './HeaderConversation';
 import { useConversationLoadMore } from '@/hooks/useConversationLoadMore';
 import { Loader2 } from 'lucide-react';
+import { CHAT_TYPE } from '@/constants/common';
 
-type Props = { id: string };
+type Props = { id: string; type: string };
 
-const ConversationContainer = ({ id }: Props) => {
+const ConversationContainer = ({ id, type }: Props) => {
   const { messages, setMessagesBefore } = useConversation();
+  const isGlobal = type === CHAT_TYPE.GLOBAL;
 
   const {
     data: conversation,

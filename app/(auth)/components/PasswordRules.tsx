@@ -32,10 +32,11 @@ const PasswordRules = ({ password }: Props) => {
                 'rounded-full w-5 h-5',
                 isChecked
                   ? 'data-[state=checked]:bg-blue-3'
-                  : 'data-[state=checked]:bg-gray-2 data-[state=checked]:border-none',
+                  : 'data-[state=checked]:bg-gray-2! data-[state=checked]:border-none!',
               )}
-              checked={true}
+              checked={isChecked}
               aria-label={rule.description}
+              disabled={true}
             />
             <label className={cn(isChecked ? 'text-green-600' : 'text-gray-500', 'text-xs')}>
               {rule.description}

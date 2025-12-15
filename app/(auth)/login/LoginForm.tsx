@@ -17,17 +17,14 @@ import GoogleButton from '../components/GoogleButton';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { setAuth } from '@/lib/features/auth/authSlice';
 import { User } from '@/interface/auth';
+import Image from 'next/image';
 
 export default function Login() {
   const { mutate, isPending } = usePostLogin();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const form = useForm<LoginSchemaType>({
-    defaultValues: {
-      email: '',
-      password: '',
-      agreement: false,
-    },
+    defaultValues: { email: '', password: '', agreement: false },
     resolver: zodResolver(loginSchema),
   });
 
@@ -49,8 +46,21 @@ export default function Login() {
   return (
     <Form {...form}>
       <form className="flex flex-col gap-8" onSubmit={form.handleSubmit(onSubmit)}>
-        <InputForm label="Email" control={form.control} name={'email'} />
-        <InputForm type="password" label="Password" control={form.control} name={'password'} />
+        <InputForm
+          prefix={<Image width={24} height={24} src={'/icons/email.svg'} alt="" />}
+          label="Email"
+          control={form.control}
+          name={'email'}
+          required={true}
+        />
+        <InputForm
+          prefix={<Image width={24} height={24} src={'/icons/lock.svg'} alt="" />}
+          type="password"
+          label="Password"
+          control={form.control}
+          name={'password'}
+          required={true}
+        />
         <div className="flex items-center justify-between">
           <RememberAccount />
           <Link className="text-sm text-blue-4!" href={''}>
