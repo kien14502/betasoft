@@ -1,4 +1,5 @@
 import { CalendarIcon, ChannelIcon, DocumentIcon, HomeIcon, TaskIcon } from '@/components/icons';
+import { CHAT_TYPE } from './common';
 
 export const GLOBAL = 'global';
 
@@ -27,14 +28,18 @@ export const projectRoutes = [
 export const channelRoutes = [
   {
     name: 'DMs',
-    path: 'dms',
+    path: CHAT_TYPE.DMS,
   },
   {
     name: 'Group',
-    path: 'group',
+    path: CHAT_TYPE.GROUP,
   },
   {
     name: 'Project',
-    path: 'project',
+    path: CHAT_TYPE.PROJECT,
+  },
+  {
+    name: 'Global',
+    path: CHAT_TYPE.GLOBAL,
   },
 ];

@@ -5,11 +5,13 @@ import { InputWithPrefix } from '../InputPrefix';
 import { FormProps } from '@/interface/common';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { HTMLInputTypeAttribute } from 'react';
+import Image from 'next/image';
 
 type Props<T extends FieldValues> = FormProps<T> & {
   prefix?: ReactNode;
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
+  required?: boolean;
 };
 
 const InputForm = <T extends FieldValues>({
@@ -20,14 +22,20 @@ const InputForm = <T extends FieldValues>({
   prefix,
   type,
   placeholder,
+  required = false,
 }: Props<T>) => (
   <FormField
     control={control}
     name={name}
     render={({ field, fieldState }) => {
       return (
-        <FormItem className={cn('flex flex-col gap-2 space-y-0', className)}>
-          {label && <FormLabel className="text-sm font-semibold">{label}</FormLabel>}
+        <FormItem className={cn('flex flex-col space-y-0 gap-0', className)}>
+          {label && (
+            <FormLabel className="text-sm font-semibold mb-2 gap-0.5">
+              {label}
+              {required && <Image width={6} height={6} src={'/icons/asterisk.svg'} alt="" />}
+            </FormLabel>
+          )}
           <FormControl>
             <InputWithPrefix
               placeholder={placeholder}
@@ -42,7 +50,7 @@ const InputForm = <T extends FieldValues>({
               type={type}
             />
           </FormControl>
-          <FormMessage />
+          <FormMessage className="mt-1" />
         </FormItem>
       );
     }}

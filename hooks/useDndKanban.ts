@@ -1,4 +1,6 @@
+import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { Task, TaskSection } from '@/interface/task';
+import { useMoveTaskKanban } from '@/services/task-service';
 import {
   BoardSections,
   findBoardSectionContainer,
@@ -20,11 +22,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 
-const useDndKanban = (
-  init_tasks: Task[],
-  sections: TaskSection[],
-  onChange: (payload: DragEndEvent) => void,
-) => {
+const useDndKanban = (init_tasks: Task[], sections: TaskSection[]) => {
   const [boardSections, setBoardSections] = useState<BoardSections>({});
   const [activeTaskId, setActiveTaskId] = useState<UniqueIdentifier | null>(null);
 
@@ -75,12 +73,13 @@ const useDndKanban = (
 
   // FIX 3: Memoize handlers to prevent recreation
   const handleDragStart = useCallback(({ active }: DragStartEvent) => {
+    console.log('start');
     setActiveTaskId(active.id);
   }, []);
 
   const handleDragOver = useCallback(({ active, over }: DragOverEvent) => {
+    console.log('over');
     if (!over) return;
-
     setBoardSections((boardSection) => {
       // Find the containers
       const activeContainer = findBoardSectionContainer(boardSection, active.id as string);
@@ -115,50 +114,43 @@ const useDndKanban = (
     });
   }, []);
 
-  const handleDragEnd = useCallback(
-    (dragEndEvent: DragEndEvent) => {
-      const { active, over } = dragEndEvent;
+  const handleDragEnd = useCallback((dragEndEvent: DragEndEvent) => {
+    const { active, over } = dragEndEvent;
 
-      if (!over) {
-        setActiveTaskId(null);
-        return;
+    if (!over) {
+      setActiveTaskId(null);
+      return;
+    }
+
+    setBoardSections((boardSection) => {
+      const activeContainer = findBoardSectionContainer(boardSection, active.id as string);
+      const overContainer = findBoardSectionContainer(boardSection, over.id as string);
+
+      if (!activeContainer || !overContainer) {
+        return boardSection;
       }
 
-      setBoardSections((boardSection) => {
-        const activeContainer = findBoardSectionContainer(boardSection, active.id as string);
-        const overContainer = findBoardSectionContainer(boardSection, over.id as string);
-
-        if (!activeContainer || !overContainer) {
-          return boardSection;
-        }
-
-        // If dropped in different container, no need to reorder (already handled in dragOver)
-        if (activeContainer !== overContainer) {
-          return boardSection;
-        }
-
-        // If dropped in same container, reorder
-        const activeIndex = boardSection[activeContainer].findIndex(
-          (task) => task.id === active.id,
-        );
-        const overIndex = boardSection[overContainer].findIndex((task) => task.id === over.id);
-
-        if (activeIndex !== overIndex) {
-          return {
-            ...boardSection,
-            [overContainer]: arrayMove(boardSection[overContainer], activeIndex, overIndex),
-          };
-        }
-
+      // If dropped in different container, no need to reorder (already handled in dragOver)
+      if (activeContainer !== overContainer) {
         return boardSection;
-      });
+      }
 
-      // Call onChange after state update
-      onChange(dragEndEvent);
-      setActiveTaskId(null);
-    },
-    [onChange],
-  );
+      // If dropped in same container, reorder
+      const activeIndex = boardSection[activeContainer].findIndex((task) => task.id === active.id);
+      const overIndex = boardSection[overContainer].findIndex((task) => task.id === over.id);
+
+      if (activeIndex !== overIndex) {
+        return {
+          ...boardSection,
+          [overContainer]: arrayMove(boardSection[overContainer], activeIndex, overIndex),
+        };
+      }
+
+      return boardSection;
+    });
+    console.log('end');
+    setActiveTaskId(null);
+  }, []);
 
   const dropAnimation: DropAnimation = useMemo(
     () => ({

@@ -3,12 +3,15 @@ import { PAGE_SIZE } from '@/constants/common';
 import { API_ENDPOINT } from '@/constants/endpoint';
 import { QUERY_KEY } from '@/constants/query-key';
 import { Pagination, ResponseSuccess } from '@/interface/common';
-import { Room, RoomData } from '@/interface/conversation';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { CreateRoom, FilterRoom, Room, RoomData } from '@/interface/conversation';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
-export const getRooms = async (payload: Pagination): Promise<ResponseSuccess<Room[]>> => {
+export const getRooms = async (
+  payload: Pagination,
+  filter: FilterRoom,
+): Promise<ResponseSuccess<Room[]>> => {
   const res = await axios.get(API_ENDPOINT.ROOM.GET_ROOMS, {
-    params: payload,
+    params: { ...payload, ...filter },
   });
   return res.data;
 };
@@ -41,6 +44,11 @@ export const getInfiniteRoom = async ({
   return { ...res.data.data, page: pageParam };
 };
 
+export const createRoom = async (payload: CreateRoom): Promise<ResponseSuccess<Room>> => {
+  const res = await axios.post(API_ENDPOINT.ROOM.GET_ROOMS, payload);
+  return res.data;
+};
+
 // hooks
 
 export const useGetRoom = (id: string, pagin: Pagination) =>
@@ -50,10 +58,10 @@ export const useGetRoom = (id: string, pagin: Pagination) =>
     select: (res) => res.data,
   });
 
-export const useGetRooms = (payload: Pagination) =>
+export const useGetRooms = (payload: Pagination, filter: FilterRoom) =>
   useQuery({
     queryKey: [QUERY_KEY.GET_ROOMS, payload],
-    queryFn: () => getRooms(payload),
+    queryFn: () => getRooms(payload, filter),
     select: (data) => data.data || [],
   });
 
@@ -75,3 +83,9 @@ export const useInfiniteGetRooms = (room_id: string | undefined) =>
       return { room, message: message || [] };
     },
   });
+
+export const useCreateRoom = () => {
+  return useMutation({
+    mutationFn: createRoom,
+  });
+};

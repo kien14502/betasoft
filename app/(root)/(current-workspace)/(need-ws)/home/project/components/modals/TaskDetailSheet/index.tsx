@@ -1,28 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Ellipsis, Share2, X } from 'lucide-react';
-import { useCallback, useContext } from 'react';
 import StatusCell from '../../cells/StatusCell';
 import ContentLeft from './components/ContentLeft';
 import ContentRight from './components/ContentRight';
-import { ModalTaskTableContext } from '../../../providers/ModalTaskTableProvider';
+import { Task } from '@/interface/task';
 
-const TaskDetailSheet = () => {
-  const {
-    isShowModal,
-    setShowModal,
-    content: task,
-    setContent,
-  } = useContext(ModalTaskTableContext);
+type Props = {
+  isShowModal: boolean;
+  toggle: () => void;
+  task: Task | null;
+};
 
-  const toggle = useCallback(() => {
-    setShowModal(!isShowModal);
-    setContent(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShowModal]);
-
-  // if (!task) return null;
-
+const TaskDetailSheet = ({ isShowModal, task, toggle }: Props) => {
   return (
     <Sheet open={isShowModal} onOpenChange={toggle}>
       <SheetContent className="rounded-l-xl p-0 sm:min-w-[1094px] gap-0" isShowCloseIcon={false}>

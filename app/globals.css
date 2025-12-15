@@ -43,6 +43,7 @@
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+  --color-neon: var(--color-global);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -151,6 +152,9 @@
   --header-top: 16px;
   --witdh-sidebar: 112px;
   --witdh-sidebar-collapse: 56px;
+  --color-global:
+    linear-gradient(0deg, #131315, #131315),
+    linear-gradient(263.4deg, #FF9100_2.15%, #FF0055_34.93%, #E300E7_62.04%, #5900FF_95.72%);
 }
 
 body {

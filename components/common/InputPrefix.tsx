@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'> {
   prefix?: React.ReactNode;
@@ -39,7 +39,11 @@ const InputWithPrefix = React.forwardRef<HTMLInputElement, InputProps>(
             className="text-muted-foreground hover:text-foreground absolute right-3 transition-colors"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            {!showPassword ? (
+              <Image width={18} height={18} src={'/icons/eye-off.svg'} alt="" />
+            ) : (
+              <Image width={18} height={18} src={'/icons/eye.svg'} alt="" />
+            )}
           </button>
         )}
       </div>

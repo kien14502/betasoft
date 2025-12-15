@@ -9,10 +9,11 @@ import { createAccountSchema, CreateAccountSchema } from '@/constants/schemas/re
 import { cn } from '@/lib/utils';
 import { showToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader, Mail } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import Image from 'next/image';
 
 const CreateAccount = () => {
   const router = useRouter();
@@ -51,7 +52,8 @@ const CreateAccount = () => {
           control={form.control}
           name="email"
           label="Email"
-          prefix={<Mail />}
+          required
+          prefix={<Image width={24} height={24} src={'/icons/email.svg'} alt="" />}
         />
         <FormField
           control={form.control}

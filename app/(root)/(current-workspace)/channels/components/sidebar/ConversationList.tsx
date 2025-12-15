@@ -4,13 +4,21 @@ import Image from 'next/image';
 import ConversationListLoading from './ConversationListLoading';
 import Link from 'next/link';
 import { decodeBase64 } from '@/utils/common';
+import { CHAT_TYPE, ROOMS_TYPE } from '@/constants/common';
 
 type Props = {
-  mode: string;
+  type: CHAT_TYPE;
 };
 
-const ConversationList = ({}: Props) => {
-  const { data: groups, isPending } = useGetRooms({ page: 1, page_size: 10 });
+const ConversationList = ({ type }: Props) => {
+  const isGlobal = type === CHAT_TYPE.GLOBAL;
+  const { data: groups, isPending } = useGetRooms(
+    { page: 1, page_size: 10 },
+    {
+      is_cross_organization: isGlobal,
+      type_of_room: ROOMS_TYPE[type],
+    },
+  );
 
   if (isPending) return <ConversationListLoading />;
 
@@ -21,7 +29,7 @@ const ConversationList = ({}: Props) => {
 
         return (
           <Link
-            href={'/channels/' + group.id}
+            href={`/channels/${type}/` + group.id}
             key={group.id}
             className="flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3"
           >

@@ -1,3 +1,5 @@
+import { ROOMS_TYPE } from '@/constants/common';
+
 /**
  * Interface cho cấu trúc tin nhắn gần nhất (latest_messages)
  */
@@ -52,4 +54,16 @@ export interface Room {
 export interface RoomData {
   room: Room;
   message: ChatMessage[]; // Danh sách các tin nhắn đã gửi/nhận
+}
+
+export interface CreateRoom {
+  type_of_room: number;
+  name: string;
+  members: string[];
+  organization_id?: string;
+}
+
+export interface FilterRoom {
+  is_cross_organization: boolean;
+  type_of_room: number;
 }
