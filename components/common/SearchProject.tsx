@@ -41,7 +41,9 @@ const SearchProject = memo(({ onChange }: Props) => {
 
   return (
     <div className="flex flex-col gap-1">
-      <Label className="font-semibold leading-5">Project</Label>
+      <Label className="font-semibold leading-5 gap-1">
+        Project <Image width={6} height={6} src={'/icons/asterisk.svg'} alt="" />
+      </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
@@ -55,7 +57,7 @@ const SearchProject = memo(({ onChange }: Props) => {
             height={24}
             alt=""
           />
-          <div className="flex-1 flex items-start">
+          <div className="flex-1 flex items-start text-sm">
             {prjSelected ? prjSelected.project.name : 'Select Project'}
           </div>
           <ChevronUp

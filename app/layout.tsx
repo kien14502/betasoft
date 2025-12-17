@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
 import ProviderConfig from './provider';
+import { Toaster } from 'sonner';
 export const metadata: Metadata = {
   title: 'Beta Management',
   description: 'Beta Management',
@@ -18,7 +17,7 @@ export default function RootLayout({
       <body>
         <ProviderConfig>
           {children}
-          <ToastContainer />
+          <Toaster richColors position="top-right" />
         </ProviderConfig>
       </body>
     </html>

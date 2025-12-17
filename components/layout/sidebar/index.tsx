@@ -1,38 +1,23 @@
 'use client';
 
 import { SettingIcon } from '@/components/icons';
-import { USER_AVATAR_URL } from '@/constants/common';
 import { mainRoutes } from '@/constants/routes';
-import { useAppSelector, getSelector, useAppDispatch } from '@/hooks/useRedux';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import InviteMemberModal from '../InviteMemberModal';
 import CreateTaskModal from '@/app/(root)/components/CreateTaskModal';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, LogOut } from 'lucide-react';
-import { logout } from '@/lib/features/auth/authSlice';
-import { removeAuthStorage } from '@/utils/authStorage';
-import { clearClientCookies } from '@/utils/cookie.client';
+import { ChevronLeft } from 'lucide-react';
 import { useToggle } from '@/hooks/useToggle';
 import ItemSidebar from './ItemSidebar';
+import UserPanel from './UserPanel';
 
 const Sidebar = () => {
-  const router = useRouter();
-  const { user: profile } = useAppSelector(getSelector('auth'));
   const [isCollapse, { toggle }] = useToggle();
   const pathname = usePathname().split('/').filter(Boolean);
   const [createTaskModal, setCreateTaskModal] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
-
-  const onLogout = () => {
-    dispatch(logout());
-    removeAuthStorage('ACCESS_TOKEN');
-    clearClientCookies();
-    router.push('/login');
-  };
 
   return (
     <>
@@ -69,18 +54,7 @@ const Sidebar = () => {
         <div className="flex flex-col gap-4 items-center justify-center">
           <InviteMemberModal isCollapse={isCollapse} />
           <div className="gap-2 flex items-center justify-between">
-            <Image
-              width={40}
-              height={40}
-              className="rounded-full object-center"
-              src={profile?.profile_image || USER_AVATAR_URL}
-              alt=""
-            />
-            {!isCollapse && (
-              <Button onClick={onLogout} variant={'ghost'} size={'icon-xs'}>
-                <LogOut />
-              </Button>
-            )}
+            <UserPanel />
           </div>
           <div className="flex items-center gap-2 text-xs">
             <SettingIcon fill="#D1D1D6" />

@@ -9,15 +9,16 @@ import { Button } from '../ui/button';
 import { launchWorkspaceUser } from '@/lib/features/auth/actions';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useGetListWorkspaceInfinite } from '@/services/workspace-service';
+import { memo, useMemo } from 'react';
 
 const WorkspaceSelector = () => {
   const router = useRouter();
-  const { items } = useAppSelector(getSelector('listWorkspace'));
-  const { info } = useAppSelector(getSelector('workspace'));
-  const { user } = useAppSelector(getSelector('auth'));
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(getSelector('auth'));
+  const { data: items } = useGetListWorkspaceInfinite();
 
-  if (items.length === 0) return null;
+  const info = useMemo(() => user?.meta_data.organization, [user?.meta_data]);
 
   const onLaunch = (id: string) => {
     if (id === user?.meta_data.organization?.id) return;
@@ -27,6 +28,8 @@ const WorkspaceSelector = () => {
         router.replace('/home/overview');
       });
   };
+
+  if (items?.length === 0) return null;
 
   return (
     <Popover>
@@ -44,7 +47,7 @@ const WorkspaceSelector = () => {
         <ChevronDown className="text-gray-5 ml-auto shrink-0" size={16} />
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0 max-h-[300px] overflow-x-auto rounded-none py-2">
-        {items.map((ws) => (
+        {items?.map((ws) => (
           <Button
             className="flex items-center w-full justify-start py-2 relative px-3 group cursor-pointer gap-2 text-sm"
             key={ws?.organization.id || ''}
@@ -83,4 +86,4 @@ const WorkspaceSelector = () => {
   );
 };
 
-export default WorkspaceSelector;
+export default memo(WorkspaceSelector);

@@ -4,7 +4,7 @@ import { QUERY_KEY } from '@/constants/query-key';
 import { CreateProjectSchemaType } from '@/constants/schemas/workspace-schema';
 import { ResponseSuccess } from '@/interface/common';
 import { Project, ProjectData } from '@/interface/task';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const getListTasks = async (
   org_id: string,
@@ -40,8 +40,15 @@ export const useGetListTasks = (org_id: string) =>
     select: (res) => res.data.projects,
   });
 
-export const useCreateProject = () =>
-  useMutation({
+export const useCreateProject = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: [QUERY_KEY.GET_PRJS],
     mutationFn: createProject,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.GET_TASKS],
+      });
+    },
   });
+};

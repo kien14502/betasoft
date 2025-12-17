@@ -18,10 +18,15 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const { boardRef, isGrabbing } = useGrabbing();
   const [openModal, { toggle }] = useToggle();
 
+  const handleOnclick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    toggle();
+  };
+
   return (
     <>
       <div
-        onClick={toggle}
+        onClick={handleOnclick}
         style={{
           cursor: isGrabbing ? 'grabbing' : 'grab',
           boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',

@@ -1,10 +1,11 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useContext, useState } from 'react';
 import TaskHeader from '../../../components/TaskHeader';
 import dynamic from 'next/dynamic';
 import ModalTaskTableProvider from '../../../providers/ModalTaskTableProvider';
 import { useGetTask } from '@/services/task-service';
+import { ProjectContext } from '@/components/providers/ProjectProvider';
 
 const ListTask = dynamic(() => import('../../../components/ListTask'), {
   loading: () => <div>Loading...</div>,
@@ -21,9 +22,9 @@ type Props = {
 const TasksPage = ({ params }: Props) => {
   const { id } = use(params);
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('list');
-  const { data } = useGetTask(id);
+  const { project } = useContext(ProjectContext);
 
-  // console.log('data', data);
+  const { data } = useGetTask(id, project?.sprint_active?.id);
 
   return (
     <div className="w-full min-h-0 grid grid-rows-[auto_1fr] flex-1">

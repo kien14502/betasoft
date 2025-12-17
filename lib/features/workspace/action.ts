@@ -7,11 +7,10 @@ type ID = {
 
 export const getMembers = createAsyncThunk(
   'ws/members',
-
   async ({ id }: ID, { rejectWithValue }) => {
     try {
       const res = await getMembersWorkspace(id);
-      return res.data;
+      return res.members;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -20,9 +19,9 @@ export const getMembers = createAsyncThunk(
 
 export const getInforWorkspace = createAsyncThunk(
   'ws/info',
-  async ({ id }: ID, { rejectWithValue }) => {
+  async ({ id }: ID, { rejectWithValue, signal }) => {
     try {
-      const res = await getWorkspace(id);
+      const res = await getWorkspace(id, signal);
       return res.data;
     } catch (error) {
       return rejectWithValue(error);

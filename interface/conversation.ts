@@ -53,7 +53,8 @@ export interface Room {
 
 export interface RoomData {
   room: Room;
-  message: ChatMessage[]; // Danh sách các tin nhắn đã gửi/nhận
+  message: ChatMessage[];
+  total: number; // Danh sách các tin nhắn đã gửi/nhận
 }
 
 export interface CreateRoom {

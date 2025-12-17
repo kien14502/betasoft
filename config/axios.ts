@@ -44,7 +44,9 @@ axios.interceptors.response.use(
     return res;
   },
   (err) => {
-    console.log('err', err);
+    if (axiosInstance.isCancel(err) || err.code === 'ERR_CANCELED') {
+      return Promise.reject({ canceled: true });
+    }
     if (isClient) {
       showToast(err?.response?.data.message, 'error');
     }
@@ -54,7 +56,8 @@ axios.interceptors.response.use(
     //   window.location.replace('./login');
     // }
     // clearClientCookies()
-    return err;
+
+    return Promise.reject(err);
   },
 );
 

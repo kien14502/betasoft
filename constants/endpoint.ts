@@ -29,5 +29,10 @@ export const API_ENDPOINT = {
     SECTION: {
       '': '/auth/task-lists',
     },
+    COMMENT: {
+      GET: (prj_id: string) => `/auth/tasks/${prj_id}/comments`,
+      CREATE: '/auth/tasks/comments',
+      DELETE: '/auth/tasks/comments',
+    },
   },
 };

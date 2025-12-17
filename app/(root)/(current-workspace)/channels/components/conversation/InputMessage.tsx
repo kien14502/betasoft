@@ -4,9 +4,10 @@ import { UseFormReturn } from 'react-hook-form';
 
 type Props = {
   form: UseFormReturn<Message>;
+  callback: () => void;
 };
 
-const InputMessage = ({ form }: Props) => {
+const InputMessage = ({ form, callback }: Props) => {
   const { ref, ...rest } = form.register('content');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -22,9 +23,15 @@ const InputMessage = ({ form }: Props) => {
   useEffect(() => {
     adjustTextareaHeight();
   }, [watchContent]);
-
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      callback();
+    }
+  };
   return (
     <textarea
+      onKeyDown={handleKeyDown}
       ref={(e) => {
         ref(e);
         textareaRef.current = e;

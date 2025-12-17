@@ -1,16 +1,11 @@
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 export const showToast = (
   message: string,
   type: 'success' | 'error' | 'info' | 'warning' = 'success',
-  options: object = {},
 ) => {
-  toast[type](message, {
-    position: 'top-right',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    ...options,
+  const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+  toast[type](capitalizedType, {
+    description: message,
   });
 };

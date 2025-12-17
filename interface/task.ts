@@ -56,6 +56,7 @@ export interface Task {
   assignee: Member;
   reporter: Member;
   created_by: Member;
+  sprint_id: string;
 }
 
 export interface TaskMove {
@@ -77,4 +78,12 @@ export interface TaskSection {
   updated_by: string;
   created_at: string; // hoặc Date nếu bạn muốn convert
   updated_at: string; // hoặc Date
+}
+
+export interface Comment {
+  id: string;
+  comment_left: number;
+  comment_right: number;
+  comment_content: string;
+  mentions: [];
 }

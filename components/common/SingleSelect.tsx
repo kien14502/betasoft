@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { ChevronUp } from 'lucide-react';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 type Option = {
   label: string;
@@ -23,6 +24,7 @@ type Props<T extends Option> = {
     content?: string;
   };
   label?: string;
+  require?: boolean;
 };
 
 const SingleSelect = <T extends Option>({
@@ -34,6 +36,7 @@ const SingleSelect = <T extends Option>({
   renderItem,
   classNames,
   label,
+  require,
 }: Props<T>) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [itemSelected, setItemSelected] = useState<T | undefined>(
@@ -51,7 +54,12 @@ const SingleSelect = <T extends Option>({
     <Popover open={openModal} onOpenChange={setOpenModal}>
       <PopoverTrigger asChild className="">
         <div className="w-full flex flex-col gap-1">
-          {label && <span className="text-sm font-semibold">{label}</span>}
+          {label && (
+            <span className="text-sm flex items-top gap-1 font-semibold">
+              {label}
+              {require && <Image width={6} height={6} src={'/icons/asterisk.svg'} alt="" />}
+            </span>
+          )}
           <Button
             type="button"
             variant={'outline'}
@@ -82,7 +90,7 @@ const SingleSelect = <T extends Option>({
       <PopoverContent
         className={cn(
           'p-0 rounded-none border-gray-2 shadow-popup',
-          'sm:min-w-[var(--radix-popover-trigger-width)]',
+          'sm:min-w-(--radix-popover-trigger-width)',
           classNames?.content,
         )}
       >
