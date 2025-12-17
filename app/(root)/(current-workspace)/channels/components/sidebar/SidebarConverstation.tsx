@@ -12,9 +12,10 @@ import EmptyWsLaunched from '../EmptyWsLaunched';
 
 type Props = {
   type: CHAT_TYPE;
+  id: string;
 };
 
-const SidebarConverstation = ({ type }: Props) => {
+const SidebarConversation = ({ type, id }: Props) => {
   const [activeTab, setActiveTab] = useState<CHAT_TYPE>(type);
   const { user } = useAppSelector(getSelector('auth'));
   const wsLaunched = user?.meta_data.organization;
@@ -28,39 +29,42 @@ const SidebarConverstation = ({ type }: Props) => {
     <div className="border flex flex-col gap-4 bg-white shadow-secondary rounded-4xl py-4 px-2 max-w-(--header-channel-width) w-full">
       <div className="flex items-center gap-2">
         <div className="flex-1 h-11 shadow-secondary-inset bg-gray-1 p-1 border rounded-5xl grid grid-cols-4">
-          {channelRoutes.map((tab, i) => (
-            <Link
-              href={`/channels/${tab.path}`}
-              key={tab.path}
-              className="relative text-sm flex items-center justify-center text-center font-medium transition-colors focus-visible:outline-none"
-            >
-              {activeTab === tab.path && (
-                <motion.div
-                  layoutId="activeTab"
-                  className={cn(
-                    'absolute inset-0 rounded-5xl',
-                    i === channelRoutes.length - 1
-                      ? 'bg-[linear-gradient(263.4deg,#FF9100_2.15%,#FF0055_34.93%,#E300E7_62.04%,#5900FF_95.72%)]'
-                      : 'bg-foreground',
-                  )}
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <span
-                className={`relative z-10 ${
-                  activeTab === tab.path
-                    ? 'text-background font-semibold'
-                    : 'text-muted-foreground font-medium'
-                }`}
+          {channelRoutes.map((tab, i) => {
+            const path = id ? `/channels/${tab.path}/${id}` : `/channels/${tab.path}`;
+            return (
+              <Link
+                href={path}
+                key={tab.path}
+                className="relative text-sm flex items-center justify-center text-center font-medium transition-colors focus-visible:outline-none"
               >
-                {tab.name}
-              </span>
-            </Link>
-          ))}
+                {activeTab === tab.path && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className={cn(
+                      'absolute inset-0 rounded-5xl',
+                      i === channelRoutes.length - 1
+                        ? 'bg-[linear-gradient(263.4deg,#FF9100_2.15%,#FF0055_34.93%,#E300E7_62.04%,#5900FF_95.72%)]'
+                        : 'bg-foreground',
+                    )}
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                <span
+                  className={`relative z-10 ${
+                    activeTab === tab.path
+                      ? 'text-background font-semibold'
+                      : 'text-muted-foreground font-medium'
+                  }`}
+                >
+                  {tab.name}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </div>
       {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} />}
     </div>
   );
 };
-export default SidebarConverstation;
+export default SidebarConversation;

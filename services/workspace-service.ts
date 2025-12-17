@@ -73,18 +73,17 @@ export const addMember = async (payload: InviteMemberSchemaType) => {
   return res.data;
 };
 
-export const getMembersWorkspace = async (
-  id: string,
-  signal?: GenericAbortSignal,
-): Promise<ResponseSuccess<User[]>> => {
-  const res = await axios.get(API_ENDPOINT.WORKSPACE[''] + `/${id}/members`, {
-    params: {
-      page: 1,
-      page_size: 10,
+export const getMembersWorkspace = async (id: string, pageParam = 1) => {
+  const res = await axios.get<ResponseSuccess<{ members: User[]; total: number }>>(
+    API_ENDPOINT.WORKSPACE[''] + `/${id}/members`,
+    {
+      params: {
+        page: pageParam,
+        page_size: PAGE_SIZE,
+      },
     },
-    signal,
-  });
-  return res.data;
+  );
+  return { ...res.data.data, page: pageParam };
 };
 
 // export const getListProjects = async (
@@ -166,6 +165,24 @@ export const useGetListWorkspaceInfinite = () => {
     select: (data) => {
       const workspaces = data?.pages.flatMap((page) => page.organizations) ?? [];
       return workspaces.filter((item) => Boolean(item));
+    },
+  });
+};
+
+export const useGetMemberWorkspace = (ws_id: string) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEY.GET_MEM_PRJ],
+    queryFn: () => getMembersWorkspace(ws_id),
+    enabled: !!ws_id,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const loaded = lastPage.page * PAGE_SIZE;
+      const total = lastPage.total;
+      if (loaded >= total) return undefined;
+      return lastPage.page + 1;
+    },
+    select: ({ pages }) => {
+      return pages.flatMap((page) => page.members);
     },
   });
 };

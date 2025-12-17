@@ -1,12 +1,13 @@
 'use client';
-import { ResponseProjectWithColLabelAndSprint } from '@/app/api/generated.schemas';
-import { useGetAuthProjectsProjectId } from '@/app/api/project/project';
+
+import { ProjectDetails } from '@/interface/project';
+import { useGetProjectId } from '@/services/project';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 import { createContext } from 'react';
 
 type ProjectContext = {
-  project: ResponseProjectWithColLabelAndSprint | undefined;
+  project: ProjectDetails | undefined;
   isPending: boolean;
 };
 
@@ -22,7 +23,7 @@ type Props = {
 
 export const ProjectProvider = ({ children, id }: Props) => {
   const router = useRouter();
-  const { data: projectData, isPending, isError } = useGetAuthProjectsProjectId(id);
+  const { data: project, isPending, isError } = useGetProjectId(id);
 
   useEffect(() => {
     if (!isError) return;
@@ -33,16 +34,7 @@ export const ProjectProvider = ({ children, id }: Props) => {
     return null;
   }
 
-  const project = projectData?.data;
-
   return (
-    <ProjectContext.Provider
-      value={{
-        project,
-        isPending,
-      }}
-    >
-      {children}
-    </ProjectContext.Provider>
+    <ProjectContext.Provider value={{ project, isPending }}>{children}</ProjectContext.Provider>
   );
 };

@@ -1,14 +1,10 @@
-import {
-  RequestUpdateTaskRequestPriority,
-  ResponseTaskResponse,
-} from '@/app/api/generated.schemas';
-import { usePatchAuthTasks } from '@/app/api/task/task';
+import { RequestUpdateTaskRequestPriority } from '@/app/api/generated.schemas';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
-import { TasksContext } from '@/components/providers/TasksProvider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getUrgencyOptions, urgencyOptions } from '@/constants/common';
 import { Task } from '@/interface/task';
 import { cn } from '@/lib/utils';
+import { useUpdateTask } from '@/services/task-service';
 import { ChevronDown } from 'lucide-react';
 import { useContext } from 'react';
 
@@ -19,28 +15,18 @@ type Props = {
 
 const PriorityCell = ({ task, variant = 'default' }: Props) => {
   const { project } = useContext(ProjectContext);
-  const { dispatch } = useContext(TasksContext);
 
-  const { mutate: udpateTask } = usePatchAuthTasks();
+  const { mutate: updateTask } = useUpdateTask();
 
   const urgency = getUrgencyOptions(task.priority || '');
 
-  const handleUpadteTask = (value: string) => {
-    udpateTask(
-      {
-        data: {
-          project_id: task.project_id || '',
-          sprint_id: project?.sprint_active?.id || '',
-          task_id: task.id || '',
-          priority: value as RequestUpdateTaskRequestPriority,
-        },
-      },
-      {
-        onSuccess: (data) => {
-          dispatch({ type: 'UPDATE_TASK', payload: data.data as ResponseTaskResponse });
-        },
-      },
-    );
+  const handleUpdateTask = (value: string) => {
+    updateTask({
+      project_id: task.project_id || '',
+      sprint_id: project?.sprint_active?.id || '',
+      task_id: task.id || '',
+      priority: value as RequestUpdateTaskRequestPriority,
+    });
   };
 
   return (
@@ -69,7 +55,7 @@ const PriorityCell = ({ task, variant = 'default' }: Props) => {
       <PopoverContent className="p-0 rounded-none py-2">
         {urgencyOptions.map((item) => (
           <div
-            onClick={() => handleUpadteTask(item.value)}
+            onClick={() => handleUpdateTask(item.value)}
             className="py-2 px-3 group relative hover:bg-gray-1"
             key={item.value}
           >

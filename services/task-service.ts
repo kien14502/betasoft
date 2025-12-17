@@ -13,8 +13,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const getTask = async (
   org_id: string,
+  sprint_id: string,
 ): Promise<ResponseSuccess<{ total: number; tasks: Task[] }>> => {
-  const res = await axios.get(API_ENDPOINT.TASK.TASK(org_id));
+  const res = await axios.get(API_ENDPOINT.TASK.TASK(org_id), {
+    params: {
+      sprint_id,
+    },
+  });
   return res.data;
 };
 
@@ -55,18 +60,20 @@ export const deleteTask = async (task_id: string) => {
   return res.data;
 };
 
-export const createTask = async (payload: CreateProjectTaskSchemaType) => {
+export const createTask = async (
+  payload: CreateProjectTaskSchemaType,
+): Promise<ResponseSuccess<Task>> => {
   const res = await axios.post(API_ENDPOINT.TASK[''], payload);
   return res.data;
 };
 // hooks
 
-export const useGetTask = (org_id: string) =>
+export const useGetTask = (org_id: string, sprint_id: string | undefined) =>
   useQuery({
-    queryKey: [QUERY_KEY.GET_TASKS, org_id],
-    queryFn: () => getTask(org_id),
+    queryKey: [QUERY_KEY.GET_TASKS, org_id, sprint_id],
+    queryFn: () => getTask(org_id, sprint_id ?? ''),
     select: ({ data }) => data,
-    enabled: !!org_id,
+    enabled: !!org_id && !!sprint_id,
   });
 
 export const useCreateTask = (callback?: (data: Task) => void) => {
@@ -74,13 +81,11 @@ export const useCreateTask = (callback?: (data: Task) => void) => {
 
   return useMutation({
     mutationFn: createTask,
-
     onSuccess: ({ data, message }) => {
       showToast(message, 'success');
       callback?.(data);
-
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.GET_TASKS, data.project_id],
+        queryKey: [QUERY_KEY.GET_TASKS],
       });
     },
   });

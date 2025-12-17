@@ -5,6 +5,7 @@ import ConversationListLoading from './ConversationListLoading';
 import Link from 'next/link';
 import { decodeBase64 } from '@/utils/common';
 import { CHAT_TYPE, ROOMS_TYPE } from '@/constants/common';
+import EmptyGlobalConversation from '../EmptyGlobalConversation';
 
 type Props = {
   type: CHAT_TYPE;
@@ -21,6 +22,8 @@ const ConversationList = ({ type }: Props) => {
   );
 
   if (isPending) return <ConversationListLoading />;
+
+  if (type === CHAT_TYPE.GLOBAL && groups?.length === 0) return <EmptyGlobalConversation />;
 
   return (
     <div className="flex flex-col gap-2 w-full flex-1 min-h-0">

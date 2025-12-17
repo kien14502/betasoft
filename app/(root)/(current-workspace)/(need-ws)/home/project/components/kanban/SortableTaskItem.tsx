@@ -18,8 +18,15 @@ const SortableTaskItem: React.FC<SortableTaskItemProps> = ({ id, children }) => 
     opacity: isDragging ? 0 : 1,
   };
 
+  // Chỉ lấy mouse listeners, bỏ keyboard listeners
+  const mouseOnlyListeners: React.HTMLAttributes<HTMLDivElement> = {
+    onPointerDown: listeners?.onPointerDown as
+      | React.PointerEventHandler<HTMLDivElement>
+      | undefined,
+  };
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div ref={setNodeRef} style={style} {...attributes} {...mouseOnlyListeners}>
       {children}
     </div>
   );

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { ConversationProvider } from '../components/providers/ConversationProvider';
+// import { ConversationProvider } from '../components/providers/ConversationProvider';
 import { WebSocketProvider } from '@/hooks/socket-provider';
-import SidebarConverstation from '../components/sidebar/SidebarConverstation';
+import SidebarConversation from '../components/sidebar/SidebarConverstation';
 import HeaderChannel from '../components/HeaderChannel';
 import EmptyConversation from '../components/EmptyConversation';
 import { CHAT_TYPE } from '@/constants/common';
@@ -31,11 +31,12 @@ const Layout = async ({ children, params }: Props) => {
   return (
     <WebSocketProvider>
       <div className="flex h-full w-full gap-6">
-        <SidebarConverstation type={fType} />
+        <SidebarConversation type={fType} id={roomId} />
         <HeaderChannel />
         {roomId ? (
           <div className="bg-white rounded-4xl shadow-secondary flex-1 min-h-0 flex">
-            <ConversationProvider roomId={roomId}>{children}</ConversationProvider>
+            {/* <ConversationProvider roomId={roomId}></ConversationProvider> */}
+            {children}
           </div>
         ) : (
           <EmptyConversation />

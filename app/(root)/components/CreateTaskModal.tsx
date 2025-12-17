@@ -16,7 +16,7 @@ import {
   CreateProjectTaskSchemaType,
 } from '@/constants/schemas/workspace-schema';
 import { ProjectData } from '@/interface/task';
-import { useGetMemberProject } from '@/services/project';
+import { useGetMemberProject, useGetProjectIdWithOutKey } from '@/services/project';
 import { useCreateTask, useGetTaskSections } from '@/services/task-service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserRound } from 'lucide-react';
@@ -37,52 +37,63 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
     defaultValues: {
       title: '',
       list_id: '',
-      sprint_id: '',
       project_id: '',
       priority: 'medium',
+      description: '',
+      assignee: '',
     },
   });
-  const { mutate: createTask } = useCreateTask(() => {
+
+  const projectId = form.watch('project_id');
+  const { data: status } = useGetTaskSections(projectId);
+  const { data: members } = useGetMemberProject(projectId);
+  const { data: project } = useGetProjectIdWithOutKey(projectId);
+
+  const { mutate: createTask, isPending } = useCreateTask(() => {
     setOpenModal(false);
     form.reset();
+    setPrjSelected(null);
   });
 
   useEffect(() => {
-    form.reset({
-      title: '',
-      list_id: '',
-      sprint_id: '',
-      priority: 'medium',
-      project_id: prjSelected?.project.id,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prjSelected]);
+    form.setValue('project_id', prjSelected?.project.id ?? '');
+  }, [prjSelected, form]);
 
-  const { data: status } = useGetTaskSections(form.watch('project_id'));
-  const { data: members } = useGetMemberProject(form.watch('project_id'));
+  useEffect(() => {
+    form.setValue('sprint_id', project?.sprint_active.id ?? '');
+  }, [form, project]);
 
   const listOptions = useMemo(() => {
-    const options = status?.map((item) => ({
-      label: item.name ?? '',
-      color: item.color ?? '',
-      value: item.id ?? '',
-    }));
-    return options ?? [];
+    return (
+      status?.map((item) => ({
+        label: item.name ?? '',
+        color: item.color ?? '',
+        value: item.id ?? '',
+      })) ?? []
+    );
   }, [status]);
 
   const memberOptions = useMemo(() => {
-    return members?.members.map((item) => {
-      const mem = item.member;
-      return {
-        label: mem?.full_name ?? '',
-        value: mem?.id ?? '',
-        avatar: mem?.profile_image || '/icons/user-circle.svg',
-      };
-    });
+    return (
+      members?.members.map((item) => {
+        const mem = item.member;
+        return {
+          label: mem?.full_name ?? '',
+          value: mem?.id ?? '',
+          avatar: mem?.profile_image || '/icons/user-circle.svg',
+        };
+      }) ?? []
+    );
   }, [members]);
 
   const onSubmit = (values: CreateProjectTaskSchemaType) => {
     createTask(values);
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+    form.reset();
+    setPrjSelected(null);
   };
 
   return (
@@ -92,7 +103,7 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
           <DialogTitle>New task</DialogTitle>
           <DialogDescription className="flex items-center gap-1">
             Required fields are marked with an asterisk
-            <Image width={6} height={6} alt="" src={'/icons/asterisk.svg'} />
+            <Image width={6} height={6} alt="Required" src={'/icons/asterisk.svg'} />
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -113,43 +124,58 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
                 )}
                 trigger={'Status'}
                 label={'Status'}
-                value={form.watch('list_id', '') || ''}
+                value={form.watch('list_id') || ''}
+                require
               />
             </div>
-            <InputForm control={form.control} name={'title'} label="Title" />
+
+            <InputForm required control={form.control} name={'title'} label="Title" />
             <TextareaForm control={form.control} name={'description'} label="Description" />
+
             <div className="grid grid-cols-2 gap-6">
               <SingleSelect
-                options={memberOptions ?? []}
+                options={memberOptions}
                 onChange={({ value }) => form.setValue('assignee', value)}
                 renderItem={(item) => (
-                  <div className="flex items-center gap-2 justify-center">
-                    <Image
-                      width={24}
-                      height={24}
-                      className="object-center"
-                      src={item.avatar}
-                      alt={item.label}
-                    />
+                  <div className="flex items-center gap-2">
+                    <div className="relative w-6 h-6 rounded-full overflow-hidden">
+                      <Image fill className="object-cover" src={item.avatar} alt={item.label} />
+                    </div>
                     <span className="text-xs">{item.label}</span>
                   </div>
                 )}
                 trigger={'Assignee'}
                 label={'Assignee'}
-                value={form.watch('assignee', '') ?? ''}
+                value={form.watch('assignee') ?? ''}
                 prefix={<UserRound size={24} />}
                 classNames={{ trigger: 'h-12' }}
+                require
               />
             </div>
+
             <UrgencySelector
               value={form.watch('priority')}
               onChange={(value) => form.setValue('priority', value)}
             />
+
             <div className="gap-6 flex items-center justify-end w-full">
-              <Button size={'xl'} className="text-blue-4" variant={'ghost'} type="button">
+              <Button
+                size={'xl'}
+                className="text-blue-4"
+                variant={'ghost'}
+                type="button"
+                onClick={handleCancel}
+                disabled={isPending}
+              >
                 Cancel
               </Button>
-              <Button size={'xl'} type="submit" variant={'active'}>
+              <Button
+                isLoading={isPending}
+                size={'xl'}
+                type="submit"
+                variant={'active'}
+                disabled={!projectId || isPending}
+              >
                 Create Task
               </Button>
             </div>

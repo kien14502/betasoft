@@ -1,9 +1,7 @@
-import { usePostAuthTasks } from '@/app/api/task/task';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { useContext } from 'react';
 import UrgencySelector from '../UrgencySelector';
 import { showToast } from '@/utils/toast';
-import { MembersProjectContext } from '@/components/providers/MembersProjectProvider';
 import { CreateProjectTaskSchemaType } from '@/constants/schemas/workspace-schema';
 import { useForm } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
@@ -17,8 +15,10 @@ import SingleSelect from '@/components/common/SingleSelect';
 import { Calendar, UserRound } from 'lucide-react';
 import { DatePicker } from '@/components/common/DatePicker';
 import { fDate } from '@/utils/dayjs';
-import { TasksContext } from '@/components/providers/TasksProvider';
-import { ResponseTaskResponse } from '@/app/api/generated.schemas';
+import { useCreateTask } from '@/services/task-service';
+import { useGetMemberWorkspace } from '@/services/workspace-service';
+import { getSelector, useAppSelector } from '@/hooks/useRedux';
+import { USER_AVATAR_URL } from '@/constants/common';
 
 type Props = {
   toggle: () => void;
@@ -26,7 +26,8 @@ type Props = {
 
 const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
   const { project } = useContext(ProjectContext);
-  const { dispatch } = useContext(TasksContext);
+  const { info } = useAppSelector(getSelector('workspace'));
+
   const form = useForm<CreateProjectTaskSchemaType>({
     defaultValues: {
       title: '',
@@ -43,33 +44,26 @@ const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
-  const { mutate: createTask } = usePostAuthTasks();
-  const { members } = useContext(MembersProjectContext);
-
+  const { mutate: createTask } = useCreateTask();
+  // OPTIMIZE
+  const { data: members } = useGetMemberWorkspace(info?.id ?? '');
   const onFinish = (values: CreateProjectTaskSchemaType) => {
-    createTask(
-      { data: values },
-      {
-        onSuccess({ message, data }) {
-          if (data) {
-            console.log('data', data);
-
-            dispatch({ type: 'ADD_TASK', payload: data as ResponseTaskResponse });
-            toggle();
-            showToast(message ?? '', 'success');
-          }
-        },
+    createTask(values, {
+      onSuccess({ message, data }) {
+        if (data) {
+          toggle();
+          showToast(message ?? '', 'success');
+        }
       },
-    );
+    });
   };
 
   const memberOptions = useMemo(() => {
-    return members.map((item) => {
-      const mem = item.member;
+    return members?.map((item) => {
       return {
-        label: mem?.full_name ?? '',
-        value: mem?.id ?? '',
-        avatar: mem?.profile_image || '/icons/user-circle.svg',
+        label: item.full_name ?? '',
+        value: item.id ?? '',
+        avatar: item.profile_image || USER_AVATAR_URL,
       };
     });
   }, [members]);
@@ -90,7 +84,7 @@ const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
         <TextareaForm control={form.control} name={'description'} label="Description" />
         <div className="w-full grid grid-cols-2 gap-8">
           <SingleSelect
-            options={memberOptions}
+            options={memberOptions || []}
             onChange={({ value }) => form.setValue('assignee', value)}
             renderItem={(item) => (
               <div className="flex items-center gap-2 justify-center">
@@ -137,7 +131,7 @@ const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
           value={form.watch('priority')}
           onChange={(value) => form.setValue('priority', value)}
         />
-        <div className="border-t border-gray-4 flex items-center justify-end gap-4 !py-6 !px-8">
+        <div className="border-t border-gray-4 flex items-center justify-end gap-4 py-6 px-8">
           <Button onClick={toggle} type="button" variant="ghost">
             Cancel
           </Button>

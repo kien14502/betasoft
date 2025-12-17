@@ -1,30 +1,30 @@
 'use client';
 import { getSelector, useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { getMe } from '@/lib/features/auth/actions';
-import { getListWorkspaces } from '@/lib/features/list-workspace/action';
-import { getInforWorkspace, getMembers } from '@/lib/features/workspace/action';
-import { ReactNode, useEffect } from 'react';
+import { getInforWorkspace } from '@/lib/features/workspace/action';
+import { ReactNode, useEffect, useMemo } from 'react';
 import LoadingScreen from '../common/loading/LoadingScreen';
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector(getSelector('auth'));
+  const wsId = useMemo(
+    () => user?.meta_data.organization?.id ?? null,
+    [user?.meta_data.organization?.id],
+  );
 
   useEffect(() => {
+    if (isAuthenticated) return;
     dispatch(getMe());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const wsId = user?.meta_data.organization?.id ?? null;
     if (wsId) {
-      console.log('call change');
-      dispatch(getListWorkspaces());
       dispatch(getInforWorkspace({ id: wsId }));
-      dispatch(getMembers({ id: wsId }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [wsId]);
 
   if (!isAuthenticated) return <LoadingScreen />;
 

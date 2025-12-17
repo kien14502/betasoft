@@ -5,7 +5,8 @@ export const getTaskCommentsSchema = z.object({
   page: z.number().int().positive().optional().default(1),
   page_size: z.number().int().positive().optional().default(10),
   parentID: z.string().optional(),
-  taskID: z.string(), // required
+  task_id: z.string(),
+  projectId: z.string(),
 });
 
 // Type inference

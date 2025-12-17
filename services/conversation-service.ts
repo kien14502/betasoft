@@ -69,17 +69,18 @@ export const useInfiniteGetRooms = (room_id: string | undefined) =>
   useInfiniteQuery({
     queryKey: [QUERY_KEY.GET_ROOMS, room_id],
     queryFn: ({ pageParam = 1 }) =>
-      getInfiniteRoom({ pageParam, room_id: room_id!, page_size: PAGE_SIZE + 10 }),
+      getInfiniteRoom({ pageParam, room_id: room_id!, page_size: PAGE_SIZE }),
     initialPageParam: 1,
     enabled: Boolean(room_id),
     getNextPageParam: (lastPage) => {
-      const total = lastPage?.message;
-      if (!total) return undefined;
+      const loaded = lastPage.page * PAGE_SIZE;
+      const total = lastPage.total;
+      if (loaded >= total) return undefined;
       return lastPage.page + 1;
     },
     select: (data) => {
       const room = data.pages[0].room;
-      const message = data?.pages.flatMap((page) => page.message) ?? [];
+      const message = data?.pages.flatMap((page) => page.message).reverse() ?? [];
       return { room, message: message || [] };
     },
   });

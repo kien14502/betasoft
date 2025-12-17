@@ -1,9 +1,10 @@
 import { DateRangePicker } from '@/components/common/date-range-picker';
 import MultipleSelect from '@/components/common/MultipleSelect';
-import { MembersProjectContext } from '@/components/providers/MembersProjectProvider';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { urgencyOptions, USER_AVATAR_URL } from '@/constants/common';
 import { TaskFilterSchema } from '@/constants/schemas/workspace-schema';
+import { getSelector, useAppSelector } from '@/hooks/useRedux';
+import { useGetMemberWorkspace } from '@/services/workspace-service';
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { useContext } from 'react';
@@ -15,7 +16,9 @@ type Props = {
 
 const TaskFilter = ({ form }: Props) => {
   const { project } = useContext(ProjectContext);
-  const { members } = useContext(MembersProjectContext);
+  const { info } = useAppSelector(getSelector('workspace'));
+  // OPTIMIZE
+  const { data: members } = useGetMemberWorkspace(info?.id ?? '');
 
   const colOptions = useMemo(() => {
     return (
@@ -29,10 +32,10 @@ const TaskFilter = ({ form }: Props) => {
 
   const memberOptions = useMemo(() => {
     return (
-      members.map((item) => ({
-        label: item.member?.full_name || '',
-        value: item.member?.id || '',
-        avatar: item.member?.profile_image || USER_AVATAR_URL,
+      members?.map((item) => ({
+        label: item.full_name,
+        value: item.id || '',
+        avatar: item.profile_image || USER_AVATAR_URL,
       })) ?? []
     );
   }, [members]);

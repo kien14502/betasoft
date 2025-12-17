@@ -6,11 +6,6 @@ import { TaskFilterSchema, taskFilterSchema } from '@/constants/schemas/workspac
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputForm from '@/components/common/form/InputField';
 import { Search } from 'lucide-react';
-import { TasksContext } from '@/components/providers/TasksProvider';
-import { useContext, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { ProjectContext } from '@/components/providers/ProjectProvider';
-import { useGetAuthProjectsProjectIdTasks } from '@/app/api/task/task';
 import { cn } from '@/lib/utils';
 import CheckListIcon from '@/components/icons/CheckListIcon';
 import ChartBarIcon from '@/components/icons/ChartBarIcon';
@@ -26,32 +21,6 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
     defaultValues: { title: '' },
   });
 
-  const { project } = useContext(ProjectContext);
-  const { dispatch } = useContext(TasksContext);
-  const pathname = usePathname().split('/').filter(Boolean);
-
-  const { data: taskData } = useGetAuthProjectsProjectIdTasks(
-    pathname[2],
-    {
-      page: 1,
-      page_size: 10,
-      sprint_id: project?.sprint_active?.id,
-      ...form.watch(),
-    },
-    { query: { select: (data) => data.data, enabled: !!project?.sprint_active?.id } },
-  );
-
-  // useEffect(() => {
-  //   dispatch({
-  //     type: 'INIT',
-  //     payload: {
-  //       page: taskData?.page || 0,
-  //       page_size: taskData?.page_size || 0,
-  //       total_pages: taskData?.total_pages || 0,
-  //       total: taskData?.total || 0,
-  //       tasks: taskData?.tasks || [],
-  //     },
-  //   });
   // }, [taskData]);
 
   return (

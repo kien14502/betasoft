@@ -18,7 +18,6 @@ const ProjectPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isFetching,
   } = useInfiniteProjects(workspaceId);
 
   const { targetRef } = useInfiniteScroll({
@@ -29,25 +28,7 @@ const ProjectPage = () => {
 
   const { adminProjects, otherProjects } = groupRoleProjects(projects || []);
 
-  if (isFetching) {
-    return (
-      <div className="gap-4 h-full max-h-full flex flex-col">
-        <ProjectHeader />
-        <div className="grid grid-cols-2 gap-8 px-24 w-full flex-1 pb-4 min-h-0">
-          <div className="flex flex-col gap-4">
-            <Skeleton className="h-[360px] w-full" />
-            <Skeleton className="h-[360px] w-full" />
-          </div>
-          <div className="flex flex-col gap-4">
-            <Skeleton className="h-[360px] w-full" />
-            <Skeleton className="h-[360px] w-full" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isFetching && (!projects || projects.length === 0)) {
+  if (!projects || projects?.length === 0) {
     return (
       <div className="gap-4 h-full max-h-full flex flex-col">
         <EmptyProjectView />
@@ -55,28 +36,29 @@ const ProjectPage = () => {
     );
   }
 
-  return (
-    <div className="gap-4 h-full max-h-full flex flex-col">
-      <>
+  if (projects?.length > 0) {
+    return (
+      <div className="gap-4 h-full max-h-full flex flex-col">
         <ProjectHeader />
         <div className="grid grid-cols-2 gap-8 px-24 w-full flex-1 pb-4 min-h-0">
           <ProjectWrapper type="owner" isEmpty={adminProjects.length === 0}>
             {adminProjects.map((item) => (
               <ProjectCard key={item.project?.id} data={item} />
             ))}
-            {isFetching && <Skeleton style={{ height: '360px', width: '100%' }} />}
-            <div ref={targetRef} />
+            {isFetchingNextPage && <Skeleton className="h-[360px] w-full" />}
+            {hasNextPage && <div ref={targetRef} />}
           </ProjectWrapper>
+
           <ProjectWrapper type="member" isEmpty={otherProjects.length === 0}>
             {otherProjects.map((item) => (
               <ProjectCard key={item.project?.id} data={item} />
             ))}
-            {isFetching && <Skeleton style={{ height: '360px', width: '100%' }} />}
-            <div ref={targetRef} />
+            {isFetchingNextPage && <Skeleton className="h-[360px] w-full" />}
+            {hasNextPage && <div ref={targetRef} />}
           </ProjectWrapper>
         </div>
-      </>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 export default ProjectPage;
