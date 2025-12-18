@@ -10,6 +10,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { showToast } from './toast';
 import { ProjectData } from '@/interface/task';
+import { CHAT_TYPE } from '@/constants/common';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -226,3 +227,8 @@ export const COLORS = [
   '#FB923C',
   '#FBBF24',
 ];
+
+export const verifyChatType = (type: string) => {
+  const objs = Object.values(CHAT_TYPE).find((key) => key === type);
+  return objs ? objs : null;
+};

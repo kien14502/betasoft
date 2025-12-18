@@ -14,11 +14,7 @@ const UserChatView = ({ user }: Props) => {
   const router = useRouter();
   const handleCreateRoom = () => {
     createRoom(
-      {
-        members: [user.id],
-        type_of_room: 2,
-        name: user.full_name,
-      },
+      { members: [user.id], type_of_room: 2, name: user.full_name },
       {
         onSuccess({ data }) {
           if (data) {

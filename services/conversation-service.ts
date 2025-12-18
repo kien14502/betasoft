@@ -2,9 +2,10 @@ import { axios } from '@/config/axios';
 import { PAGE_SIZE } from '@/constants/common';
 import { API_ENDPOINT } from '@/constants/endpoint';
 import { QUERY_KEY } from '@/constants/query-key';
+import { CreateConversationSchema } from '@/constants/schemas/conversation-schema';
 import { Pagination, ResponseSuccess } from '@/interface/common';
-import { CreateRoom, FilterRoom, Room, RoomData } from '@/interface/conversation';
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { FilterRoom, Room, RoomData } from '@/interface/conversation';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const getRooms = async (
   payload: Pagination,
@@ -13,6 +14,13 @@ export const getRooms = async (
   const res = await axios.get(API_ENDPOINT.ROOM.GET_ROOMS, {
     params: { ...payload, ...filter },
   });
+  return res.data;
+};
+
+export const createConversation = async (
+  payload: CreateConversationSchema,
+): Promise<ResponseSuccess<Room>> => {
+  const res = await axios.post(API_ENDPOINT.ROOM.GET_ROOMS, payload);
   return res.data;
 };
 
@@ -44,11 +52,6 @@ export const getInfiniteRoom = async ({
   return { ...res.data.data, page: pageParam };
 };
 
-export const createRoom = async (payload: CreateRoom): Promise<ResponseSuccess<Room>> => {
-  const res = await axios.post(API_ENDPOINT.ROOM.GET_ROOMS, payload);
-  return res.data;
-};
-
 // hooks
 
 export const useGetRoom = (id: string, pagin: Pagination) =>
@@ -60,7 +63,7 @@ export const useGetRoom = (id: string, pagin: Pagination) =>
 
 export const useGetRooms = (payload: Pagination, filter: FilterRoom) =>
   useQuery({
-    queryKey: [QUERY_KEY.GET_ROOMS, payload],
+    queryKey: [QUERY_KEY.GET_ROOMS, filter.type_of_room],
     queryFn: () => getRooms(payload, filter),
     select: (data) => data.data || [],
   });
@@ -86,7 +89,11 @@ export const useInfiniteGetRooms = (room_id: string | undefined) =>
   });
 
 export const useCreateRoom = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createRoom,
+    mutationFn: createConversation,
+    onSuccess: ({ data }) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.GET_ROOMS, data.type_of_room] });
+    },
   });
 };

@@ -19,6 +19,7 @@ const SidebarConversation = ({ type, id }: Props) => {
   const [activeTab, setActiveTab] = useState<CHAT_TYPE>(type);
   const { user } = useAppSelector(getSelector('auth'));
   const wsLaunched = user?.meta_data.organization;
+
   useEffect(() => {
     setActiveTab(type);
   }, [type]);
@@ -63,7 +64,7 @@ const SidebarConversation = ({ type, id }: Props) => {
           })}
         </div>
       </div>
-      {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} />}
+      {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} current_id={id} />}
     </div>
   );
 };

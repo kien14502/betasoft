@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { decodeBase64 } from '@/utils/common';
 import { CHAT_TYPE, ROOMS_TYPE } from '@/constants/common';
 import EmptyGlobalConversation from '../EmptyGlobalConversation';
+import { cn } from '@/lib/utils';
 
 type Props = {
   type: CHAT_TYPE;
+  current_id: string;
 };
 
-const ConversationList = ({ type }: Props) => {
+const ConversationList = ({ type, current_id }: Props) => {
   const isGlobal = type === CHAT_TYPE.GLOBAL;
   const { data: groups, isPending } = useGetRooms(
     { page: 1, page_size: 10 },
@@ -34,7 +36,11 @@ const ConversationList = ({ type }: Props) => {
           <Link
             href={`/channels/${type}/` + group.id}
             key={group.id}
-            className="flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3"
+            className={cn(
+              'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',
+              'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',
+              current_id === group.id && 'bg-blue-1',
+            )}
           >
             <Image
               width={40}

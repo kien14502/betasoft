@@ -48,7 +48,7 @@ axios.interceptors.response.use(
       return Promise.reject({ canceled: true });
     }
     if (isClient) {
-      showToast(err?.response?.data.message, 'error');
+      showToast(err?.response?.data.message || 'Server error', 'error');
     }
     // if (!err?.response?.data?.refreshToken) {
     //   local.clear();

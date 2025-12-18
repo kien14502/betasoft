@@ -1,4 +1,3 @@
-import { usePostAuthRoom } from '@/app/api/rooms/rooms';
 import InputForm from '@/components/common/form/InputField';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,32 +16,41 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import FindMember from './FindMember';
+import { useCreateRoom } from '@/services/conversation-service';
+import { CHAT_TYPE, ROOMS_TYPE } from '@/constants/common';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-const CreateConversation = () => {
+type Props = {
+  key_chat: CHAT_TYPE;
+};
+
+const CreateConversation = ({ key_chat }: Props) => {
+  const router = useRouter();
   const form = useForm<CreateConversationSchema>({
     defaultValues: {
       name: '',
     },
     resolver: zodResolver(createConversationSchema),
   });
-  const { mutate: createRoom } = usePostAuthRoom();
+  const { mutate: createRoom, isPending } = useCreateRoom();
 
-  const onSubmit = () => {
-    createRoom(
-      {
-        data: {
-          members: ['6901db44b4bdd3e8afec6719', '691e84694c247704ded36a50'],
-          name: 'tesst',
-          organization_id: '6901de9fb4bdd3e8afec672b',
-          type_of_room: 2,
-        },
+  useEffect(() => {
+    form.setValue('type_of_room', ROOMS_TYPE[key_chat]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key_chat]);
+
+  const onSubmit = (values: CreateConversationSchema) => {
+    createRoom(values, {
+      onSuccess({ data }) {
+        const findType = Object.entries(ROOMS_TYPE).find(
+          ([, value]) => value === data.type_of_room,
+        );
+        const fType = findType?.[0] ?? CHAT_TYPE.GLOBAL;
+        router.push(`/channels/${fType}/${data.id}`);
       },
-      {
-        onSuccess({ data }) {
-          console.log('dataa', data);
-        },
-      },
-    );
+    });
   };
 
   return (
@@ -57,19 +65,30 @@ const CreateConversation = () => {
           <Plus />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="p-8 rounded-4xl sm:min-w-3xl">
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogTitle>Create a channel</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your account and remove your
-            data from our servers.
+            Channels are where conversations happen around a topic. Use a name that is easy to find
+            and understand.
           </DialogDescription>
           <Form {...form}>
-            <form className="flex flex-col gap-2" onSubmit={form.handleSubmit(onSubmit)}>
-              <InputForm control={form.control} label="Name conversation" name="name" />
-              <Button variant={'active'} type="submit">
-                Create
-              </Button>
+            <form className="w-full grid grid-cols-2 gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="flex flex-col gap-4">
+                <InputForm
+                  control={form.control}
+                  label="Name conversation"
+                  name="name"
+                  required={true}
+                  placeholder="Enter name conversation"
+                />
+                <Button isLoading={isPending} variant={'active'} type="submit">
+                  Create
+                </Button>
+              </div>
+              <div>
+                <FindMember onChange={(ids) => form.setValue('members', ids)} />
+              </div>
             </form>
           </Form>
         </DialogHeader>
