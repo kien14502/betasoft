@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-// import { ConversationProvider } from '../components/providers/ConversationProvider';
 import { WebSocketProvider } from '@/hooks/socket-provider';
 import SidebarConversation from '../components/sidebar/SidebarConverstation';
 import HeaderChannel from '../components/HeaderChannel';
@@ -24,8 +23,6 @@ const Layout = async ({ children, params }: Props) => {
     redirect(`/channels/${CHAT_TYPE.GLOBAL}`);
   }
 
-  console.log('fType', fType);
-
   return (
     <WebSocketProvider>
       <div className="flex h-full w-full gap-6">
@@ -33,7 +30,6 @@ const Layout = async ({ children, params }: Props) => {
         <HeaderChannel key_chat={fType} />
         {roomId ? (
           <div className="bg-white rounded-4xl shadow-secondary flex-1 min-h-0 flex">
-            {/* <ConversationProvider roomId={roomId}></ConversationProvider> */}
             {children}
           </div>
         ) : (
