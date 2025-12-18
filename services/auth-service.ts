@@ -23,7 +23,7 @@ const register = async (
   return res.data;
 };
 
-const searchUser = async (pageParam: number = 1, email: string) => {
+export const searchUser = async (pageParam: number = 1, email: string) => {
   const res = await axios.get<
     ResponseSuccess<{
       total: number;

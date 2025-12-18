@@ -1,5 +1,3 @@
-import { ROOMS_TYPE } from '@/constants/common';
-
 /**
  * Interface cho cấu trúc tin nhắn gần nhất (latest_messages)
  */

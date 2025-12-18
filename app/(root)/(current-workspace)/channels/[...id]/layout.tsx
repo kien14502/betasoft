@@ -6,15 +6,11 @@ import HeaderChannel from '../components/HeaderChannel';
 import EmptyConversation from '../components/EmptyConversation';
 import { CHAT_TYPE } from '@/constants/common';
 import { redirect } from 'next/navigation';
+import { verifyChatType } from '@/utils/common';
 
 type Props = {
   params: Promise<{ id: string[] }>;
   children: ReactNode;
-};
-
-const verifyChatType = (type: string) => {
-  const objs = Object.values(CHAT_TYPE).find((key) => key === type);
-  return objs ? objs : null;
 };
 
 const Layout = async ({ children, params }: Props) => {
@@ -28,11 +24,13 @@ const Layout = async ({ children, params }: Props) => {
     redirect(`/channels/${CHAT_TYPE.GLOBAL}`);
   }
 
+  console.log('fType', fType);
+
   return (
     <WebSocketProvider>
       <div className="flex h-full w-full gap-6">
         <SidebarConversation type={fType} id={roomId} />
-        <HeaderChannel />
+        <HeaderChannel key_chat={fType} />
         {roomId ? (
           <div className="bg-white rounded-4xl shadow-secondary flex-1 min-h-0 flex">
             {/* <ConversationProvider roomId={roomId}></ConversationProvider> */}
