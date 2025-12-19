@@ -16,7 +16,7 @@ type Props = {
 const PriorityCell = ({ task, variant = 'default' }: Props) => {
   const { project } = useContext(ProjectContext);
 
-  const { mutate: updateTask } = useUpdateTask();
+  const { mutate: updateTask } = useUpdateTask(project?.sprint_active.id ?? '');
 
   const urgency = getUrgencyOptions(task.priority || '');
 

@@ -19,14 +19,14 @@ type Props = {
   tabs: Tab[];
   contents: Content[];
   defaultValue: string;
-  clasName?: string;
+  className?: string;
 };
 
-const TabsContent = ({ contents, tabs, defaultValue, clasName }: Props) => {
+const TabsContent = ({ contents, tabs, defaultValue, className }: Props) => {
   const [activeTab, setActiveTab] = useState(defaultValue);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className={cn(clasName)}>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className={cn('min-h-0', className)}>
       <TabsList className="bg-inherit p-0 gap-6">
         {tabs.map((tab) => (
           <TabsTrigger

@@ -35,6 +35,7 @@ const useKanbanV2 = (init_tasks: Task[], sections: TaskSection[]) => {
     tasksRef.current = init_tasks;
     sectionsRef.current = sections;
   }, [init_tasks, sections]);
+
   const tasksKey = useMemo(
     () =>
       init_tasks
@@ -70,7 +71,7 @@ const useKanbanV2 = (init_tasks: Task[], sections: TaskSection[]) => {
     setBoardSections(boardSection);
     isInitialized.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksKey, sectionsKey]);
+  }, [tasksKey, sectionsKey, init_tasks]);
 
   return {
     setActiveTaskId,

@@ -66,7 +66,24 @@ export const createTask = async (
   const res = await axios.post(API_ENDPOINT.TASK[''], payload);
   return res.data;
 };
+
+export const getSubtasks = async (
+  project_id: string,
+  task_id: string,
+): Promise<{ sub_tasks: Task[] }> => {
+  const res = await axios.get(API_ENDPOINT.TASK.SUBTASKS.GET(project_id, task_id));
+  return res.data;
+};
+
 // hooks
+
+export const useGetSubtasks = (project_id: string, task_id: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.SUBTASKS, project_id, task_id],
+    queryFn: () => getSubtasks(project_id, task_id),
+    enabled: !!task_id && !!project_id,
+  });
+};
 
 export const useGetTask = (org_id: string, sprint_id: string | undefined) =>
   useQuery({
@@ -91,24 +108,34 @@ export const useCreateTask = (callback?: (data: Task) => void) => {
   });
 };
 
-export const useGetTaskKanban = (org_id: string) =>
-  useQuery({
-    queryKey: [QUERY_KEY.GET_TASKS, org_id],
-    queryFn: () => getKanban(org_id),
-    select: ({ data, message }) => {
-      showToast(message, 'success');
-      return data;
-    },
-    enabled: !!org_id,
+export const useCreateSubtask = () => {
+  return useMutation({
+    mutationFn: createTask,
+    // TODO
+    onSuccess: ({ data }, variables) => {},
   });
+};
 
-export const useUpdateTask = (callback?: (task: Task) => void) => {
+// export const useGetTaskKanban = (org_id: string) =>
+//   useQuery({
+//     queryKey: [QUERY_KEY.GET_TASKS, org_id],
+//     queryFn: () => getKanban(org_id),
+//     select: ({ data, message }) => {
+//       showToast(message, 'success');
+//       return data;
+//     },
+//     enabled: !!org_id,
+//   });
+
+export const useUpdateTask = (sprint_id: string, callback?: (task: Task) => void) => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: updateTask,
     onSuccess: ({ data }) => {
       callback?.(data);
-      const key = [QUERY_KEY.GET_TASKS];
+      const key = [QUERY_KEY.GET_TASKS, data.project_id, sprint_id];
+
       queryClient.invalidateQueries({ queryKey: key });
     },
   });

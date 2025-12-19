@@ -11,6 +11,7 @@ const EmptyLaunchedWorkspace = () => {
   const { items } = useAppSelector(getSelector('listWorkspace'));
 
   const onLaunch = (id: string) => {
+    // TODO
     console.log(id);
   };
 

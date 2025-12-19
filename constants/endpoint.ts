@@ -34,5 +34,8 @@ export const API_ENDPOINT = {
       CREATE: '/auth/tasks/comments',
       DELETE: '/auth/tasks/comments',
     },
+    SUBTASKS: {
+      GET: (project_id: string, task_id: string) => `/auth/tasks/${project_id}/${task_id}`,
+    },
   },
 };

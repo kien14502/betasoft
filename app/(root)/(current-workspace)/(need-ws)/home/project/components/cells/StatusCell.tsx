@@ -15,7 +15,7 @@ type Props = {
 const StatusCell = ({ task }: Props) => {
   const { project } = useContext(ProjectContext);
   const cols = project?.columns || [];
-  const { mutate: updateTask, isPending } = useUpdateTask();
+  const { mutate: updateTask, isPending } = useUpdateTask(project?.sprint_active.id ?? '');
   const [openModal, { toggle }] = useToggle();
 
   const handleUpdateTask = (value: string) => {

@@ -30,12 +30,12 @@ const TasksPage = ({ params }: Props) => {
     <div className="w-full min-h-0 grid grid-rows-[auto_1fr] flex-1">
       <>
         <TaskHeader viewMode={viewMode} setViewMode={setViewMode} />
-        {viewMode === 'kanban' && <BoardSectionList id={id} tasks={data?.tasks ?? []} />}
-        {viewMode === 'list' && (
-          <ModalTaskTableProvider>
-            <ListTask tasks={data?.tasks ?? []} />
-          </ModalTaskTableProvider>
-        )}
+        <ModalTaskTableProvider>
+          <>
+            {viewMode === 'kanban' && <BoardSectionList id={id} tasks={data?.tasks ?? []} />}
+            {viewMode === 'list' && <ListTask tasks={data?.tasks ?? []} />}
+          </>
+        </ModalTaskTableProvider>
       </>
     </div>
   );

@@ -49,10 +49,9 @@ const CreateWorkModal: React.FC<Props> = ({ toggle }) => {
   const { data: members } = useGetMemberWorkspace(info?.id ?? '');
   const onFinish = (values: CreateProjectTaskSchemaType) => {
     createTask(values, {
-      onSuccess({ message, data }) {
+      onSuccess({ data }) {
         if (data) {
           toggle();
-          showToast(message ?? '', 'success');
         }
       },
     });

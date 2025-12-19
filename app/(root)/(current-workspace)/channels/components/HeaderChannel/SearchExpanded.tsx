@@ -26,9 +26,9 @@ const SearchExpanded = ({ isOpen, setIsOpen }: Props) => {
   const debouncedSearch = useRef(
     _.debounce((value: string) => {
       setDebouncedValue(value);
+      // TODO
       // Simulate API call
       // todo call api
-      console.log('value', value);
     }, 500),
   ).current;
 

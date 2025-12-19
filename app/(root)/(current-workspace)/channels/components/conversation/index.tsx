@@ -17,6 +17,7 @@ type Props = { id: string; type: string };
 const ConversationContainer = ({ id, type }: Props) => {
   const { state, dispatch } = useContext(ConversationContext);
   const { isConnected, ws } = useWS();
+
   const {
     data: conversation,
     fetchNextPage,
@@ -26,19 +27,40 @@ const ConversationContainer = ({ id, type }: Props) => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const previousScrollHeight = useRef(0);
   const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
+
+  // scroll tracking
+  const previousScrollHeight = useRef(0);
+  const previousScrollTop = useRef(0);
   const shouldRestoreScroll = useRef(false);
 
+  /* ----------------------------------
+   * INIT messages
+   * ---------------------------------- */
   useEffect(() => {
+    dispatch({
+      type: 'INIT',
+      payload: conversation?.message || [],
+    });
+  }, [conversation, dispatch]);
+
+  /* ----------------------------------
+   * Infinite scroll (load older msgs)
+   * ---------------------------------- */
+  useEffect(() => {
+    if (!messagesContainerRef.current) return;
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
+      ([entry]) => {
         if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          if (messagesContainerRef.current) {
-            previousScrollHeight.current = messagesContainerRef.current.scrollHeight;
-            shouldRestoreScroll.current = true;
-          }
+          const container = messagesContainerRef.current;
+          if (!container) return;
+
+          // save scroll state BEFORE fetch
+          previousScrollHeight.current = container.scrollHeight;
+          previousScrollTop.current = container.scrollTop;
+          shouldRestoreScroll.current = true;
+
           fetchNextPage();
         }
       },
@@ -52,71 +74,86 @@ const ConversationContainer = ({ id, type }: Props) => {
       observer.observe(loadMoreTriggerRef.current);
     }
 
-    return () => {
-      if (loadMoreTriggerRef.current) {
-        observer.unobserve(loadMoreTriggerRef.current);
-      }
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+  /* ----------------------------------
+   * Restore scroll position
+   * ---------------------------------- */
+  useEffect(() => {
+    if (!messagesContainerRef.current || !shouldRestoreScroll.current) return;
+
+    const container = messagesContainerRef.current;
+    const newScrollHeight = container.scrollHeight;
+    const heightDiff = newScrollHeight - previousScrollHeight.current;
+
+    container.scrollTop = previousScrollTop.current + heightDiff;
+
+    // reset
+    shouldRestoreScroll.current = false;
+    previousScrollHeight.current = 0;
+    previousScrollTop.current = 0;
+  }, [state.messages]);
+
+  /* ----------------------------------
+   * Scroll to bottom (new msg)
+   * ---------------------------------- */
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    messagesEndRef.current?.scrollIntoView({
+      behavior: 'smooth',
+    });
   };
 
-  useEffect(() => {
-    dispatch({ type: 'INIT', payload: conversation?.message || [] });
-  }, [conversation, dispatch]);
-
+  /* ----------------------------------
+   * WebSocket listen
+   * ---------------------------------- */
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const receivedData = JSON.parse(event.data);
+
       if (receivedData.action === ESocketAction.NEW_MESSAGE) {
         const message: ChatMessage = receivedData.data;
         dispatch({ type: 'ADD', payload: message });
       }
     };
+
     ws?.addEventListener('message', handleMessage);
     return () => {
       ws?.removeEventListener('message', handleMessage);
     };
   }, [ws, dispatch]);
 
-  useEffect(() => {
-    if (
-      messagesContainerRef.current &&
-      shouldRestoreScroll.current &&
-      previousScrollHeight.current > 0
-    ) {
-      const newScrollHeight = messagesContainerRef.current.scrollHeight;
-      const scrollDifference = newScrollHeight - previousScrollHeight.current;
-
-      // Restore scroll position without animation to keep user's view stable
-      messagesContainerRef.current.scrollTop = scrollDifference;
-
-      // Reset tracking variables
-      previousScrollHeight.current = 0;
-      shouldRestoreScroll.current = false;
-    }
-    console.log('checked');
-  }, [state.messages]); // Depend on messages instead of conversation
-
+  /* ----------------------------------
+   * Join / Leave room
+   * ---------------------------------- */
   useEffect(() => {
     if (!isConnected) return;
-    ws?.send(JSON.stringify({ action: ESocketAction.JOIN_ROOM, room: id }));
+
+    ws?.send(
+      JSON.stringify({
+        action: ESocketAction.JOIN_ROOM,
+        room: id,
+      }),
+    );
+
     return () => {
-      ws?.send(JSON.stringify({ action: ESocketAction.LEAVE_ROOM, room: id }));
+      ws?.send(
+        JSON.stringify({
+          action: ESocketAction.LEAVE_ROOM,
+          room: id,
+        }),
+      );
     };
   }, [isConnected, ws, id]);
 
+  /* ----------------------------------
+   * Render
+   * ---------------------------------- */
   return (
     <div className="min-h-0 flex flex-col w-full">
-      <HeaderConversation avatar={''} name={conversation?.room.name || ''} />
-      <div
-        ref={messagesContainerRef}
-        className="overflow-x-hidden py-4 px-6 min-h-0 flex-1 scroll-smooth"
-      >
+      <HeaderConversation avatar="" name={conversation?.room.name || ''} />
+
+      <div ref={messagesContainerRef} className="overflow-x-hidden py-4 px-6 min-h-0 flex-1">
         {hasNextPage && (
           <div ref={loadMoreTriggerRef} className="flex justify-center py-2">
             {isFetchingNextPage && (
@@ -128,11 +165,13 @@ const ConversationContainer = ({ id, type }: Props) => {
           </div>
         )}
 
-        {groupMessagesByUserWithTime(state.messages).map((message, i) => (
-          <Message key={i} messageGroup={message} />
+        {groupMessagesByUserWithTime(state.messages).map((group, i) => (
+          <Message key={i} messageGroup={group} />
         ))}
+
         <div ref={messagesEndRef} />
       </div>
+
       <ConversationController id={id} onBottomMessage={scrollToBottom} />
     </div>
   );

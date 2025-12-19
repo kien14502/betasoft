@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+import { Task } from '@/interface/task';
+import { ModalTaskTableContext } from '../../providers/ModalTaskTableProvider';
+
 type SortableTaskItemProps = {
   children: React.ReactNode;
-  id: string;
+  task: Task;
 };
 
-const SortableTaskItem: React.FC<SortableTaskItemProps> = ({ id, children }) => {
+const SortableTaskItem: React.FC<SortableTaskItemProps> = ({ task, children }) => {
+  const { isShowModal, setContent, setShowModal } = useContext(ModalTaskTableContext);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id,
+    id: task.id,
+    disabled: isShowModal,
   });
 
   const style = {
@@ -25,10 +30,23 @@ const SortableTaskItem: React.FC<SortableTaskItemProps> = ({ id, children }) => 
       | undefined,
   };
 
+  const handleShowModal = () => {
+    setContent(task);
+    setShowModal(true);
+  };
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...mouseOnlyListeners}>
-      {children}
-    </div>
+    <>
+      <div
+        onClick={handleShowModal}
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...mouseOnlyListeners}
+      >
+        {children}
+      </div>
+    </>
   );
 };
 export default SortableTaskItem;

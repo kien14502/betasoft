@@ -209,7 +209,7 @@ a:link,
 a:visited,
 a:hover, /* If you want the color to stay the same on hover */
 a:active {
-  color: #131315;
+  color: var(--blue-4);
 }
 
 button,
