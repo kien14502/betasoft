@@ -8,14 +8,12 @@ import { redirect } from 'next/navigation';
 import { verifyChatType } from '@/utils/common';
 
 type Props = {
-  params: Promise<{ id: string[] }>;
+  params: Promise<{ type: string }>;
   children: ReactNode;
 };
 
 const Layout = async ({ children, params }: Props) => {
-  const { id } = await params;
-  const type = id[0];
-  const roomId = id[1];
+  const { type } = await params;
 
   const fType = verifyChatType(type);
 
@@ -26,15 +24,17 @@ const Layout = async ({ children, params }: Props) => {
   return (
     <WebSocketProvider>
       <div className="flex h-full w-full gap-6">
-        <SidebarConversation type={fType} id={roomId} />
+        <SidebarConversation type={fType} />
         <HeaderChannel key_chat={fType} />
-        {roomId ? (
+
+        {children}
+        {/* {roomId ? (
           <div className="bg-white rounded-4xl shadow-secondary flex-1 min-h-0 flex">
             {children}
           </div>
         ) : (
           <EmptyConversation />
-        )}
+        )} */}
       </div>
     </WebSocketProvider>
   );

@@ -12,9 +12,9 @@ import { useWS } from '@/hooks/socket-provider';
 import { ESocketAction } from '@/constants';
 import type { ChatMessage } from '@/interface/conversation';
 
-type Props = { id: string; type: string };
+type Props = { id: string };
 
-const ConversationContainer = ({ id, type }: Props) => {
+const ConversationContainer = ({ id }: Props) => {
   const { state, dispatch } = useContext(ConversationContext);
   const { isConnected, ws } = useWS();
 
@@ -150,7 +150,7 @@ const ConversationContainer = ({ id, type }: Props) => {
    * Render
    * ---------------------------------- */
   return (
-    <div className="min-h-0 flex flex-col w-full">
+    <div className="min-h-0 flex flex-col w-full bg-white rounded-4xl border shadow-secondary">
       <HeaderConversation avatar="" name={conversation?.room.name || ''} />
 
       <div ref={messagesContainerRef} className="overflow-x-hidden py-4 px-6 min-h-0 flex-1">

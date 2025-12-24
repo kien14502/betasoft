@@ -99,7 +99,7 @@ export const createProjectTaskSchema = z.object({
   labels: z.array(z.string()).optional(),
   list_id: z.string(),
   parent_task_id: z.string().optional(),
-  priority: z.enum(['low', 'medium', 'high']).optional(),
+  priority: z.string().optional(),
   project_id: z.string(),
   sprint_id: z.string(),
   start_date: z.string().optional(),

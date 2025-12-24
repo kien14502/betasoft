@@ -70,7 +70,7 @@ export const createTask = async (
 export const getSubtasks = async (
   project_id: string,
   task_id: string,
-): Promise<{ sub_tasks: Task[] }> => {
+): Promise<ResponseSuccess<{ sub_tasks: Task[] }>> => {
   const res = await axios.get(API_ENDPOINT.TASK.SUBTASKS.GET(project_id, task_id));
   return res.data;
 };
@@ -82,6 +82,7 @@ export const useGetSubtasks = (project_id: string, task_id: string) => {
     queryKey: [QUERY_KEY.SUBTASKS, project_id, task_id],
     queryFn: () => getSubtasks(project_id, task_id),
     enabled: !!task_id && !!project_id,
+    select: ({ data }) => data,
   });
 };
 

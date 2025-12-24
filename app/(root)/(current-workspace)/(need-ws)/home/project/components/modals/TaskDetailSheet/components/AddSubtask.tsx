@@ -1,20 +1,37 @@
 import { ButtonTooltip } from '@/components/common/ButtonTooltip';
+import AssigneeSelect from '@/components/common/task/AssigneeSelect';
+import PrioritySelect from '@/components/common/task/PrioritySelect';
+import StatusSelect from '@/components/common/task/StatusSelect';
 import { ProjectContext } from '@/components/providers/ProjectProvider';
 import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
 import {
   CreateProjectTaskSchemaType,
   createProjectTaskSchema,
 } from '@/constants/schemas/workspace-schema';
+import { getSelector, useAppSelector } from '@/hooks/useRedux';
 import { useToggle } from '@/hooks/useToggle';
+import { useCreateTask, useGetTaskSections } from '@/services/task-service';
+import { useGetMemberWorkspace } from '@/services/workspace-service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CircleDashed, CornerDownRight, Flag, UserCircle, X } from 'lucide-react';
-import { useContext } from 'react';
+import { CornerDownRight, X } from 'lucide-react';
+import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-const AddSubtask = () => {
+type Props = {
+  taskId: string;
+};
+
+const AddSubtask = ({ taskId }: Props) => {
   // TODO
   const [open, { toggle }] = useToggle();
   const { project } = useContext(ProjectContext);
+  const { info } = useAppSelector(getSelector('workspace'));
+
+  const { data: sections } = useGetTaskSections(project?.project.id ?? '');
+  const { data: members } = useGetMemberWorkspace(info?.id ?? '');
+  const { mutate: createTask } = useCreateTask();
+
   const form = useForm<CreateProjectTaskSchemaType>({
     resolver: zodResolver(createProjectTaskSchema),
     defaultValues: {
@@ -25,6 +42,16 @@ const AddSubtask = () => {
       priority: 'medium',
     },
   });
+
+  useEffect(() => {
+    form.setValue('parent_task_id', taskId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskId]);
+
+  const onSubmit = (values: CreateProjectTaskSchemaType) => {
+    createTask(values);
+  };
+
   return (
     <div>
       {!open ? (
@@ -37,21 +64,40 @@ const AddSubtask = () => {
           Add Sub-task
         </Button>
       ) : (
-        <div className="w-full flex items-center gap-1 p-2 rounded border shadow-secondary">
-          <ButtonTooltip content="Status" variant={'ghost'} size={'icon-xs'}>
-            <CircleDashed />
-          </ButtonTooltip>
-          <input placeholder="Name subtask" className="outline-none flex-1 text-sm font-medium" />
-          <ButtonTooltip content="Priority" variant={'outline'} size={'icon-xs'}>
-            <Flag />
-          </ButtonTooltip>
-          <ButtonTooltip content="Assignee" variant={'outline'} size={'icon-xs'}>
-            <UserCircle />
-          </ButtonTooltip>
-          <ButtonTooltip content="Close" variant={'destructive'} size={'icon-xs'} onClick={toggle}>
-            <X />
-          </ButtonTooltip>
-        </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-full flex items-center gap-1 p-2 rounded border shadow-secondary"
+          >
+            <StatusSelect
+              onChange={(value) => form.setValue('list_id', value)}
+              sections={sections || []}
+              value={form.watch('list_id')}
+            />
+            <input
+              {...form.register('title')}
+              placeholder="Name subtask"
+              className="outline-none flex-1 text-sm font-medium"
+            />
+            <PrioritySelect
+              onChange={(value) => form.setValue('priority', value)}
+              value={form.watch('priority') ?? ''}
+            />
+            <AssigneeSelect
+              onChange={(value) => form.setValue('assignee', value)}
+              users={members ?? []}
+            />
+            <ButtonTooltip
+              content="Close"
+              variant={'destructive'}
+              size={'icon-xs'}
+              onClick={toggle}
+              type="button"
+            >
+              <X />
+            </ButtonTooltip>
+          </form>
+        </Form>
       )}
     </div>
   );

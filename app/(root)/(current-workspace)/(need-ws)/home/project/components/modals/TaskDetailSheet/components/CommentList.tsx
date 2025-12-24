@@ -20,9 +20,7 @@ const CommentList = ({ taskId, prjId }: Props) => {
     isFetching,
   } = useInfiniteGetComments(taskId, prjId);
 
-  console.log(comments);
-
-  if (comments?.length === 0) return <div>No comments</div>;
+  if (comments?.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-10 mt-6">
