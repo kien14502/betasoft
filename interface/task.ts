@@ -1,3 +1,4 @@
+import { User } from './auth';
 import { Member } from './conversation';
 
 export interface ProjectLead {
@@ -82,8 +83,10 @@ export interface TaskSection {
 
 export interface Comment {
   id: string;
-  comment_left: number;
-  comment_right: number;
-  comment_content: string;
-  mentions: [];
+  comment_task_id: string;
+  author: User;
+  comment_content: string; // Lexical serialized JSON string
+  mentions: string[];
+  created_at: string; // ISO datetime
+  updated_at: string; // ISO datetime
 }

@@ -10,10 +10,9 @@ import { cn } from '@/lib/utils';
 
 type Props = {
   type: CHAT_TYPE;
-  current_id: string;
 };
 
-const ConversationList = ({ type, current_id }: Props) => {
+const ConversationList = ({ type }: Props) => {
   const isGlobal = type === CHAT_TYPE.GLOBAL;
   const { data: groups, isPending } = useGetRooms(
     { page: 1, page_size: 10 },
@@ -39,7 +38,6 @@ const ConversationList = ({ type, current_id }: Props) => {
             className={cn(
               'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',
               'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',
-              current_id === group.id && 'bg-blue-1',
             )}
           >
             <Image

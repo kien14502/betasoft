@@ -12,11 +12,11 @@ type Props = {
 };
 
 const MessageUpload = ({}: Props) => {
-  const iamgeOrVideoRef = useRef<HTMLInputElement>(null);
+  const imageOrVideoRef = useRef<HTMLInputElement>(null);
   const uploadFileRef = useRef<HTMLInputElement>(null);
 
   const handleImageOrVideoClick = () => {
-    iamgeOrVideoRef.current?.click();
+    imageOrVideoRef.current?.click();
   };
   const handleUploadFileClick = () => {
     uploadFileRef.current?.click();
@@ -68,8 +68,8 @@ const MessageUpload = ({}: Props) => {
 
         {/* accept video & image files */}
         <input
-          ref={iamgeOrVideoRef}
-          type="image/*,video/*"
+          ref={imageOrVideoRef}
+          type="file"
           accept="image/*,video/*"
           className="hidden"
           multiple

@@ -9,4 +9,6 @@ export enum QUERY_KEY {
   GET_WORKSPACES = 'get-workspaces',
   AUTH = 'auth',
   USER = 'user',
+  TASK_COMMENT = 'task-comment',
+  SUBTASKS = 'subtasks',
 }

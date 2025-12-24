@@ -65,7 +65,7 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
         >
           <div className="p-4 pb-0 flex flex-col gap-4">
             {tasks.map((task) => (
-              <SortableTaskItem key={task.id} id={task.id ?? ''}>
+              <SortableTaskItem key={task.id} task={task}>
                 <TaskItem task={task} />
               </SortableTaskItem>
             ))}

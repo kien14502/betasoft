@@ -1,5 +1,6 @@
 import { Task } from '@/interface/task';
 import { createContext, ReactNode, useState } from 'react';
+import TaskDetailSheet from '../components/modals/TaskDetailSheet';
 
 type ModalTaskTableContext = {
   isShowModal: boolean;
@@ -35,6 +36,11 @@ const ModalTaskTableProvider = ({ children }: Props) => {
       }}
     >
       {children}
+      <TaskDetailSheet
+        isShowModal={isShowModal}
+        toggle={() => setShowModal(!isShowModal)}
+        task={content}
+      />
     </ModalTaskTableContext.Provider>
   );
 };

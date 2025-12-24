@@ -12,7 +12,6 @@ type Props = {
 
 const HeaderChannel = ({ key_chat }: Props) => {
   const [isOpenSearch, setIsOpenSearch] = useState(false);
-  console.log('key', key_chat);
 
   return (
     <div className="fixed top-0 flex items-center w-full justify-between py-4 max-w-(--header-channel-width)">

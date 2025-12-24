@@ -6,8 +6,6 @@ import { MemberProject, ProjectDetails } from '@/interface/project';
 import { useQuery } from '@tanstack/react-query';
 
 export const getProject = async (id: string): Promise<ResponseSuccess<ProjectDetails>> => {
-  console.log('id', id);
-
   const res = await axios.get(API_ENDPOINT.PROJECT[''] + `/${id}`);
 
   return res.data;

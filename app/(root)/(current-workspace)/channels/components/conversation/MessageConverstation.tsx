@@ -9,6 +9,7 @@ const MessageConverstation = () => {
   const [editorState, setEditorState] = useState<SerializedEditorState>(initialValue);
 
   const onSend = () => {
+    // TODO
     console.log('editorState', JSON.stringify(editorState.root));
   };
 

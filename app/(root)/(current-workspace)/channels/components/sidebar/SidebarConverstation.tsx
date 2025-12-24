@@ -12,10 +12,9 @@ import EmptyWsLaunched from '../EmptyWsLaunched';
 
 type Props = {
   type: CHAT_TYPE;
-  id: string;
 };
 
-const SidebarConversation = ({ type, id }: Props) => {
+const SidebarConversation = ({ type }: Props) => {
   const [activeTab, setActiveTab] = useState<CHAT_TYPE>(type);
   const { user } = useAppSelector(getSelector('auth'));
   const wsLaunched = user?.meta_data.organization;
@@ -31,12 +30,11 @@ const SidebarConversation = ({ type, id }: Props) => {
       <div className="flex items-center gap-2">
         <div className="flex-1 h-11 shadow-secondary-inset bg-gray-1 p-1 border rounded-5xl grid grid-cols-4">
           {channelRoutes.map((tab, i) => {
-            const path = id ? `/channels/${tab.path}/${id}` : `/channels/${tab.path}`;
             return (
               <Link
-                href={path}
+                href={`/channels/${tab.path}`}
                 key={tab.path}
-                className="relative text-sm flex items-center justify-center text-center font-medium transition-colors focus-visible:outline-none"
+                className="relative text-primary text-sm flex items-center justify-center text-center font-medium transition-colors focus-visible:outline-none"
               >
                 {activeTab === tab.path && (
                   <motion.div
@@ -64,7 +62,7 @@ const SidebarConversation = ({ type, id }: Props) => {
           })}
         </div>
       </div>
-      {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} current_id={id} />}
+      {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} />}
     </div>
   );
 };
