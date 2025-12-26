@@ -23,12 +23,14 @@ const InputMessage = ({ form, callback }: Props) => {
   useEffect(() => {
     adjustTextareaHeight();
   }, [watchContent]);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       callback();
     }
   };
+
   return (
     <textarea
       onKeyDown={handleKeyDown}

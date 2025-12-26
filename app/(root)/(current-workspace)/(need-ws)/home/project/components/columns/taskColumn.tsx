@@ -19,9 +19,44 @@ import { Button } from '@/components/ui/button';
 import { useCallback, useContext } from 'react';
 import { ModalTaskTableContext } from '../../providers/ModalTaskTableProvider';
 import { Task } from '@/interface/task';
+import { ArrowDown2 } from 'iconsax-reactjs';
+import { cn } from '@/lib/utils';
 
-const taskColumn = (): ColumnDef<Task>[] => {
+const taskColumn = (isSubtask: boolean = false): ColumnDef<Task>[] => {
   return [
+    {
+      id: 'expander',
+      header: () => null,
+      cell: ({ row }) => {
+        if (isSubtask) {
+          return null;
+        }
+        const isCanExpand = row.original.sub_tasks.length > 0;
+        return isCanExpand ? (
+          <Button
+            {...{
+              className: 'size-7 text-muted-foreground',
+              onClick: row.getToggleExpandedHandler(),
+              'aria-expanded': row.getIsExpanded(),
+              'aria-label': row.getIsExpanded()
+                ? `Collapse details for ${row.original.id}`
+                : `Expand details for ${row.original.id}`,
+              size: 'icon',
+              variant: 'ghost',
+            }}
+          >
+            <ArrowDown2
+              className={cn(row.getIsExpanded() ? 'rotate-180' : '', 'transition-transform')}
+              size="32"
+              variant="Bold"
+            />
+          </Button>
+        ) : undefined;
+      },
+      size: 50,
+      maxSize: 50,
+      minSize: 50,
+    },
     {
       accessorKey: 'title',
       header: () => (
@@ -33,7 +68,12 @@ const taskColumn = (): ColumnDef<Task>[] => {
       cell: ({ row }) => {
         const original = row.original;
         return (
-          <div className="flex items-center gap-1.5 group relative">
+          <div className={cn('flex items-center gap-1.5 group relative', isSubtask && 'pl-10')}>
+            {/* {isSubtask && (
+              <div className="absolute -top-6 ml-1">
+                <Image width={24} height={35} src={'/icons/sub-arrow.svg'} alt="" />
+              </div>
+            )} */}
             <Checkbox
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -43,7 +83,7 @@ const taskColumn = (): ColumnDef<Task>[] => {
             <div className="text-sm font-medium line-clamp-1 max-w-[250px] overflow-hidden text-ellipsis">
               {original.title}
             </div>
-            <ButtonModal task={original} />
+            {!isSubtask && <ButtonModal task={original} />}
           </div>
         );
       },

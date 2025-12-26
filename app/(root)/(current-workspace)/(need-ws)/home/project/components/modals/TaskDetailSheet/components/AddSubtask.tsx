@@ -49,7 +49,11 @@ const AddSubtask = ({ taskId }: Props) => {
   }, [taskId]);
 
   const onSubmit = (values: CreateProjectTaskSchemaType) => {
-    createTask(values);
+    createTask(values, {
+      onSuccess: () => {
+        form.reset();
+      },
+    });
   };
 
   return (
@@ -59,6 +63,7 @@ const AddSubtask = ({ taskId }: Props) => {
           variant={'ghost'}
           onClick={toggle}
           className="w-fit bg-blue-1 text-blue-5 py-1.5 px-3 rounded-[8px]"
+          size={'sm'}
         >
           <CornerDownRight size={20} />
           Add Sub-task

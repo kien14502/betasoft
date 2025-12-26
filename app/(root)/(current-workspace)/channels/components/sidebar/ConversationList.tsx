@@ -29,16 +29,12 @@ const ConversationList = ({ type }: Props) => {
   return (
     <div className="flex flex-col gap-2 w-full flex-1 min-h-0">
       {groups?.map((group) => {
-        const isExistLastestMessage = group?.latest_messages;
-
+        const isExistLatestMessage = group?.latest_messages;
         return (
           <Link
             href={`/channels/${type}/` + group.id}
             key={group.id}
-            className={cn(
-              'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',
-              'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',
-            )}
+            className={cn('flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3')}
           >
             <Image
               width={40}
@@ -55,7 +51,7 @@ const ConversationList = ({ type }: Props) => {
                 </p>
                 <p className="text-sm text-gray-5">{fHmmA(group.latest_messages.created_at)}</p>
               </div>
-              {isExistLastestMessage && (
+              {isExistLatestMessage && (
                 <span className="text-sm max-w-full text-gray-5 truncate overflow-hidden text-ellipsis">
                   {decodeBase64(group?.latest_messages.content ?? '')}
                 </span>

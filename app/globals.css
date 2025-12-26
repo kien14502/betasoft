@@ -144,6 +144,7 @@
   --shadow-blur: 0px 0px 20px 0px #ffffff80;
 
   /* another */
+  --panel-chat-width: 416px;
   --header-height: 80px;
   --header-channel-width: 425px;
   --message-width: 320px;
