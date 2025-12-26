@@ -58,6 +58,16 @@ export interface Task {
   reporter: Member;
   created_by: Member;
   sprint_id: string;
+  comments_count: number;
+  attachments_count: number;
+  links_count: number;
+  sub_tasks: Subtask[];
+}
+
+export interface Subtask {
+  id: string;
+  title: string;
+  completed: boolean;
 }
 
 export interface TaskMove {

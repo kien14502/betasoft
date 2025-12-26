@@ -11,6 +11,7 @@ import { groupMessagesByUserWithTime } from '@/utils/message';
 import { useWS } from '@/hooks/socket-provider';
 import { ESocketAction } from '@/constants';
 import type { ChatMessage } from '@/interface/conversation';
+import PanelContainer from '../panel/PanelContainer';
 
 type Props = { id: string };
 
@@ -150,30 +151,33 @@ const ConversationContainer = ({ id }: Props) => {
    * Render
    * ---------------------------------- */
   return (
-    <div className="min-h-0 flex flex-col w-full bg-white rounded-4xl border shadow-secondary">
-      <HeaderConversation avatar="" name={conversation?.room.name || ''} />
+    <>
+      <div className="min-h-0 flex flex-col w-full bg-white rounded-4xl border shadow-secondary">
+        <HeaderConversation avatar="" name={conversation?.room.name || ''} />
 
-      <div ref={messagesContainerRef} className="overflow-x-hidden py-4 px-6 min-h-0 flex-1">
-        {hasNextPage && (
-          <div ref={loadMoreTriggerRef} className="flex justify-center py-2">
-            {isFetchingNextPage && (
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <Loader2 className="size-4 animate-spin" />
-                Loading messages...
-              </div>
-            )}
-          </div>
-        )}
+        <div ref={messagesContainerRef} className="overflow-x-hidden py-4 px-6 min-h-0 flex-1">
+          {hasNextPage && (
+            <div ref={loadMoreTriggerRef} className="flex justify-center py-2">
+              {isFetchingNextPage && (
+                <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                  <Loader2 className="size-4 animate-spin" />
+                  Loading messages...
+                </div>
+              )}
+            </div>
+          )}
 
-        {groupMessagesByUserWithTime(state.messages).map((group, i) => (
-          <Message key={i} messageGroup={group} />
-        ))}
+          {groupMessagesByUserWithTime(state.messages).map((group, i) => (
+            <Message key={i} messageGroup={group} />
+          ))}
 
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
+        </div>
+
+        <ConversationController id={id} onBottomMessage={scrollToBottom} />
       </div>
-
-      <ConversationController id={id} onBottomMessage={scrollToBottom} />
-    </div>
+      <PanelContainer id={id} />
+    </>
   );
 };
 

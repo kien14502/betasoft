@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import ConversationContainer from '../../components/conversation';
 import ConversationProviderV2 from '../../components/providers/ConversationProviderV2';
 
@@ -9,7 +10,9 @@ const Page = async ({ params }: Props) => {
   const { id } = await params;
   return (
     <ConversationProviderV2>
-      <ConversationContainer id={id} />
+      <Suspense fallback={<div>Loading messages...</div>}>
+        <ConversationContainer id={id} />
+      </Suspense>
     </ConversationProviderV2>
   );
 };
