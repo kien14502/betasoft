@@ -7,7 +7,7 @@ import ListSubtaskTable from './ListSubtaskTable';
 type Props = { tasks: Task[] };
 
 const ListTask = ({ tasks }: Props) => {
-  if (tasks?.length === 0) return <EmptyWork />;
+  if (tasks && tasks?.length === 0) return <EmptyWork />;
 
   return (
     <div className="w-full h-full min-h-0 flex-1 mt-2 overflow-x-hidden">
