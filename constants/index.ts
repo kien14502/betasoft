@@ -68,6 +68,7 @@ enum ESocketAction {
   TOGGLE_ONLINE = 'toggleOnline',
   TOGGLE_OFFLINE = 'toggleOffline',
   NEW_MESSAGE = 'new_message',
+  NEW_ROOM = 'new_room',
 }
 
 export {

@@ -3,21 +3,27 @@ import { API_ENDPOINT } from '@/constants/endpoint';
 import { QUERY_KEY } from '@/constants/query-key';
 import {
   CreateProjectTaskSchemaType,
+  TaskFilterSchema,
   TaskSectionSchema,
   UpdateTaskSchema,
 } from '@/constants/schemas/workspace-schema';
 import { ResponseSuccess } from '@/interface/common';
 import { Task, TaskMove, TaskSection } from '@/interface/task';
+import { trimBody } from '@/utils/common';
 import { showToast } from '@/utils/toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const getTask = async (
   org_id: string,
   sprint_id: string,
+  filter?: TaskFilterSchema,
 ): Promise<ResponseSuccess<{ total: number; tasks: Task[] }>> => {
   const res = await axios.get(API_ENDPOINT.TASK.TASK(org_id), {
     params: {
       sprint_id,
+      ...trimBody(filter),
+      sort_by: 'position',
+      sort_order: 'asc',
     },
   });
   return res.data;
@@ -86,12 +92,16 @@ export const useGetSubtasks = (project_id: string, task_id: string) => {
   });
 };
 
-export const useGetTask = (org_id: string, sprint_id: string | undefined) =>
+export const useGetTask = (
+  org_id: string,
+  sprint_id: string | undefined,
+  filter?: TaskFilterSchema,
+) =>
   useQuery({
     queryKey: [QUERY_KEY.GET_TASKS, org_id, sprint_id],
-    queryFn: () => getTask(org_id, sprint_id ?? ''),
+    queryFn: () => getTask(org_id, sprint_id ?? '', filter),
     select: ({ data }) => data,
-    enabled: !!org_id && !!sprint_id,
+    enabled: !!sprint_id,
   });
 
 export const useCreateTask = (callback?: (data: Task) => void) => {
@@ -99,34 +109,18 @@ export const useCreateTask = (callback?: (data: Task) => void) => {
 
   return useMutation({
     mutationFn: createTask,
-    onSuccess: ({ data, message }) => {
+    onSuccess: ({ data, message }, variables) => {
       showToast(message, 'success');
       callback?.(data);
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.GET_TASKS],
+        queryKey: [QUERY_KEY.GET_TASKS, variables.project_id, variables.sprint_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.SUBTASKS, variables.project_id, variables.parent_task_id],
       });
     },
   });
 };
-
-export const useCreateSubtask = () => {
-  return useMutation({
-    mutationFn: createTask,
-    // TODO
-    onSuccess: ({ data }, variables) => {},
-  });
-};
-
-// export const useGetTaskKanban = (org_id: string) =>
-//   useQuery({
-//     queryKey: [QUERY_KEY.GET_TASKS, org_id],
-//     queryFn: () => getKanban(org_id),
-//     select: ({ data, message }) => {
-//       showToast(message, 'success');
-//       return data;
-//     },
-//     enabled: !!org_id,
-//   });
 
 export const useUpdateTask = (sprint_id: string, callback?: (task: Task) => void) => {
   const queryClient = useQueryClient();

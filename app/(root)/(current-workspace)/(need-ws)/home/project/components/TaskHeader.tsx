@@ -6,22 +6,48 @@ import { TaskFilterSchema, taskFilterSchema } from '@/constants/schemas/workspac
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputForm from '@/components/common/form/InputField';
 import { Search } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import CheckListIcon from '@/components/icons/CheckListIcon';
 import ChartBarIcon from '@/components/icons/ChartBarIcon';
+import { useEffect, useRef } from 'react';
 
 type Props = {
   viewMode: 'kanban' | 'list';
   setViewMode: (value: 'kanban' | 'list') => void;
+  setFilter: (filter: TaskFilterSchema) => void;
 };
 
-const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
+const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode, setFilter }) => {
   const form = useForm<TaskFilterSchema>({
     resolver: zodResolver(taskFilterSchema),
     defaultValues: { title: '' },
   });
 
-  // }, [taskData]);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      // Clear previous timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      // Nếu là title field thì debounce, các field khác thì instant
+      if (name === 'title') {
+        debounceTimerRef.current = setTimeout(() => {
+          setFilter(value as TaskFilterSchema);
+        }, 300);
+      } else {
+        setFilter(value as TaskFilterSchema);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [form, setFilter]);
 
   return (
     <Form {...form}>
@@ -33,7 +59,7 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
               variant={viewMode !== 'list' ? 'secondary' : 'active'}
               size={'icon-lg'}
               onClick={() => setViewMode('list')}
-              className={cn('rounded-[10px]')}
+              className="rounded-[10px]"
             >
               <CheckListIcon fill={viewMode !== 'list' ? '#C0C0C0' : 'white'} />
             </Button>
@@ -42,7 +68,7 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
               size={'icon-lg'}
               variant={viewMode !== 'kanban' ? 'secondary' : 'active'}
               onClick={() => setViewMode('kanban')}
-              className={cn('rounded-[10px]')}
+              className="rounded-[10px]"
             >
               <ChartBarIcon fill={viewMode !== 'kanban' ? '#C0C0C0' : 'white'} />
             </Button>
@@ -52,7 +78,7 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
             placeholder="Search work"
             control={form.control}
             name="title"
-            className="max-w-[200px] [&_input]:pl-8! [&_input]:h-9! [&_input]:rounded-md! [&_input]:shadow-secondary!"
+            className="max-w-[200px] [&_input]:pl-8 [&_input]:h-9 [&_input]:rounded-md [&_input]:shadow-secondary"
             prefix={<Search size={16} />}
           />
         </div>
@@ -61,4 +87,5 @@ const TaskHeader: React.FC<Props> = ({ viewMode, setViewMode }) => {
     </Form>
   );
 };
+
 export default TaskHeader;

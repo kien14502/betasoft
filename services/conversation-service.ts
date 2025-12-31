@@ -17,6 +17,22 @@ export const getRooms = async (
   return res.data;
 };
 
+export const getInfiniteRooms = async (pageParam = 1, filter: FilterRoom) => {
+  const res = await axios.get<ResponseSuccess<{ total: number; rooms: Room[] }>>(
+    API_ENDPOINT.ROOM.GET_ROOMS,
+    {
+      params: {
+        page: pageParam,
+        page_size: PAGE_SIZE,
+        sort_by: 'updated_at',
+        sort_order: 'desc',
+        ...filter,
+      },
+    },
+  );
+  return { ...res.data.data, page: pageParam };
+};
+
 export const createConversation = async (
   payload: CreateConversationSchema,
 ): Promise<ResponseSuccess<Room>> => {
@@ -67,6 +83,24 @@ export const useGetRooms = (payload: Pagination, filter: FilterRoom) =>
     queryFn: () => getRooms(payload, filter),
     select: (data) => data.data || [],
   });
+
+export const useGetInfiniteConversations = (filter: FilterRoom) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEY.GET_ROOMS, filter.type_of_room],
+    queryFn: ({ pageParam = 1 }) => getInfiniteRooms(pageParam, filter),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const loaded = lastPage.page * PAGE_SIZE;
+      const total = lastPage.total;
+      if (loaded >= total) return undefined;
+      return lastPage.page + 1;
+    },
+    select: (data) => {
+      const rooms = data.pages[0].rooms;
+      return rooms;
+    },
+  });
+};
 
 export const useInfiniteGetRooms = (room_id: string | undefined) =>
   useInfiniteQuery({

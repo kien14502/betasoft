@@ -127,5 +127,5 @@ export const ROOMS_TYPE = {
   [CHAT_TYPE.GLOBAL]: 2,
   [CHAT_TYPE.DMS]: 1,
   [CHAT_TYPE.GROUP]: 3,
-  [CHAT_TYPE.PROJECT]: 4,
+  [CHAT_TYPE.PROJECT]: 3,
 };

@@ -80,6 +80,9 @@ const BoardSectionList: React.FC<Props> = ({ id, tasks }) => {
       setActiveTaskId(null);
       return;
     }
+
+    console.log({ active, over });
+
     setBoardSections((boardSection) => {
       const activeContainer = findBoardSectionContainer(boardSection, active.id as string);
       const overContainer = findBoardSectionContainer(boardSection, over.id as string);
@@ -103,13 +106,16 @@ const BoardSectionList: React.FC<Props> = ({ id, tasks }) => {
       return boardSection;
     });
     setActiveTaskId(null);
-    const { containerId, index } = active.data.current?.sortable || {};
+
+    const { containerId } = active.data.current?.sortable || {};
+    const { index: overId } = over.data.current?.sortable || {};
+
     const payload = {
       project_id: id,
       task_id: active.id.toString(),
       sprint_id: project?.sprint_active?.id || '',
       target_list_id: containerId || '',
-      target_position: index + 1,
+      target_position: overId + 1,
     };
     onMoveTask(payload);
   };

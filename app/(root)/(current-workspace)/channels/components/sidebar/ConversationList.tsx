@@ -1,4 +1,4 @@
-import { useGetRooms } from '@/services/conversation-service';
+import { useGetInfiniteConversations } from '@/services/conversation-service';
 import { fHmmA } from '@/utils/dayjs';
 import Image from 'next/image';
 import ConversationListLoading from './ConversationListLoading';
@@ -7,34 +7,63 @@ import { decodeBase64 } from '@/utils/common';
 import { CHAT_TYPE, ROOMS_TYPE } from '@/constants/common';
 import EmptyGlobalConversation from '../EmptyGlobalConversation';
 import { cn } from '@/lib/utils';
+import useConversationSocket from '@/hooks/useConversationSocket';
+import { useWS } from '@/hooks/socket-provider';
+import { useEffect, useState } from 'react';
+import { Room } from '@/interface/conversation';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 type Props = {
   type: CHAT_TYPE;
+  id: string;
 };
 
-const ConversationList = ({ type }: Props) => {
+const ConversationList = ({ type, id }: Props) => {
   const isGlobal = type === CHAT_TYPE.GLOBAL;
-  const { data: groups, isPending } = useGetRooms(
-    { page: 1, page_size: 10 },
-    {
-      is_cross_organization: isGlobal,
-      type_of_room: ROOMS_TYPE[type],
-    },
-  );
+  const { ws } = useWS();
+  const [conversations, setConversations] = useState<Room[]>([]);
 
-  if (isPending) return <ConversationListLoading />;
+  useConversationSocket(ws, (payload) => {
+    setConversations([payload, ...conversations]);
+  });
 
-  if (type === CHAT_TYPE.GLOBAL && groups?.length === 0) return <EmptyGlobalConversation />;
+  const {
+    data: conversationData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = useGetInfiniteConversations({
+    is_cross_organization: isGlobal,
+    type_of_room: ROOMS_TYPE[type],
+  });
+
+  const { targetRef } = useInfiniteScroll({
+    hasMore: hasNextPage,
+    loading: isFetchingNextPage,
+    onLoadMore: fetchNextPage,
+  });
+
+  useEffect(() => {
+    setConversations(conversationData || []);
+  }, [conversationData]);
+
+  if (isFetching) return <ConversationListLoading />;
+
+  if (type === CHAT_TYPE.GLOBAL && conversations?.length === 0) return <EmptyGlobalConversation />;
 
   return (
     <div className="flex flex-col gap-2 w-full flex-1 min-h-0">
-      {groups?.map((group) => {
+      {conversations?.map((group) => {
         const isExistLatestMessage = group?.latest_messages;
         return (
           <Link
             href={`/channels/${type}/` + group.id}
             key={group.id}
-            className={cn('flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3')}
+            className={cn(
+              'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',
+              id === group.id && 'bg-blue-1',
+            )}
           >
             <Image
               width={40}
@@ -60,6 +89,7 @@ const ConversationList = ({ type }: Props) => {
           </Link>
         );
       })}
+      <div ref={targetRef} />
     </div>
   );
 };
