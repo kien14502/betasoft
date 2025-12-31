@@ -12,9 +12,10 @@ import EmptyWsLaunched from '../EmptyWsLaunched';
 
 type Props = {
   type: CHAT_TYPE;
+  id: string;
 };
 
-const SidebarConversation = ({ type }: Props) => {
+const SidebarConversation = ({ type, id }: Props) => {
   const [activeTab, setActiveTab] = useState<CHAT_TYPE>(type);
   const { user } = useAppSelector(getSelector('auth'));
   const wsLaunched = user?.meta_data.organization;
@@ -31,7 +32,7 @@ const SidebarConversation = ({ type }: Props) => {
         <div className="flex-1 h-11 shadow-secondary-inset bg-gray-1 p-1 border rounded-5xl grid grid-cols-4">
           {channelRoutes.map((tab, i) => (
             <Link
-              href={`/channels/${tab.path}`}
+              href={`/channels/${tab.path}/${id}`}
               key={tab.path}
               className="relative text-primary text-sm flex items-center justify-center text-center font-medium transition-colors focus-visible:outline-none"
             >
@@ -60,7 +61,7 @@ const SidebarConversation = ({ type }: Props) => {
           ))}
         </div>
       </div>
-      {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} />}
+      {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} id={id} />}
     </div>
   );
 };

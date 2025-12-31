@@ -50,6 +50,11 @@ export const trimBody = (body: object | undefined): object | undefined => {
       continue;
     }
 
+    if (Array.isArray(value)) {
+      const trimmedArray = trimBody(value);
+      trimmed[key] = trimmedArray;
+    }
+
     // 4. Include all other primitive values (numbers, booleans, etc.)
     trimmed[key] = value;
   }

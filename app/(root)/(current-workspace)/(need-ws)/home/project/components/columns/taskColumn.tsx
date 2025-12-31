@@ -21,6 +21,7 @@ import { ModalTaskTableContext } from '../../providers/ModalTaskTableProvider';
 import { Task } from '@/interface/task';
 import { ArrowDown2 } from 'iconsax-reactjs';
 import { cn } from '@/lib/utils';
+import { fDate } from '@/utils/dayjs';
 
 const taskColumn = (isSubtask: boolean = false): ColumnDef<Task>[] => {
   return [
@@ -53,9 +54,9 @@ const taskColumn = (isSubtask: boolean = false): ColumnDef<Task>[] => {
           </Button>
         ) : undefined;
       },
-      size: 50,
-      maxSize: 50,
-      minSize: 50,
+      size: 16,
+      maxSize: 16,
+      minSize: 16,
     },
     {
       accessorKey: 'title',
@@ -65,24 +66,46 @@ const taskColumn = (isSubtask: boolean = false): ColumnDef<Task>[] => {
           Tasks
         </div>
       ),
-      cell: ({ row }) => {
+      cell: ({ row, table }) => {
         const original = row.original;
+        const subTasks = original?.sub_tasks || [];
+
+        const isLastSubtask =
+          table.getCoreRowModel().rows.findIndex((item) => item.original.id === row.original.id) <
+          subTasks.length - 2;
+
         return (
           <div className={cn('flex items-center gap-1.5 group relative', isSubtask && 'pl-10')}>
-            {/* {isSubtask && (
-              <div className="absolute -top-6 ml-1">
-                <Image width={24} height={35} src={'/icons/sub-arrow.svg'} alt="" />
-              </div>
-            )} */}
+            {isSubtask && (
+              <>
+                <div className="absolute left-0 -top-6 ml-1">
+                  <Image width={24} height={35} src={'/icons/sub-arrow.svg'} alt="" />
+                </div>
+                {!isLastSubtask && (
+                  <div className="w-[1px] h-16 -top-6 left-1 absolute bg-[#D1D1D6] last:hidden" />
+                )}
+              </>
+            )}
+
             <Checkbox
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
               aria-label="Select row"
               className="rounded-full"
             />
-            <div className="text-sm font-medium line-clamp-1 max-w-[250px] overflow-hidden text-ellipsis">
-              {original.title}
+
+            <div className="flex items-center gap-4">
+              <div className="text-sm  font-medium line-clamp-1 max-w-[250px] overflow-hidden text-ellipsis">
+                {original.title}
+              </div>
+              {subTasks.length > 0 && (
+                <div className="flex items-center gap-2 text-sm  text-gray-4">
+                  <Image src={'/icons/arrow-turn-down-right.svg'} width={16} height={16} alt="" />
+                  {subTasks.filter((item) => item.completed).length}/{subTasks.length}
+                </div>
+              )}
             </div>
+
             {!isSubtask && <ButtonModal task={original} />}
           </div>
         );
@@ -162,8 +185,8 @@ const taskColumn = (isSubtask: boolean = false): ColumnDef<Task>[] => {
         </div>
       ),
       cell: ({ row }) => {
-        // const date = fDate(row.original.);
-        return <div></div>;
+        const date = fDate(row.original.created_at);
+        return <div>{date?.toISOString()}</div>;
       },
       size: 100,
       maxSize: 100,

@@ -61,7 +61,6 @@ export const useCreateTaskComment = () => {
     mutationFn: (payload: CreateTaskComment) => createTaskComment(payload),
     onSuccess: ({ data }, variables) => {
       const listKey = [QUERY_KEY.TASK_COMMENT, variables.task_id, variables.project_id];
-
       // Update infinite query data structure
       queryClient.setQueryData<
         InfiniteData<{
@@ -70,7 +69,8 @@ export const useCreateTaskComment = () => {
           page: number;
         }>
       >(listKey, (old) => {
-        if (!old) {
+        const isExist = old?.pages[0].comments;
+        if (!isExist) {
           return {
             pages: [
               {
