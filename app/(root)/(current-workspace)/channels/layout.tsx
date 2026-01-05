@@ -7,7 +7,7 @@ import { redirect, usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import HeaderChannel from './components/HeaderChannel';
 import PanelProvider from './components/providers/PanelProvider';
-import SidebarConversation from './components/sidebar/SidebarConverstation';
+import SidebarConversation from './components/sidebar/SidebarConversation';
 
 type Props = {
   children: ReactNode;
@@ -15,21 +15,14 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const pathname = usePathname().split('/').filter(Boolean);
-  const type = pathname[1];
-  const id = pathname[2];
-
-  const fType = verifyChatType(type);
-
-  if (!fType) {
-    redirect(`/channels/${CHAT_TYPE.GLOBAL}`);
-  }
+  const id = pathname[1];
 
   return (
     <WebSocketProvider>
       <PanelProvider>
         <div className="flex h-full w-full gap-6">
-          <SidebarConversation type={fType} id={id} />
-          <HeaderChannel key_chat={fType} />
+          <SidebarConversation id={id} />
+          <HeaderChannel />
           {children}
         </div>
       </PanelProvider>

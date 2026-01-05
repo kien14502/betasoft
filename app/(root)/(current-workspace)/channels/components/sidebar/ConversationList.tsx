@@ -58,7 +58,7 @@ const ConversationList = ({ type, id }: Props) => {
         const isExistLatestMessage = group?.latest_messages;
         return (
           <Link
-            href={`/channels/${type}/` + group.id}
+            href={`/channels/` + group.id}
             key={group.id}
             className={cn(
               'flex py-3 px-4 rounded-2xl hover:bg-blue-1 items-center gap-3',

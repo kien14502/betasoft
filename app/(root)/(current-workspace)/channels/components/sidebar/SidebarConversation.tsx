@@ -5,34 +5,33 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import ConversationList from './ConversationList';
 import { CHAT_TYPE } from '@/constants/common';
-import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { getSelector, useAppSelector } from '@/hooks/useRedux';
 import EmptyWsLaunched from '../EmptyWsLaunched';
+import { Button } from '@/components/ui/button';
 
 type Props = {
-  type: CHAT_TYPE;
   id: string;
 };
 
-const SidebarConversation = ({ type, id }: Props) => {
-  const [activeTab, setActiveTab] = useState<CHAT_TYPE>(type);
+const SidebarConversation = ({ id }: Props) => {
+  const [activeTab, setActiveTab] = useState<CHAT_TYPE>(CHAT_TYPE.GLOBAL);
   const { user } = useAppSelector(getSelector('auth'));
   const wsLaunched = user?.meta_data.organization;
 
   useEffect(() => {
-    setActiveTab(type);
-  }, [type]);
-
-  const isWsExisted = !wsLaunched && type !== CHAT_TYPE.GLOBAL;
+    if (!wsLaunched) {
+      setActiveTab(CHAT_TYPE.GLOBAL);
+    }
+  }, [wsLaunched]);
 
   return (
     <div className="border flex flex-col gap-4 bg-white shadow-secondary rounded-4xl py-4 px-2 max-w-(--header-channel-width) w-full">
       <div className="flex items-center gap-2">
         <div className="flex-1 h-11 shadow-secondary-inset bg-gray-1 p-1 border rounded-5xl grid grid-cols-4">
           {channelRoutes.map((tab, i) => (
-            <Link
-              href={`/channels/${tab.path}/${id}`}
+            <button
+              onClick={() => setActiveTab(tab.path)}
               key={tab.path}
               className="relative text-primary text-sm flex items-center justify-center text-center font-medium transition-colors focus-visible:outline-none"
             >
@@ -57,11 +56,11 @@ const SidebarConversation = ({ type, id }: Props) => {
               >
                 {tab.name}
               </span>
-            </Link>
+            </button>
           ))}
         </div>
       </div>
-      {isWsExisted ? <EmptyWsLaunched /> : <ConversationList type={type} id={id} />}
+      <ConversationList type={activeTab} id={id} />
     </div>
   );
 };

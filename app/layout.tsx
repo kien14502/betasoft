@@ -3,8 +3,8 @@ import './globals.css';
 import ProviderConfig from './provider';
 import { Toaster } from 'sonner';
 export const metadata: Metadata = {
-  title: 'Beta Management',
-  description: 'Beta Management',
+  title: 'Asona.ai',
+  description: 'Asona.ai',
 };
 
 export default function RootLayout({

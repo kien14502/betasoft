@@ -19,27 +19,23 @@ import { useForm } from 'react-hook-form';
 import FindMember from './FindMember';
 import { useCreateRoom } from '@/services/conversation-service';
 import { CHAT_TYPE, ROOMS_TYPE } from '@/constants/common';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Props = {
-  key_chat: CHAT_TYPE;
-};
-
-const CreateConversation = ({ key_chat }: Props) => {
+const CreateConversation = () => {
   const router = useRouter();
   const form = useForm<CreateConversationSchema>({
     defaultValues: {
       name: '',
+      type_of_room: ROOMS_TYPE['global'],
     },
     resolver: zodResolver(createConversationSchema),
   });
   const { mutate: createRoom, isPending } = useCreateRoom();
 
-  useEffect(() => {
-    form.setValue('type_of_room', ROOMS_TYPE[key_chat]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key_chat]);
+  // useEffect(() => {
+  //   form.setValue('type_of_room');
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [key_chat]);
 
   const onSubmit = (values: CreateConversationSchema) => {
     createRoom(values, {
