@@ -1,17 +1,13 @@
 import { Suspense } from 'react';
 import ConversationContainer from '../components/conversation';
 import ConversationProviderV2 from '../components/providers/ConversationProviderV2';
-import EmptyConversation from '../components/EmptyConversation';
 
 type Props = {
-  params: Promise<{ slug: string[] }>;
+  params: Promise<{ id: string }>;
 };
 
 const Page = async ({ params }: Props) => {
-  const { slug } = await params;
-  const id = slug[1];
-
-  if (!id) return <EmptyConversation />;
+  const { id } = await params;
 
   return (
     <ConversationProviderV2>

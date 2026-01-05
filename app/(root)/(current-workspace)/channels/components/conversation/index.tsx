@@ -24,6 +24,7 @@ const ConversationContainer = ({ id }: Props) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isError,
   } = useInfiniteGetRooms(id);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -150,6 +151,9 @@ const ConversationContainer = ({ id }: Props) => {
   /* ----------------------------------
    * Render
    * ---------------------------------- */
+
+  if (isError) return <div>Conversation not found</div>;
+
   return (
     <>
       <div className="min-h-0 flex flex-col w-full bg-white rounded-4xl border shadow-secondary">

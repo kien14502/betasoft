@@ -10,12 +10,12 @@ import InviteMemberModal from '../InviteMemberModal';
 import CreateTaskModal from '@/app/(root)/components/CreateTaskModal';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
-import { useToggle } from '@/hooks/useToggle';
 import ItemSidebar from './ItemSidebar';
 import UserPanel from './UserPanel';
+import { usePersistentState } from '@/hooks/usePersistentState';
 
 const Sidebar = () => {
-  const [isCollapse, { toggle }] = useToggle();
+  const [isCollapse, toggle] = usePersistentState('SIDEBAR-COLLAPSE-STORAGE', false);
   const pathname = usePathname().split('/').filter(Boolean);
   const [createTaskModal, setCreateTaskModal] = useState<boolean>(false);
 
@@ -63,7 +63,7 @@ const Sidebar = () => {
           <Button
             className={cn('duration-500', isCollapse && 'rotate-180')}
             size={'icon-xs'}
-            onClick={toggle}
+            onClick={() => toggle(!isCollapse)}
             variant={'ghost'}
           >
             <ChevronLeft />

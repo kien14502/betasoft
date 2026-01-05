@@ -1,8 +1,7 @@
-import { CHAT_TYPE } from '@/constants/common';
-import { redirect } from 'next/navigation';
+import EmptyConversation from './components/EmptyConversation';
 
 const ChannelsPage = async () => {
-  redirect(`/channels/${CHAT_TYPE.GLOBAL}`);
+  return <EmptyConversation />;
 };
 
 export default ChannelsPage;
