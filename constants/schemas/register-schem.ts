@@ -27,6 +27,12 @@ export const createAccountSchema = z.object({
 
 export type CreateAccountSchema = z.infer<typeof createAccountSchema>;
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().regex(emailRegex, 'Invalid email address'),
+});
+
+export type ForgotPassword = z.infer<typeof forgotPasswordSchema>;
+
 export const verifyOtpSchema = z.object({
   email: z.string().regex(emailRegex, 'Invalid email address'),
   code: z.string().length(6),

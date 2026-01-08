@@ -40,7 +40,7 @@ const SearchProject = memo(({ onChange }: Props) => {
   }, [prjSelected]);
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 max-w-[320px]">
       <Label className="font-semibold leading-5 gap-1">
         Project <Image width={6} height={6} src={'/icons/asterisk.svg'} alt="" />
       </Label>

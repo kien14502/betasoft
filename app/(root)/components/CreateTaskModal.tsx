@@ -49,11 +49,7 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
   const { data: members } = useGetMemberProject(projectId);
   const { data: project } = useGetProjectIdWithOutKey(projectId);
 
-  const { mutate: createTask, isPending } = useCreateTask(() => {
-    setOpenModal(false);
-    form.reset();
-    setPrjSelected(null);
-  });
+  const { mutate: createTask, isPending } = useCreateTask();
 
   useEffect(() => {
     form.setValue('project_id', prjSelected?.project.id ?? '');
@@ -62,6 +58,15 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
   useEffect(() => {
     form.setValue('sprint_id', project?.sprint_active.id ?? '');
   }, [form, project]);
+
+  const projectIdValue = form.watch('project_id');
+
+  useEffect(() => {
+    if (!projectIdValue) return;
+
+    form.setValue('list_id', '');
+    form.setValue('assignee', '');
+  }, [projectIdValue, form]);
 
   const listOptions = useMemo(() => {
     return (
@@ -87,7 +92,13 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
   }, [members]);
 
   const onSubmit = (values: CreateProjectTaskSchemaType) => {
-    createTask(values);
+    createTask(values, {
+      onSuccess: () => {
+        setOpenModal(false);
+        form.reset();
+        setPrjSelected(null);
+      },
+    });
   };
 
   const handleCancel = () => {
@@ -96,43 +107,38 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
     setPrjSelected(null);
   };
 
+  const isDisable = !form.watch('project_id');
+
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
-      <DialogContent className="sm:max-w-[728px]">
-        <DialogHeader>
-          <DialogTitle>New task</DialogTitle>
-          <DialogDescription className="flex items-center gap-1">
-            Required fields are marked with an asterisk
-            <Image width={6} height={6} alt="Required" src={'/icons/asterisk.svg'} />
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-[728px] p-0 max-h-svh overflow-x-hidden">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-            <div className="grid grid-cols-2 gap-6">
+            <DialogHeader className="py-6 px-8 border-b gap-1 flex flex-col">
+              <DialogTitle className="text-[#0045AC] text-2xl">New task</DialogTitle>
+              <DialogDescription className="flex text-[#787878] items-center gap-1">
+                Required fields are marked with an asterisk
+                <Image width={6} height={6} alt="Required" src={'/icons/asterisk.svg'} />
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="px-8 flex flex-col gap-6 w-full">
               <SearchProject onChange={setPrjSelected} />
-              <SingleSelect
-                classNames={{ trigger: 'h-12' }}
-                options={listOptions}
-                onChange={({ value }) => form.setValue('list_id', value)}
-                renderItem={(item) => (
-                  <div
-                    className="w-fit py-0.5 px-2 rounded text-xs font-medium text-white"
-                    style={{ backgroundColor: item.color }}
-                  >
-                    {item.label}
-                  </div>
-                )}
-                trigger={'Status'}
-                label={'Status'}
-                value={form.watch('list_id') || ''}
-                require
+              <InputForm
+                className="max-w-[320px]"
+                required
+                control={form.control}
+                name={'title'}
+                label="Title"
+                disable={isDisable}
               />
-            </div>
+              <TextareaForm
+                disabled={isDisable}
+                control={form.control}
+                name={'description'}
+                label="Description"
+              />
 
-            <InputForm required control={form.control} name={'title'} label="Title" />
-            <TextareaForm control={form.control} name={'description'} label="Description" />
-
-            <div className="grid grid-cols-2 gap-6">
               <SingleSelect
                 options={memberOptions}
                 onChange={({ value }) => form.setValue('assignee', value)}
@@ -148,17 +154,38 @@ const CreateTaskModal = ({ openModal, setOpenModal }: Props) => {
                 label={'Assignee'}
                 value={form.watch('assignee') ?? ''}
                 prefix={<UserRound size={24} />}
-                classNames={{ trigger: 'h-12' }}
+                classNames={{ trigger: 'h-12 max-w-[320px]' }}
                 require
+                disable={isDisable}
+              />
+              <div className="grid grid-cols-2 gap-6">
+                <SingleSelect
+                  disable={isDisable}
+                  classNames={{ trigger: 'h-12' }}
+                  options={listOptions}
+                  onChange={({ value }) => form.setValue('list_id', value)}
+                  renderItem={(item) => (
+                    <div
+                      className="w-fit py-0.5 px-2 rounded text-xs font-medium text-white"
+                      style={{ backgroundColor: item.color }}
+                    >
+                      {item.label}
+                    </div>
+                  )}
+                  trigger={'Status'}
+                  label={'Status'}
+                  value={form.watch('list_id') || ''}
+                  require
+                />
+              </div>
+              <UrgencySelector
+                value={form.watch('priority')}
+                onChange={(value) => form.setValue('priority', value)}
+                isDisable={isDisable}
               />
             </div>
 
-            <UrgencySelector
-              value={form.watch('priority')}
-              onChange={(value) => form.setValue('priority', value)}
-            />
-
-            <div className="gap-6 flex items-center justify-end w-full">
+            <div className="gap-6 py-5 px-8 flex items-center justify-end w-full border-t">
               <Button
                 size={'xl'}
                 className="text-blue-4"

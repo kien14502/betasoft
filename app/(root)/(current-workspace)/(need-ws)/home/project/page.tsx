@@ -28,7 +28,11 @@ const ProjectPage = () => {
 
   const { adminProjects, otherProjects } = groupRoleProjects(projects || []);
 
-  if (!projects || projects?.length === 0) {
+  if (!projects && isFetchingNextPage) {
+    return <div>Loading....</div>;
+  }
+
+  if (projects && projects?.length === 0) {
     return (
       <div className="gap-4 h-full max-h-full flex flex-col">
         <EmptyProjectView />
@@ -36,7 +40,7 @@ const ProjectPage = () => {
     );
   }
 
-  if (projects?.length > 0) {
+  if (projects && projects?.length > 0) {
     return (
       <div className="gap-4 h-full max-h-full flex flex-col">
         <ProjectHeader />

@@ -4,6 +4,7 @@ export const API_ENDPOINT = {
     PROFILE: '/auth/user/profile',
     REGISTER: '/auth/register',
     SEARCH_USER: '/auth/user/search',
+    FORGOT_PASSWORD: '/forgot_password',
   },
   ROOM: {
     GET_ROOMS: 'auth/chat/rooms',

@@ -1,9 +1,7 @@
 'use client';
 
-import { CHAT_TYPE } from '@/constants/common';
 import { WebSocketProvider } from '@/hooks/socket-provider';
-import { verifyChatType } from '@/utils/common';
-import { redirect, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import HeaderChannel from './components/HeaderChannel';
 import PanelProvider from './components/providers/PanelProvider';

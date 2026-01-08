@@ -33,7 +33,7 @@ const TextareaForm = <T extends FieldValues>({
               rows={rows}
               placeholder={placeholder}
               className={cn(
-                'text-sm h-[198px] outline-none resize-none rounded-none shadow-popup border-gray-5',
+                'text-sm h-[198px] outline-none resize-none rounded-none shadow-popup! border-gray-5',
                 'focus-visible:ring-offset-0 focus-visible:ring-0',
                 'focus-visible:border-2 focus-visible:border-blue-4 transition-all duration-100',
                 fieldState.error && 'border-destructive',

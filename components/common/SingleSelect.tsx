@@ -19,12 +19,10 @@ type Props<T extends Option> = {
   prefix?: ReactNode;
   value: string;
   renderItem?: (value: T) => ReactNode;
-  classNames?: {
-    trigger?: string;
-    content?: string;
-  };
+  classNames?: { trigger?: string; content?: string };
   label?: string;
   require?: boolean;
+  disable?: boolean;
 };
 
 const SingleSelect = <T extends Option>({
@@ -37,11 +35,15 @@ const SingleSelect = <T extends Option>({
   classNames,
   label,
   require,
+  disable = false,
 }: Props<T>) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [itemSelected, setItemSelected] = useState<T | undefined>(
-    options.find((item) => item.value === value),
-  );
+  const [itemSelected, setItemSelected] = useState<T | undefined>(undefined);
+
+  useEffect(() => {
+    const foundItem = options.find((item) => item.value === value);
+    setItemSelected(foundItem);
+  }, [value, options]);
 
   useEffect(() => {
     if (itemSelected !== undefined) {
@@ -51,8 +53,8 @@ const SingleSelect = <T extends Option>({
   }, [itemSelected]);
 
   return (
-    <Popover open={openModal} onOpenChange={setOpenModal}>
-      <PopoverTrigger asChild className="">
+    <Popover open={openModal && !disable} onOpenChange={!disable ? setOpenModal : () => {}}>
+      <PopoverTrigger asChild>
         <div className="w-full flex flex-col gap-1">
           {label && (
             <span className="text-sm flex items-top gap-1 font-semibold">
@@ -61,6 +63,7 @@ const SingleSelect = <T extends Option>({
             </span>
           )}
           <Button
+            disabled={disable}
             type="button"
             variant={'outline'}
             className={cn(
@@ -94,6 +97,9 @@ const SingleSelect = <T extends Option>({
           classNames?.content,
         )}
       >
+        {options.length === 0 && (
+          <div className="p-4 text-gray-8 text-sm font-medium">Not found items</div>
+        )}
         {options.map((option) => (
           <div
             className="py-2 px-3 flex items-center gap-2 cursor-pointer relative group hover:bg-gray-1"
@@ -108,4 +114,5 @@ const SingleSelect = <T extends Option>({
     </Popover>
   );
 };
+
 export default SingleSelect;

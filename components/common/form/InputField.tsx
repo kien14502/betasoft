@@ -12,6 +12,7 @@ type Props<T extends FieldValues> = FormProps<T> & {
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
   required?: boolean;
+  disable?: boolean;
 };
 
 const InputForm = <T extends FieldValues>({
@@ -23,6 +24,7 @@ const InputForm = <T extends FieldValues>({
   type,
   placeholder,
   required = false,
+  disable = false,
 }: Props<T>) => (
   <FormField
     control={control}
@@ -46,6 +48,7 @@ const InputForm = <T extends FieldValues>({
                 'focus-visible:border-2 focus-visible:border-blue-4 transition-all duration-100',
                 fieldState.error && 'border-destructive',
               )}
+              disabled={disable}
               {...field}
               type={type}
             />

@@ -1,4 +1,6 @@
+import LoadingPage from '@/components/loading/LoadingPage';
+
 const OverviewPage = () => {
-  return <div>OverviewPage</div>;
+  return <LoadingPage />;
 };
 export default OverviewPage;

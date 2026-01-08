@@ -63,8 +63,8 @@ export default function Login() {
         />
         <div className="flex items-center justify-between">
           <RememberAccount />
-          <Link className="text-sm text-blue-4!" href={''}>
-            Forgot password?
+          <Link className="text-sm text-blue-4!" href={'/forgot-pass'}>
+            Forgot password
           </Link>
         </div>
         <Button size={'xl'} type="submit" variant={'active'} disabled={isPending}>
