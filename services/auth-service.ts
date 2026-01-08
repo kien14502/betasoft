@@ -2,6 +2,7 @@ import { axios } from '@/config/axios';
 import { PAGE_SIZE } from '@/constants/common';
 import { API_ENDPOINT } from '@/constants/endpoint';
 import { QUERY_KEY } from '@/constants/query-key';
+import { RequestForgotPasswordSchemaType } from '@/constants/schemas/password-schema';
 import { RequestRegisterRequest, User } from '@/interface/auth';
 import { ResponseSuccess } from '@/interface/common';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
@@ -35,10 +36,18 @@ export const searchUser = async (pageParam: number = 1, email: string) => {
   return { ...res.data.data, page: pageParam };
 };
 
+const forgotPassword = async (
+  payload: Partial<RequestForgotPasswordSchemaType>,
+): Promise<ResponseSuccess<string>> => {
+  const res = await axios.post(API_ENDPOINT.AUTH.FORGOT_PASSWORD, payload);
+  return res.data;
+};
+
 export const authService = {
   getMe,
   register,
   searchUser,
+  forgotPassword,
 };
 
 // hooks
@@ -67,3 +76,9 @@ export const useSearchUserInfinite = (email: string) => {
     },
   });
 };
+
+export const useForgotPassword = () =>
+  useMutation({
+    mutationFn: forgotPassword,
+    mutationKey: [QUERY_KEY.AUTH],
+  });

@@ -6,9 +6,10 @@ import Image from 'next/image';
 type Props = {
   onChange?: (value: RequestCreateTaskRequestPriority) => void;
   value?: string;
+  isDisable?: boolean;
 };
 
-const UrgencySelector: React.FC<Props> = ({ value, onChange }) => (
+const UrgencySelector: React.FC<Props> = ({ value, onChange, isDisable = false }) => (
   <div className="flex items-center gap-4">
     {Object.values(EUrgency).map((item) => (
       <button
@@ -19,6 +20,7 @@ const UrgencySelector: React.FC<Props> = ({ value, onChange }) => (
         )}
         type="button"
         key={item}
+        disabled={isDisable}
       >
         <Image src={`/icons/${item}.svg`} width={16} height={16} alt={''} />
         {item}

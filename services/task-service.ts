@@ -104,14 +104,13 @@ export const useGetTask = (
     enabled: !!sprint_id,
   });
 
-export const useCreateTask = (callback?: (data: Task) => void) => {
+export const useCreateTask = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createTask,
-    onSuccess: ({ data, message }, variables) => {
+    onSuccess: ({ message }, variables) => {
       showToast(message, 'success');
-      callback?.(data);
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.GET_TASKS, variables.project_id, variables.sprint_id],
       });

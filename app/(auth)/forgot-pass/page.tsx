@@ -1,61 +1,58 @@
 'use client';
 
+import Link from 'next/link';
+import ConfirmForgotPassword from './components/ConfirmForgotPassword';
 import { useState } from 'react';
-import RequestForgotPasswordForm from './components/RequestForgotPasswordForm';
-import ConfirmNewPasswordForm from './components/ConfirmNewPasswordForm';
+import VerifyCode from './components/VerifyCode';
+import SuccessView from './components/SuccessView';
+
+type View = 'confirm' | 'code' | 'done';
 
 function ForgotPassPage() {
-  const [step, setStep] = useState<1 | 2>(1);
-
-  const stepToggle = () => (1 ? setStep(2) : setStep(1));
-
-  const formForgotPassword = () => {
-    switch (step) {
-      case 2:
-        return <ConfirmNewPasswordForm step={step} />;
-      default:
-        return <RequestForgotPasswordForm step={step} setStep={stepToggle} />;
-    }
-  };
+  const [view, setView] = useState<View>('confirm');
+  const [email, setEmail] = useState<string>('');
 
   return (
-    <div>
-      <div
-        style={{
-          position: 'relative',
-          height: '100vh',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          style={{
-            width: '85%',
-            margin: 'auto',
-            borderRadius: 0,
-            padding: '5%',
-          }}
-        >
-          <div
-            style={{
-              textAlign: 'center',
-              fontSize: '3em',
-              fontWeight: 700,
-              marginBottom: '10px',
-            }}
-          >
-            Forgotten your password?
+    <>
+      {view === 'confirm' && (
+        <>
+          <Title
+            subTitle="A code will be sent to your email to help reset password."
+            title="Forgot Password"
+          />
+          <ConfirmForgotPassword onSetView={setView} setEmail={setEmail} />
+        </>
+      )}
+      {view === 'code' && (
+        <>
+          <div className="flex flex-col items-center justify-center gap-2 w-full">
+            <p className="text-[40px] font-medium">Check Your Email</p>
+            <div className="flex flex-col items-start gap-1">
+              <span className="text-gray-4">Enter the verification code sent to:</span>
+              <span className="font-semibold">{email}</span>
+            </div>
           </div>
-          <p style={{ textAlign: 'center', fontSize: '1.2em', fontWeight: 400 }}>
-            There is nothing to worry about, we&apos;ll send you a message to help you reset your
-            password.
-          </p>
-          {formForgotPassword()}
+          <VerifyCode email={email} setView={setView} />
+        </>
+      )}
+      {view === 'done' && <SuccessView />}
+      {view !== 'code' && (
+        <div className="flex items-center gap-1 justify-center text-sm">
+          <span>Back to</span>
+          <Link href={'/login'} className="text-blue-4!">
+            Login
+          </Link>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 
 export default ForgotPassPage;
+
+const Title = ({ title, subTitle }: { title: string; subTitle: string }) => (
+  <div className="flex flex-col gap-2">
+    <p className="text-[40px] font-medium">{title}</p>
+    <span className="text-xs text-gray-4">{subTitle}</span>
+  </div>
+);
