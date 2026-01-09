@@ -37,7 +37,7 @@ export default function Login() {
           setClientCookie(EToken.ACCESS_TOKEN, token);
           dispatch(setAuth(res.data?.user as unknown as User));
           saveAuthStorage('ACCESS_TOKEN', token);
-          router.push('/');
+          router.replace('/');
         },
       },
     );

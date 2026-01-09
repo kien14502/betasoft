@@ -50,7 +50,7 @@ const CreatePassword = ({ email, code }: Props) => {
           setClientCookie(EToken.ACCESS_TOKEN, token);
           dispatch(setAuth(data.user));
           saveAuthStorage('ACCESS_TOKEN', token);
-          router.push('/');
+          router.replace('/');
           showToast(message || 'Register account successfully', 'success');
         },
       },
