@@ -3,6 +3,17 @@ import bg from '@/public/images/bg_auth.png';
 import WavyDiv from './components/WavyDiv';
 import Image from 'next/image';
 
+// Set headers để prevent caching
+export async function generateMetadata() {
+  return {
+    other: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      Pragma: 'no-cache',
+      Expires: '0',
+    },
+  };
+}
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div

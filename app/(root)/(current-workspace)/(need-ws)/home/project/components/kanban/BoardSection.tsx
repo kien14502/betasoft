@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Ellipsis, Plus } from 'lucide-react';
 import NewTask from './NewTask';
 import { memo } from 'react';
-import { hexToRGB } from '@/utils/common';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task, TaskSection } from '@/interface/task';
 
@@ -22,12 +21,10 @@ const BoardSection: React.FC<BoardSectionProps> = ({ id, section, tasks }) => {
   });
   if (!section) return null;
 
-  const { b, g, r } = hexToRGB(section.color || '');
-
   return (
     <div
       style={{
-        backgroundColor: `rgb(${r}, ${g}, ${b}, 0.2)`,
+        backgroundColor: `color-mix(in srgb, ${section.color} 40%, white)`,
         boxShadow: '0px 0px 4px 0px hsla(0, 0%, 0%, 0.2)',
       }}
       className="rounded-3xl min-h-0 flex flex-col h-fit pb-4 relative"

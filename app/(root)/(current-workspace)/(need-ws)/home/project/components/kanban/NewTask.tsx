@@ -21,7 +21,7 @@ type Props = {
 const NewTask = ({ section, onBottom }: Props) => {
   const inputRef = useRef<HTMLDivElement>(null);
   const { project } = useContext(ProjectContext);
-  const [isAddTask, setIsAddTask] = useState<boolean>(false);
+  const [isAddTask, setIsAddTask] = useState<boolean>(true);
   const { mutate: createTask, isPending: createTaskPending } = useCreateTask();
 
   const form = useForm<CreateProjectTaskSchemaType>({
@@ -53,7 +53,7 @@ const NewTask = ({ section, onBottom }: Props) => {
   };
 
   return (
-    <div className="w-full mt-2" ref={inputRef}>
+    <div className="w-full my-2" ref={inputRef}>
       {isAddTask ? (
         <Form {...form}>
           <form
